@@ -1,0 +1,18 @@
+enum Bloodline {
+  LUMIERE,
+  TENEBRE,
+  EAU,
+  FEU,
+  VENT,
+  TERRE,
+  FOUDRE,
+  GLACE,
+  NAGA,
+  TROGLODYTE,
+  LYCAN,
+  GOULE,
+  SUCCUBE,
+  ILLITHIDE,
+  ARBRE,
+  AUCUN
+}
