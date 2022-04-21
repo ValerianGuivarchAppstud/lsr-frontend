@@ -33,7 +33,7 @@ class _CharacterPageState extends State<CharacterPage> with CharacterView {
     presenter = /*(widget.initPresenter != null
         ? widget.initPresenter(this)
         : */CharacterPresenter(
-        view: this, interactor: Injector.of(context).characterService);
+        view: this, interactor: Injector.of(context).sheetService);
     presenter.triggerLoad();
     super.didChangeDependencies();
   }
@@ -51,7 +51,7 @@ class _CharacterPageState extends State<CharacterPage> with CharacterView {
     var size = MediaQuery
         .of(context)
         .size;
-    return StreamBuilder<CharacterState>(
+    return StreamBuilder<CharacterSheetState>(
       stream: presenter.stream,
       initialData: presenter.latest,
       builder: (context, characterState) {

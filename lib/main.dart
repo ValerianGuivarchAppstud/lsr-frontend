@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:lsr/domain/services/CharacterService.dart';
+import 'package:lsr/domain/services/SheetService.dart';
 import 'package:lsr/utils/Injector.dart';
 import 'package:lsr/utils/api/NetworkingConfig.dart';
 import 'package:lsr/view/modules/character/CharacterScreen.dart';
+import 'package:lsr/view/widgets/fonts/FontIconCharacter.dart';
 
 import 'config/config_reader.dart';
-import 'data/api/CharacterProvider.dart';
+import 'data/api/character/CharacterProvider.dart';
+import 'data/api/roll/RollProvider.dart';
 
 
 Future<void> mainCommon(String env) async {
@@ -35,12 +37,12 @@ class MyApp2 extends StatelessWidget {
 }
 class MyApp extends StatelessWidget {
   final _characterService =
-  CharacterService(characterProvider: CharacterProvider(NetworkingConfig()));
+  SheetService(characterProvider: CharacterProvider(NetworkingConfig()), rollProvider: RollProvider(NetworkingConfig()));
 
   @override
   Widget build(BuildContext context) {
     return Injector(
-      characterService: _characterService,
+      sheetService: _characterService,
       key: Key("Main"),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -79,8 +81,9 @@ class MainStatefulWidget extends StatefulWidget {
 }
 
 class _MainStatefulWidgetState extends State<MainStatefulWidget> {
-  final _characterService = CharacterService(
-      characterProvider: CharacterProvider(NetworkingConfig()));
+  // TODO check, pkoi il est deux fois ?
+  final _characterService = SheetService(
+      characterProvider: CharacterProvider(NetworkingConfig()), rollProvider: RollProvider(NetworkingConfig()));
 
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
@@ -96,7 +99,7 @@ class _MainStatefulWidgetState extends State<MainStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return Injector(
-        characterService: _characterService,
+        sheetService: _characterService,
         key: Key("main"),
         child: Scaffold(
           appBar: AppBar(
@@ -106,22 +109,27 @@ class _MainStatefulWidgetState extends State<MainStatefulWidget> {
             child: getBody(_selectedIndex),
           ),
           bottomNavigationBar: BottomNavigationBar(
+            unselectedItemColor: Colors.tealAccent,
+            selectedItemColor: Colors.blue,
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: Icon(Icons.home),
+                icon: Icon(CustomIcons.character),
                 label: 'Personnage',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.business),
-                label: 'Sorts',
+                icon: Icon(CustomIcons.dice),
+                label: 'Lancer',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.school),
+                icon: Icon(CustomIcons.spell),
+                label: 'Magie',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(CustomIcons.fight),
                 label: 'Combat',
               ),
             ],
             currentIndex: _selectedIndex,
-            selectedItemColor: Colors.amber[800],
             onTap: _onItemTapped,
           ),
         ));

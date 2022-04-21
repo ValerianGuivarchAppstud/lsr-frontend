@@ -4,7 +4,7 @@ import 'dart:async';
 import '../../../utils/view/Mvi.dart';
 import 'CharacterState.dart';
 
-class CharacterView implements MviView<CharacterState> {
+class CharacterView implements MviView<CharacterSheetState> {
   final fetchCharacter = StreamController<bool>.broadcast(sync: true);
 
   @override
@@ -13,5 +13,5 @@ class CharacterView implements MviView<CharacterState> {
   }
 
   @override
-  CharacterState get initialState => CharacterState.initial();
+  CharacterSheetState get initialState => CharacterSheetState.initial();
 }

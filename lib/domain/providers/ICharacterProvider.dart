@@ -1,6 +1,8 @@
 import 'package:lsr/domain/models/Character.dart';
 
+import '../models/CharacterSheet.dart';
+
 abstract class ICharacterProvider {
-  Stream<Set<Character>> get(String name);
-  Stream<Set<Character>> update(Character character);
+  Stream<Set<CharacterSheet>> get(String name);
+  Stream<Set<CharacterSheet>> update(Character character);
 }

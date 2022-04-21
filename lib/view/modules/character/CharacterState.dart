@@ -1,35 +1,45 @@
 
+import 'package:lsr/domain/models/Roll.dart';
+
 import '../../../domain/models/Character.dart';
 import '../../../utils/view/Mvi.dart';
 
-class CharacterState
-    extends MviStateViewModel<CharacterPartialState, CharacterState> {
-  final bool showLoading;
+class CharacterSheetState
+    extends MviStateViewModel<CharacterSheetPartialState, CharacterSheetState> {
+  final bool? showLoading;
   final Character? character;
+  final Set<Roll>? rollList;
   final String? error;
 
-  CharacterState({required this.showLoading, this.character, this.error});
+  CharacterSheetState({this.showLoading, this.character, this.error, this.rollList});
 
-  factory CharacterState.initial() => CharacterState(showLoading: true);
+  factory CharacterSheetState.initial() => CharacterSheetState(showLoading: true);
 
-  factory CharacterState.error(String message) => CharacterState(
+  factory CharacterSheetState.error(String message) => CharacterSheetState(
       error: message, showLoading: false);
 
-  factory CharacterState.withCharacter(Character character) =>
-      CharacterState(error: null, showLoading: false, character: character);
+  factory CharacterSheetState.withCharacterSheet(Character character, Set<Roll> rollList) =>
+      CharacterSheetState(error: null, showLoading: false, character: character, rollList: rollList);
+
+  factory CharacterSheetState.withCharacter(Character character) =>
+      CharacterSheetState(error: null, showLoading: false, character: character);
+
+  factory CharacterSheetState.withRollList(Set<Roll> rollList) =>
+      CharacterSheetState(rollList: rollList);
 
   @override
   String toString() {
-    return 'CharacterState {showLoading: $showLoading, character: $character, error: $error}';
+    return 'CharacterState {showLoading: $showLoading, character: $character, rollList: $rollList, error: $error}';
   }
 
   @override
   bool operator ==(other) {
     return identical(this, other) ||
-        other is CharacterState &&
+        other is CharacterSheetState &&
             showLoading == other.showLoading &&
             character == other.character &&
-            error == other.error;
+            error == other.error &&
+            rollList == other.rollList;
   }
 
   @override
@@ -37,28 +47,31 @@ class CharacterState
       showLoading.hashCode ^ character.hashCode ^ error.hashCode;
 
   @override
-  CharacterState reducer(CharacterPartialState partialState) {
+  CharacterSheetState reducer(CharacterSheetPartialState partialState) {
     switch (partialState.runtimeType) {
-      case CharacterLoaded:
-        return CharacterState.withCharacter(
-            (partialState as CharacterLoaded).character);
-      case CharacterFailed:
-        return CharacterState.error('Unable to load character');
+      case CharacterSheetLoaded:
+        return CharacterSheetState.withCharacterSheet(
+          (partialState as CharacterSheetLoaded).character,
+          (partialState).rollList,
+        );
+      case CharacterSheetFailed:
+        return CharacterSheetState.error('Unable to load character');
       default:
-        return CharacterState.initial();
+        return CharacterSheetState.initial();
     }
   }
 }
 
 
-class CharacterPartialState extends MviPartialState {}
+class CharacterSheetPartialState extends MviPartialState {}
 
-class CharacterLoaded extends CharacterPartialState {
+class CharacterSheetLoaded extends CharacterSheetPartialState {
   Character character;
+  Set<Roll> rollList;
 
-  CharacterLoaded(this.character);
+  CharacterSheetLoaded(this.character, this.rollList);
 }
 
-class CharacterFailed extends CharacterPartialState {}
+class CharacterSheetFailed extends CharacterSheetPartialState {}
 
-class CharacterLoading extends CharacterPartialState {}
+class CharacterSheetLoading extends CharacterSheetPartialState {}

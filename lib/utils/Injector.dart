@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
-import 'package:lsr/domain/services/CharacterService.dart';
+import 'package:lsr/domain/services/SheetService.dart';
 
 class Injector extends InheritedWidget {
-  final CharacterService characterService;
+  final SheetService sheetService;
 
   Injector({
     required Key key,
-    required this.characterService,
+    required this.sheetService,
     required Widget child,
   }) : super(key: key, child: child);
 
@@ -15,6 +15,6 @@ class Injector extends InheritedWidget {
 
   @override
   bool updateShouldNotify(Injector oldWidget) {
-    return characterService != oldWidget.characterService;
+    return sheetService != oldWidget.sheetService;
   }
 }

@@ -1,11 +1,12 @@
 import 'dart:async';
 
-import 'package:lsr/data/api/entities/CreateOrUpdateRequest.dart';
 import 'package:lsr/domain/models/Character.dart';
+import 'package:lsr/domain/models/CharacterSheet.dart';
 import 'package:lsr/domain/providers/ICharacterProvider.dart';
 
-import '../../utils/api/ErrorHandlerTransformer.dart';
-import '../../utils/api/NetworkingConfig.dart';
+import '../../../utils/api/ErrorHandlerTransformer.dart';
+import '../../../utils/api/NetworkingConfig.dart';
+import 'entities/CreateOrUpdateRequest.dart';
 
 class CharacterProvider implements ICharacterProvider {
   final NetworkingConfig _networkingConfig;
@@ -13,22 +14,20 @@ class CharacterProvider implements ICharacterProvider {
   CharacterProvider(this._networkingConfig);
 
   @override
-  Stream<Set<Character>> get(String name) {
+  Stream<Set<CharacterSheet>> get(String name) {
     print('character?name=' + name);
     return Stream.fromFuture(_networkingConfig.dio.get('character?name=' + name))
         .transform(ErrorHandlerTransformer()).map((result) => {
-      Character.fromJson(result.data)
+      CharacterSheet.fromJson(result.data)
     });
   }
 
   @override
-  Stream<Set<Character>> update(Character character) {
-
-    print("chair2");
+  Stream<Set<CharacterSheet>> update(Character character) {
     CreateOrUpdateRequest createOrUpdateRequest = new CreateOrUpdateRequest(character: character);
     return Stream.fromFuture(_networkingConfig.dio.put('character', data: createOrUpdateRequest.toJson()))
         .transform(ErrorHandlerTransformer()).map((result) => {
-      Character.fromJson(result.data)
+      CharacterSheet.fromJson(result.data)
     });
   }
 
