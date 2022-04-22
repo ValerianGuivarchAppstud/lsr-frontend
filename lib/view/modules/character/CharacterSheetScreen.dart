@@ -1,12 +1,11 @@
 
 import 'package:flutter/material.dart';
-import 'package:lsr/view/modules/character/CharacterView.dart';
 
 import '../../../utils/Injector.dart';
-import '../../widgets/StatRow.dart';
-import 'CharacterPresenter.dart';
-import 'CharacterState.dart';
+import 'CharacterSheetViewModel.dart';
+import 'CharacterSheetState.dart';
 import 'CharacterWidget.dart';
+import 'package:provider/provider.dart';
 
 
 class CharacterPage extends StatefulWidget {
@@ -16,10 +15,7 @@ class CharacterPage extends StatefulWidget {
   _CharacterPageState createState() => _CharacterPageState();
 }
 
-
-
-class _CharacterPageState extends State<CharacterPage> with CharacterView {
-  late CharacterPresenter presenter;
+class _CharacterPageState extends State<CharacterPage> {
   late TextEditingController noteFieldController;
 
   @override
@@ -29,19 +25,7 @@ class _CharacterPageState extends State<CharacterPage> with CharacterView {
   }
 
   @override
-  void didChangeDependencies() {
-    presenter = /*(widget.initPresenter != null
-        ? widget.initPresenter(this)
-        : */CharacterPresenter(
-        view: this, interactor: Injector.of(context).sheetService);
-    presenter.triggerLoad();
-    super.didChangeDependencies();
-  }
-
-  @override
   void dispose() {
-    tearDown(); // from CharacterView
-    presenter.tearDown();
     noteFieldController.dispose();
     super.dispose();
   }
@@ -52,31 +36,36 @@ class _CharacterPageState extends State<CharacterPage> with CharacterView {
         .of(context)
         .size;
     return StreamBuilder<CharacterSheetState>(
-      stream: presenter.stream,
-      initialData: presenter.latest,
-      builder: (context, characterState) {
-        return Scaffold(
+        stream: Injector.of(context).characterSheetViewModel.streamController.stream,
+        initialData: CharacterSheetState.initial(),
+        builder: (context, state)
+    {
+      if(state.data?.showLoading ?? true) {
+        Injector.of(context).characterSheetViewModel.getCharacterSheet("Viktor");
+
+      }
+      return Scaffold(
           body: Container(
-            height: size.height,
-            width: size.width,
-            color: Colors.white,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: CharacterWidget(
-                key: Key("CharacterState"),
-                character: characterState.data?.character,
-                loading: characterState.data?.showLoading ?? true,
-                error: characterState.data?.error,
-                size: size,
-                noteFieldController: noteFieldController,
-              presenter : presenter),
-        )
-        )
-        );
-      },
+              height: size.height,
+              width: size.width,
+              color: Colors.white,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: CharacterWidget(
+                    key: Key("CharacterState"),
+                    character: state.data?.character,
+                    loading: state.data?.showLoading ?? true,
+                    error: state.data?.error,
+                    size: size,
+                    noteFieldController: noteFieldController),
+              )
+          )
+      );
+    }
     );
+    }
   }
-}
+
 
 /*
 class CharacterPage extends Page {

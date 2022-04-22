@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:lsr/domain/models/Character.dart';
 import 'package:lsr/domain/models/CharacterSheet.dart';
 import 'package:lsr/domain/providers/ICharacterProvider.dart';
@@ -14,21 +15,19 @@ class CharacterProvider implements ICharacterProvider {
   CharacterProvider(this._networkingConfig);
 
   @override
-  Stream<Set<CharacterSheet>> get(String name) {
-    print('character?name=' + name);
-    return Stream.fromFuture(_networkingConfig.dio.get('character?name=' + name))
-        .transform(ErrorHandlerTransformer()).map((result) => {
-      CharacterSheet.fromJson(result.data)
-    });
+  Future<CharacterSheet> get(String name) async{
+    Response response = await _networkingConfig.dio.get('character?name=' + name);
+    CharacterSheet characterSheet = CharacterSheet.fromJson(response.data);
+    return characterSheet;
   }
 
+
   @override
-  Stream<Set<CharacterSheet>> update(Character character) {
+  Future<CharacterSheet> update(Character character) async{
     CreateOrUpdateRequest createOrUpdateRequest = new CreateOrUpdateRequest(character: character);
-    return Stream.fromFuture(_networkingConfig.dio.put('character', data: createOrUpdateRequest.toJson()))
-        .transform(ErrorHandlerTransformer()).map((result) => {
-      CharacterSheet.fromJson(result.data)
-    });
+    Response response = await _networkingConfig.dio.put('character', data: createOrUpdateRequest.toJson());
+    CharacterSheet characterSheet = CharacterSheet.fromJson(response.data);
+    return characterSheet;
   }
 
 /*

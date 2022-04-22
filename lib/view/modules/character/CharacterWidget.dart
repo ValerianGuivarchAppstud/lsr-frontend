@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:lsr/view/modules/character/CharacterPresenter.dart';
 
 import '../../../domain/models/Character.dart';
 import '../../widgets/StatRow.dart';
@@ -16,7 +15,6 @@ class CharacterWidget extends StatelessWidget {
   final String? error;
   final Size size;
   final TextEditingController noteFieldController;
-  final CharacterPresenter presenter;
 
   CharacterWidget(
       {required Key key,
@@ -24,8 +22,7 @@ class CharacterWidget extends StatelessWidget {
       required this.character,
       required this.error,
       required this.size,
-      required this.noteFieldController,
-      required this.presenter})
+      required this.noteFieldController})
       : super(key: key);
 
   @override
@@ -115,21 +112,21 @@ class CharacterWidget extends StatelessWidget {
                           print("chair1");
                           character.chair = character.chair + 1;
                           print("chair2");
-                          presenter.updateCharacter(character);
+                          //presenter.updateCharacter(character);
                         }),
                     StatRow(
                         statName: "Esprit",
                         statValue: character.esprit.toString(),
                         statOnPressed: () {
                           character.chair = character.chair + 1;
-                          presenter.updateCharacter(character);
+                          //presenter.updateCharacter(character);
                         }),
                     StatRow(
                         statName: "Essence",
                         statValue: character.essence.toString(),
                         statOnPressed: () {
                           character.chair = character.chair + 1;
-                          presenter.updateCharacter(character);
+                          //presenter.updateCharacter(character);
                         }),
                   ],
                 ),
@@ -143,21 +140,21 @@ class CharacterWidget extends StatelessWidget {
                         statValue: character.lux,
                         statOnPressed: () {
                           character.chair = character.chair + 1;
-                          presenter.updateCharacter(character);
+                          //presenter.updateCharacter(character);
                         }),
                     StatRow(
                         statName: "Umbra",
                         statValue: character.umbra,
                         statOnPressed: () {
                           character.chair = character.chair + 1;
-                          presenter.updateCharacter(character);
+                          //presenter.updateCharacter(character);
                         }),
                     StatRow(
                         statName: "Secunda",
                         statValue: character.secunda,
                         statOnPressed: () {
                           character.chair = character.chair + 1;
-                          presenter.updateCharacter(character);
+                          //presenter.updateCharacter(character);
                         }),
                   ],
                 ),

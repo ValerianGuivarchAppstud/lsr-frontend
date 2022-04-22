@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lsr/domain/services/SheetService.dart';
 import 'package:lsr/utils/Injector.dart';
 import 'package:lsr/utils/api/NetworkingConfig.dart';
-import 'package:lsr/view/modules/character/CharacterScreen.dart';
+import 'package:lsr/view/modules/character/CharacterSheetScreen.dart';
+import 'package:lsr/view/modules/character/CharacterSheetViewModel.dart';
 import 'package:lsr/view/widgets/fonts/FontIconCharacter.dart';
 
 import 'config/config_reader.dart';
@@ -38,11 +39,11 @@ class MyApp2 extends StatelessWidget {
 class MyApp extends StatelessWidget {
   final _characterService =
   SheetService(characterProvider: CharacterProvider(NetworkingConfig()), rollProvider: RollProvider(NetworkingConfig()));
-
   @override
   Widget build(BuildContext context) {
     return Injector(
       sheetService: _characterService,
+      characterSheetViewModel: CharacterSheetViewModel(_characterService),
       key: Key("Main"),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -100,6 +101,7 @@ class _MainStatefulWidgetState extends State<MainStatefulWidget> {
   Widget build(BuildContext context) {
     return Injector(
         sheetService: _characterService,
+        characterSheetViewModel: CharacterSheetViewModel(_characterService),
         key: Key("main"),
         child: Scaffold(
           appBar: AppBar(
