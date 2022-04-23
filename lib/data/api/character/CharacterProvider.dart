@@ -23,11 +23,10 @@ class CharacterProvider implements ICharacterProvider {
 
 
   @override
-  Future<CharacterSheet> update(Character character) async{
+  Future<Character> update(Character character) async{
     CreateOrUpdateRequest createOrUpdateRequest = new CreateOrUpdateRequest(character: character);
     Response response = await _networkingConfig.dio.put('character', data: createOrUpdateRequest.toJson());
-    CharacterSheet characterSheet = CharacterSheet.fromJson(response.data);
-    return characterSheet;
+    return Character.fromJson(response.data);
   }
 
 /*

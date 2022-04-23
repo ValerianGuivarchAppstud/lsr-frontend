@@ -8,10 +8,38 @@ part of 'SendRollRequest.dart';
 
 SendRollRequest _$SendRollRequestFromJson(Map<String, dynamic> json) =>
     SendRollRequest(
-      roll: Roll.fromJson(json['roll'] as Map<String, dynamic>),
+      rollerName: json['rollerName'] as String,
+      rollType: $enumDecode(_$RollTypeEnumMap, json['rollType']),
+      secret: json['secret'] as bool,
+      focus: json['focus'] as bool,
+      power: json['power'] as bool,
+      proficiency: json['proficiency'] as bool,
+      benediction: json['benediction'] as int,
+      malediction: json['malediction'] as int,
     );
 
 Map<String, dynamic> _$SendRollRequestToJson(SendRollRequest instance) =>
     <String, dynamic>{
-      'roll': instance.roll,
+      'rollerName': instance.rollerName,
+      'rollType': _$RollTypeEnumMap[instance.rollType],
+      'secret': instance.secret,
+      'focus': instance.focus,
+      'power': instance.power,
+      'proficiency': instance.proficiency,
+      'benediction': instance.benediction,
+      'malediction': instance.malediction,
     };
+
+const _$RollTypeEnumMap = {
+  RollType.CHAIR: 'CHAIR',
+  RollType.ESPRIT: 'ESPRIT',
+  RollType.ESSENCE: 'ESSENCE',
+  RollType.EMPIRIQUE: 'EMPIRIQUE',
+  RollType.MAGIE_LEGERE: 'MAGIE_LEGERE',
+  RollType.MAGIE_FORTE: 'MAGIE_FORTE',
+  RollType.SOIN: 'SOIN',
+  RollType.ARCANE_FIXE: 'ARCANE_FIXE',
+  RollType.ARCANE_ESPRIT: 'ARCANE_ESPRIT',
+  RollType.ARCANE_ESSENCE: 'ARCANE_ESSENCE',
+  RollType.SAUVEGARDE_VS_MORT: 'SAUVEGARDE_VS_MORT',
+};

@@ -8,7 +8,7 @@ part 'CharacterSheet.g.dart';
 @JsonSerializable()
 class CharacterSheet {
   Character character;
-  Set<Roll> rollList;
+  List<Roll> rollList;
   CharacterSheet({
       required this.character,
       required this.rollList

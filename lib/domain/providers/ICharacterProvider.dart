@@ -4,5 +4,5 @@ import '../models/CharacterSheet.dart';
 
 abstract class ICharacterProvider {
   Future<CharacterSheet> get(String name);
-  Future<CharacterSheet> update(Character character);
+  Future<Character> update(Character character);
 }

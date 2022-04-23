@@ -7,20 +7,25 @@ part of 'Roll.dart';
 // **************************************************************************
 
 Roll _$RollFromJson(Map<String, dynamic> json) => Roll(
-      rollerName: json['rollerName'] as String,
-      rollType: $enumDecode(_$RollTypeEnumMap, json['rollType']),
-      secret: json['secret'] as bool,
-      focus: json['focus'] as bool,
-      power: json['power'] as bool,
-      proficiency: json['proficiency'] as bool,
-      benediction: json['benediction'] as int,
-      malediction: json['malediction'] as int,
-      result: (json['result'] as List<dynamic>).map((e) => e as int).toList(),
+      json['id'] as String,
+      json['rollerName'] as String,
+      $enumDecode(_$RollTypeEnumMap, json['rollType']),
+      DateTime.parse(json['date'] as String),
+      json['secret'] as bool,
+      json['focus'] as bool,
+      json['power'] as bool,
+      json['proficiency'] as bool,
+      json['benediction'] as int,
+      json['malediction'] as int,
+      (json['result'] as List<dynamic>).map((e) => e as int).toList(),
+      json['success'] as int?,
     );
 
 Map<String, dynamic> _$RollToJson(Roll instance) => <String, dynamic>{
+      'id': instance.id,
       'rollerName': instance.rollerName,
       'rollType': _$RollTypeEnumMap[instance.rollType],
+      'date': instance.date.toIso8601String(),
       'secret': instance.secret,
       'focus': instance.focus,
       'power': instance.power,
@@ -28,6 +33,7 @@ Map<String, dynamic> _$RollToJson(Roll instance) => <String, dynamic>{
       'benediction': instance.benediction,
       'malediction': instance.malediction,
       'result': instance.result,
+      'success': instance.success,
     };
 
 const _$RollTypeEnumMap = {
@@ -35,8 +41,10 @@ const _$RollTypeEnumMap = {
   RollType.ESPRIT: 'ESPRIT',
   RollType.ESSENCE: 'ESSENCE',
   RollType.EMPIRIQUE: 'EMPIRIQUE',
-  RollType.MAGIE: 'MAGIE',
+  RollType.MAGIE_LEGERE: 'MAGIE_LEGERE',
+  RollType.MAGIE_FORTE: 'MAGIE_FORTE',
   RollType.SOIN: 'SOIN',
+  RollType.ARCANE_FIXE: 'ARCANE_FIXE',
   RollType.ARCANE_ESPRIT: 'ARCANE_ESPRIT',
   RollType.ARCANE_ESSENCE: 'ARCANE_ESSENCE',
   RollType.SAUVEGARDE_VS_MORT: 'SAUVEGARDE_VS_MORT',

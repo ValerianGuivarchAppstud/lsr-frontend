@@ -11,11 +11,11 @@ CharacterSheet _$CharacterSheetFromJson(Map<String, dynamic> json) =>
       character: Character.fromJson(json['character'] as Map<String, dynamic>),
       rollList: (json['rollList'] as List<dynamic>)
           .map((e) => Roll.fromJson(e as Map<String, dynamic>))
-          .toSet(),
+          .toList(),
     );
 
 Map<String, dynamic> _$CharacterSheetToJson(CharacterSheet instance) =>
     <String, dynamic>{
       'character': instance.character,
-      'rollList': instance.rollList.toList(),
+      'rollList': instance.rollList,
     };

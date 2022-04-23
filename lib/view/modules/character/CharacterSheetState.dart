@@ -1,4 +1,3 @@
-
 import 'package:lsr/domain/models/Roll.dart';
 
 import '../../../domain/models/Character.dart';
@@ -8,23 +7,49 @@ class CharacterSheetState
     extends MviStateViewModel<CharacterSheetPartialState, CharacterSheetState> {
   final bool? showLoading;
   final Character? character;
-  final Set<Roll>? rollList;
+  final List<Roll>? rollList;
   final String? error;
+  final bool? secret;
+  final bool? power;
+  final bool? proficiency;
+  final bool? focus;
+  final int? benediction;
+  final int? malediction;
 
-  CharacterSheetState({this.showLoading, this.character, this.error, this.rollList});
+  CharacterSheetState(
+      {this.secret,
+        this.power,
+        this.proficiency,
+      this.focus,
+      this.benediction,
+      this.malediction,
+      this.showLoading,
+      this.character,
+      this.error,
+      this.rollList});
 
-  factory CharacterSheetState.initial() => CharacterSheetState(showLoading: true);
+  factory CharacterSheetState.initial() =>
+      CharacterSheetState(showLoading: true);
 
-  factory CharacterSheetState.error(String message) => CharacterSheetState(
-      error: message, showLoading: false);
+  factory CharacterSheetState.loading() =>
+      CharacterSheetState(showLoading: true);
 
-  factory CharacterSheetState.withCharacterSheet(Character character, Set<Roll> rollList) =>
-      CharacterSheetState(error: null, showLoading: false, character: character, rollList: rollList);
+  factory CharacterSheetState.error(String message) =>
+      CharacterSheetState(error: message, showLoading: false);
+
+  factory CharacterSheetState.withCharacterSheet(
+          Character character, List<Roll> rollList) =>
+      CharacterSheetState(
+          error: null,
+          showLoading: false,
+          character: character,
+          rollList: rollList);
 
   factory CharacterSheetState.withCharacter(Character character) =>
-      CharacterSheetState(error: null, showLoading: false, character: character);
+      CharacterSheetState(
+          error: null, showLoading: false, character: character);
 
-  factory CharacterSheetState.withRollList(Set<Roll> rollList) =>
+  factory CharacterSheetState.withRollList(List<Roll> rollList) =>
       CharacterSheetState(rollList: rollList);
 
   @override
@@ -56,18 +81,19 @@ class CharacterSheetState
         );
       case CharacterSheetFailed:
         return CharacterSheetState.error('Unable to load character');
+      case CharacterSheetLoading:
+        return CharacterSheetState.loading();
       default:
         return CharacterSheetState.initial();
     }
   }
 }
 
-
 class CharacterSheetPartialState extends MviPartialState {}
 
 class CharacterSheetLoaded extends CharacterSheetPartialState {
   Character character;
-  Set<Roll> rollList;
+  List<Roll> rollList;
 
   CharacterSheetLoaded(this.character, this.rollList);
 }

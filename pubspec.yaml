@@ -27,7 +27,7 @@ dependencies:
   json_annotation: ^4.4.0
   dio: ^4.0.6
   provider: ^5.0.0
-
+  intl: ^0.17.0
 
 
 
@@ -57,6 +57,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/background/vent.jpg
+    - assets/images/background/border.png
     - assets/images/background/null.jpg
     - assets/images/icons/Chair.png
     - assets/images/icons/Esprit.png

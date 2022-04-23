@@ -25,7 +25,7 @@ VS extends MviStateViewModel<PS, VS>> {
   VS reducer(PS partialState);
 }
 
-class MviPresenter<
+/*class MviPresenter<
 PS extends MviPartialState,
 VS extends MviStateViewModel<PS, VS>,
 V extends MviView<VS>>
@@ -69,4 +69,4 @@ class ViewNotAttachedException implements Exception {
   @override
   String toString() =>
       'ViewNotAttachedException: View not attached';
-}
+}*/
