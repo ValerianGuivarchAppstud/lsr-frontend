@@ -1,9 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:lsr/data/api/sse.dart';
 import 'package:lsr/domain/models/RollType.dart';
 
 import '../../../domain/models/Character.dart';
@@ -37,20 +37,15 @@ class _CharacterPageState extends State<CharacterPage> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery
-        .of(context)
-        .size;
+    var size = MediaQuery.of(context).size;
     CharacterSheetViewModel characterSheetViewModel =
-        Injector
-            .of(context)
-            .characterSheetViewModel;
+        Injector.of(context).characterSheetViewModel;
     return StreamBuilder<CharacterSheetState>(
         stream: characterSheetViewModel.streamController.stream,
         initialData: CharacterSheetState.loading(),
         builder: (context, state) {
           if (state.data?.showLoading ?? true) {
-            Injector
-                .of(context)
+            Injector.of(context)
                 .characterSheetViewModel
                 .getCharacterSheet("Viktor");
           }
@@ -66,8 +61,8 @@ class _CharacterPageState extends State<CharacterPage> {
                             (state.data!.showLoading ?? true)) {
                           return LoadingWidget(
                               key: Key(
-                                "LoadingWidget",
-                              ));
+                            "LoadingWidget",
+                          ));
                         } else if (state.data?.character == null) {
                           return Center(
                             child: Text("Aucun personnage..."),
@@ -80,10 +75,11 @@ class _CharacterPageState extends State<CharacterPage> {
         });
   }
 
-  _buildCharacter(Character character,
-      double sizeWidth,
-      CharacterSheetViewModel characterSheetViewModel,
-      CharacterSheetState characterSheetState) =>
+  _buildCharacter(
+          Character character,
+          double sizeWidth,
+          CharacterSheetViewModel characterSheetViewModel,
+          CharacterSheetState characterSheetState) =>
       Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -95,8 +91,7 @@ class _CharacterPageState extends State<CharacterPage> {
                 Padding(
                     padding: EdgeInsets.only(bottom: 62),
                     child: Image.asset(
-                      "assets/images/background/${describeEnum(
-                          character.bloodline).toLowerCase()}.jpg",
+                      "assets/images/background/${describeEnum(character.bloodline).toLowerCase()}.jpg",
                       fit: BoxFit.fill,
                       height: 100,
                       width: sizeWidth,
@@ -147,16 +142,42 @@ class _CharacterPageState extends State<CharacterPage> {
                         borderSide: BorderSide(width: 1, color: Colors.blue)),
                     focusedBorder: OutlineInputBorder(
                         borderSide:
-                        BorderSide(width: 1, color: Colors.redAccent))),
+                            BorderSide(width: 1, color: Colors.redAccent))),
               ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                CharacterSheetButton("Chair", character.chair.toString(), sizeWidth / 4.3, 26, Colors.blue, () => sendRoll(character, characterSheetViewModel, RollType.CHAIR, characterSheetState), () => showEditStatAlertDialog(characterSheetViewModel, character, "Chair")),
-                CharacterSheetButton("Esprit", character.esprit.toString(), sizeWidth / 4.3, 26, Colors.blue, () => sendRoll(character, characterSheetViewModel, RollType.ESPRIT, characterSheetState), () => {}),
-                CharacterSheetButton("Essence", character.essence.toString(),   sizeWidth / 4.3, 26, Colors.blue, () => sendRoll(character, characterSheetViewModel, RollType.ESSENCE, characterSheetState), () => {}),
-                CharacterSheetButton("Dettes", character.dettes.toString(), sizeWidth / 4.3, 26, Colors.blue, () => {}, () => {}),
+                CharacterSheetButton(
+                    "Chair",
+                    character.chair.toString(),
+                    sizeWidth / 4.3,
+                    26,
+                    Colors.blue,
+                    () => sendRoll(character, characterSheetViewModel,
+                        RollType.CHAIR, characterSheetState),
+                    () => showEditStatAlertDialog(
+                        characterSheetViewModel, character, "Chair")),
+                CharacterSheetButton(
+                    "Esprit",
+                    character.esprit.toString(),
+                    sizeWidth / 4.3,
+                    26,
+                    Colors.blue,
+                    () => sendRoll(character, characterSheetViewModel,
+                        RollType.ESPRIT, characterSheetState),
+                    () => {}),
+                CharacterSheetButton(
+                    "Essence",
+                    character.essence.toString(),
+                    sizeWidth / 4.3,
+                    26,
+                    Colors.blue,
+                    () => sendRoll(character, characterSheetViewModel,
+                        RollType.ESSENCE, characterSheetState),
+                    () => {}),
+                CharacterSheetButton("Dettes", character.dettes.toString(),
+                    sizeWidth / 4.3, 26, Colors.blue, () => {}, () => {}),
               ],
             ),
             Row(
@@ -166,33 +187,343 @@ class _CharacterPageState extends State<CharacterPage> {
                     sizeWidth / 4.3, 12, Colors.blue, () => {}, () => {}),
                 CharacterSheetButton("Umbra", character.umbra.toString(),
                     sizeWidth / 4.3, 12, Colors.blue, () => {}, () => {}),
-                CharacterSheetButton("Secunda", character.secunda.toString(),
-                    sizeWidth / 4.3, 12, Colors.blue, () => {}, () => {}),
+                CharacterSheetButton(
+                    "Secunda",
+                    character.secunda.toString(),
+                    sizeWidth / 4.3,
+                    12,
+                    Colors.blue,
+                    () => {
+                          Sse.connect(
+                            uri: Uri.parse(
+                                'http://192.168.1.177:8080/api/v1/sse'),
+                            closeOnError: true,
+                            withCredentials: false,
+                          ).stream.listen((event) {
+                            print('Received:' +
+                                DateTime.now()
+                                    .millisecondsSinceEpoch
+                                    .toString() +
+                                ' : ' +
+                                event.toString());
+                          })
+                        },
+                    () => {}),
                 CharacterSheetButton("Proficiency", 'Vitesse/Agilité',
                     sizeWidth / 4.3, 10, Colors.blue, () => {}, () => {}),
               ],
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      iconSize: sizeWidth / 18,
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
+                      color: Colors.blue,
+                      icon: Icon(Icons.remove_circle),
+                      onPressed: () {},
+                    ),
+                    CharacterSheetButton("PV", '20/20', sizeWidth / 5, 26,
+                        Colors.blue, () => {}, () => {}),
+                    IconButton(
+                      iconSize: sizeWidth / 18,
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
+                      color: Colors.blue,
+                      icon: Icon(Icons.add_circle),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      iconSize: sizeWidth / 18,
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
+                      color: Colors.blue,
+                      icon: Icon(Icons.remove_circle),
+                      onPressed: () {},
+                    ),
+                    CharacterSheetButton("PF", '20/20', sizeWidth / 5, 26,
+                        Colors.blue, () => {}, () => {}),
+                    IconButton(
+                      iconSize: sizeWidth / 18,
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
+                      color: Colors.blue,
+                      icon: Icon(Icons.add_circle),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      iconSize: sizeWidth / 18,
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
+                      color: Colors.blue,
+                      icon: Icon(Icons.remove_circle),
+                      onPressed: () {},
+                    ),
+                    CharacterSheetButton("PV", '20/20', sizeWidth / 5, 26,
+                        Colors.blue, () => {}, () => {}),
+                    IconButton(
+                      iconSize: sizeWidth / 18,
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
+                      color: Colors.blue,
+                      icon: Icon(Icons.add_circle),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CharacterSheetButton("PV", '20/20', sizeWidth / 5, 26,
+                        Colors.blue, () => {}, () => {}),
+                    IconButton(
+                      iconSize: sizeWidth / 12,
+                      color: Colors.blue,
+                      icon: Icon(Icons.remove_circle),
+                      onPressed: () {},
+                    ),
+                    IconButton(
+                      iconSize: sizeWidth / 12,
+                      color: Colors.blue,
+                      icon: Icon(Icons.add_circle),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CharacterSheetButton("PV", '20/20', sizeWidth / 5, 26,
+                        Colors.blue, () => {}, () => {}),
+                    IconButton(
+                      iconSize: sizeWidth / 12,
+                      color: Colors.blue,
+                      icon: Icon(Icons.remove_circle),
+                      onPressed: () {},
+                    ),
+                    IconButton(
+                      iconSize: sizeWidth / 12,
+                      color: Colors.blue,
+                      icon: Icon(Icons.add_circle),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            /*Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                CharacterSheetButton(
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CharacterSheetButton("PV", '20/20', sizeWidth / 5, 26,
+                        Colors.blue, () => {}, () => {}),
+                    Padding(
+                        padding: EdgeInsets.only(right: sizeWidth / 4),
+                        child: IconButton(
+                          iconSize: sizeWidth / 12,
+                          color: Colors.blue,
+                          icon: Icon(Icons.remove_circle),
+                          onPressed: () {},
+                        )),
+                    Padding(
+                        padding: EdgeInsets.only(left: sizeWidth / 4),
+                        child: IconButton(
+                          iconSize: sizeWidth / 12,
+                          color: Colors.blue,
+                          icon: Icon(Icons.add_circle),
+                          onPressed: () {},
+                        ))
+                  ],
+                ),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CharacterSheetButton("PV", '1', sizeWidth / 5, 26,
+                        Colors.blue, () => {}, () => {}),
+                    Padding(
+                        padding: EdgeInsets.only(right: sizeWidth / 4),
+                        child: IconButton(
+                          iconSize: sizeWidth / 12,
+                          color: Colors.blue,
+                          icon: Icon(Icons.remove_circle),
+                          onPressed: () {},
+                        )),
+                    Padding(
+                        padding: EdgeInsets.only(left: sizeWidth / 4),
+                        child: IconButton(
+                          iconSize: sizeWidth / 12,
+                          color: Colors.blue,
+                          icon: Icon(Icons.add_circle),
+                          onPressed: () {},
+                        ))
+                  ],
+                ),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CharacterSheetButton("PV", '1', sizeWidth / 5, 26,
+                        Colors.blue, () => {}, () => {}),
+                    Padding(
+                        padding: EdgeInsets.only(right: sizeWidth / 4),
+                        child: IconButton(
+                          iconSize: sizeWidth / 12,
+                          color: Colors.blue,
+                          icon: Icon(Icons.remove_circle),
+                          onPressed: () {},
+                        )),
+                    Padding(
+                        padding: EdgeInsets.only(left: sizeWidth / 4),
+                        child: IconButton(
+                          iconSize: sizeWidth / 12,
+                          color: Colors.blue,
+                          icon: Icon(Icons.add_circle),
+                          onPressed: () {},
+                        ))
+                  ],
+                ),
+                 CharacterSheetButton(
                     "PV",
                     character.pv.toString() + '/ ' + character.pvMax.toString(),
                     sizeWidth / 4.3,
                     26,
-                    Colors.blue, () => {}, () => {}),
+                    Colors.blue,
+                    () => {},
+                    () => {}),
                 CharacterSheetButton(
                     "PF",
                     character.pf.toString() + '/ ' + character.pfMax.toString(),
                     sizeWidth / 4.3,
                     26,
-                    Colors.blue, () => {}, () => {}),
+                    Colors.blue,
+                    () => {},
+                    () => {}),
                 CharacterSheetButton(
                     "PP",
                     character.pp.toString() + '/ ' + character.ppMax.toString(),
                     sizeWidth / 4.3,
                     26,
-                    Colors.blue, () => {}, () => {}),
+                    Colors.blue,
+                    () => {},
+                    () => {}),
+              ],
+            ),*/
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CharacterSheetButton("PV", '20/20', sizeWidth / 5, 26,
+                        Colors.blue, () => {}, () => {}),
+                    Padding(
+                        padding: EdgeInsets.only(right: sizeWidth / 4),
+                        child: IconButton(
+                          iconSize: sizeWidth / 12,
+                          color: Colors.blue,
+                          icon: Icon(Icons.remove_circle),
+                          onPressed: () {},
+                        )),
+                    Padding(
+                        padding: EdgeInsets.only(left: sizeWidth / 4),
+                        child: IconButton(
+                          iconSize: sizeWidth / 12,
+                          color: Colors.blue,
+                          icon: Icon(Icons.add_circle),
+                          onPressed: () {},
+                        ))
+                  ],
+                ),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CharacterSheetButton("PV", '1', sizeWidth / 5, 26,
+                        Colors.blue, () => {}, () => {}),
+                    Padding(
+                        padding: EdgeInsets.only(right: sizeWidth / 4),
+                        child: IconButton(
+                          iconSize: sizeWidth / 12,
+                          color: Colors.blue,
+                          icon: Icon(Icons.remove_circle),
+                          onPressed: () {},
+                        )),
+                    Padding(
+                        padding: EdgeInsets.only(left: sizeWidth / 4),
+                        child: IconButton(
+                          iconSize: sizeWidth / 12,
+                          color: Colors.blue,
+                          icon: Icon(Icons.add_circle),
+                          onPressed: () {},
+                        ))
+                  ],
+                ),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CharacterSheetButton("PV", '1', sizeWidth / 5, 26,
+                        Colors.blue, () => {}, () => {}),
+                    Padding(
+                        padding: EdgeInsets.only(right: sizeWidth / 4),
+                        child: IconButton(
+                          iconSize: sizeWidth / 12,
+                          color: Colors.blue,
+                          icon: Icon(Icons.remove_circle),
+                          onPressed: () {},
+                        )),
+                    Padding(
+                        padding: EdgeInsets.only(left: sizeWidth / 4),
+                        child: IconButton(
+                          iconSize: sizeWidth / 12,
+                          color: Colors.blue,
+                          icon: Icon(Icons.add_circle),
+                          onPressed: () {},
+                        ))
+                  ],
+                ),
+                CharacterSheetButton(
+                    "PV",
+                    character.pv.toString() + '/ ' + character.pvMax.toString(),
+                    sizeWidth / 4.3,
+                    26,
+                    Colors.blue,
+                    () => {},
+                    () => {}),
+                CharacterSheetButton(
+                    "PF",
+                    character.pf.toString() + '/ ' + character.pfMax.toString(),
+                    sizeWidth / 4.3,
+                    26,
+                    Colors.blue,
+                    () => {},
+                    () => {}),
+                CharacterSheetButton(
+                    "PP",
+                    character.pp.toString() + '/ ' + character.ppMax.toString(),
+                    sizeWidth / 4.3,
+                    26,
+                    Colors.blue,
+                    () => {},
+                    () => {}),
               ],
             ),
             Row(
@@ -201,64 +532,52 @@ class _CharacterPageState extends State<CharacterPage> {
                 Stack(
                   alignment: Alignment.center,
                   children: [
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        CharacterSheetButton(
-                            "Malus", '1', sizeWidth / 3.5, 26, Colors.red, () => {}, () => {}),
-                        Padding(
-                            padding: EdgeInsets.only(right: sizeWidth /3),
-                            child: IconButton(
-                              iconSize: 40,
-                              color: Colors.red,
-                              icon: Icon(Icons.remove_circle),
-                              onPressed: () {},
-                            )),
-                        Padding(
-                            padding: EdgeInsets.only(left: sizeWidth / 3),
-                            child: IconButton(
-                              iconSize: 40,
-                              color: Colors.red,
-                              icon: Icon(Icons.add_circle),
-                              onPressed: () {},
-                            ))
-                      ],
-                    )
+                    CharacterSheetButton("Malus", '1', sizeWidth / 3.5, 26,
+                        Colors.red, () => {}, () => {}),
+                    Padding(
+                        padding: EdgeInsets.only(right: sizeWidth / 3),
+                        child: IconButton(
+                          iconSize: 40,
+                          color: Colors.red,
+                          icon: Icon(Icons.remove_circle),
+                          onPressed: () {},
+                        )),
+                    Padding(
+                        padding: EdgeInsets.only(left: sizeWidth / 3),
+                        child: IconButton(
+                          iconSize: 40,
+                          color: Colors.red,
+                          icon: Icon(Icons.add_circle),
+                          onPressed: () {},
+                        ))
                   ],
                 ),
                 Stack(
                   alignment: Alignment.center,
                   children: [
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        CharacterSheetButton("Bonus", '0', sizeWidth / 3.5, 26,
-                            Colors.green, () => {}, () => {}),
-                        Padding(
-                            padding: EdgeInsets.only(right: sizeWidth / 3),
-                            child: IconButton(
-                              iconSize: 40,
-                              color: Colors.green,
-                              icon: Icon(Icons.remove_circle),
-                              onPressed: () {},
-                            )),
-                        Padding(
-                            padding: EdgeInsets.only(left: sizeWidth / 3),
-                            child: IconButton(
-                              iconSize: 40,
-                              color: Colors.green,
-                              icon: Icon(Icons.add_circle),
-                              onPressed: () {},
-                            ))
-                      ],
-                    )
+                    CharacterSheetButton("Bonus", '0', sizeWidth / 3.5, 26,
+                        Colors.green, () => {}, () => {}),
+                    Padding(
+                        padding: EdgeInsets.only(right: sizeWidth / 3),
+                        child: IconButton(
+                          iconSize: 40,
+                          color: Colors.green,
+                          icon: Icon(Icons.remove_circle),
+                          onPressed: () {},
+                        )),
+                    Padding(
+                        padding: EdgeInsets.only(left: sizeWidth / 3),
+                        child: IconButton(
+                          iconSize: 40,
+                          color: Colors.green,
+                          icon: Icon(Icons.add_circle),
+                          onPressed: () {},
+                        ))
                   ],
-                ),
+                )
               ],
             ),
             LayoutBuilder(builder: (context, constraints) {
-              const T1 = Text("t1");
-              const T2 = Text("t2");
               List<Widget> rolls = [];
               for (Roll roll in (characterSheetState.rollList ?? [])) {
                 rolls.add(RollWidget(roll));
@@ -269,7 +588,8 @@ class _CharacterPageState extends State<CharacterPage> {
             }),
           ]);
 
-  void sendRoll(Character character,
+  void sendRoll(
+      Character character,
       CharacterSheetViewModel characterSheetViewModel,
       RollType rollType,
       CharacterSheetState characterSheetState) {
@@ -284,10 +604,16 @@ class _CharacterPageState extends State<CharacterPage> {
         malediction: characterSheetState.malediction ?? 0);
   }
 
-  CharacterSheetButton(String title, String value, double width,
-      double fontSize, MaterialColor color, void Function() onPressed, void Function() onLongPress) {
+  CharacterSheetButton(
+      String title,
+      String value,
+      double width,
+      double fontSize,
+      MaterialColor color,
+      void Function() onPressed,
+      void Function() onLongPress) {
     return Padding(
-        padding: EdgeInsets.all(2),
+        padding: EdgeInsets.fromLTRB(0, 2, 0, 2),
         child: SizedBox(
             height: 50,
             width: width, // <-- match_parent
@@ -298,8 +624,8 @@ class _CharacterPageState extends State<CharacterPage> {
                   minimumSize: Size.zero, // Set this
                   padding: EdgeInsets.zero, // and this
                 ),
-                onPressed:onPressed,
-                onLongPress:onLongPress,
+                onPressed: onPressed,
+                onLongPress: onLongPress,
                 child: Stack(alignment: Alignment.bottomCenter, children: [
                   Column(
                     mainAxisSize: MainAxisSize.max,
@@ -314,7 +640,8 @@ class _CharacterPageState extends State<CharacterPage> {
                         value,
                         style: TextStyle(
                           fontSize: fontSize,
-                          fontWeight: FontWeight.bold,),
+                          fontWeight: FontWeight.bold,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                     ],
@@ -322,69 +649,70 @@ class _CharacterPageState extends State<CharacterPage> {
                 ]))));
   }
 
-
   Widget RollWidget2(Roll roll) {
     List<TextSpan> rollText = [];
-    rollText.add(TextSpan( // (secret)
-        text: roll.secretText()
-    ));
+    rollText.add(TextSpan(
+        // (secret)
+        text: roll.secretText()));
     if (roll.malediction > 0 && roll.benediction == 0) {
-      rollText.add(TextSpan( // Avec 2 bénédictions et 1 malédiction,
+      rollText.add(TextSpan(
+          // Avec 2 bénédictions et 1 malédiction,
           text: 'Avec ${roll.malediction} malédiction' +
-              (roll.malediction > 0 ? 's' : '') + ', '));
+              (roll.malediction > 0 ? 's' : '') +
+              ', '));
     } else if (roll.malediction == 0 && roll.benediction > 0) {
-      rollText.add(TextSpan( // Avec 2 bénédictions et 1 malédiction,
+      rollText.add(TextSpan(
+          // Avec 2 bénédictions et 1 malédiction,
           text: 'Avec ${roll.benediction} benediction' +
-              (roll.benediction > 0 ? 's' : '') + ', '));
-    } if (roll.malediction > 0 && roll.benediction > 0) {
-      rollText.add(TextSpan( // Avec 2 bénédictions et 1 malédiction,
+              (roll.benediction > 0 ? 's' : '') +
+              ', '));
+    }
+    if (roll.malediction > 0 && roll.benediction > 0) {
+      rollText.add(TextSpan(
+          // Avec 2 bénédictions et 1 malédiction,
           text: 'Avec ${roll.malediction} malédiction' +
               (roll.malediction > 0 ? 's' : '') +
               ' et ${roll.benediction} benediction' +
-              (roll.benediction > 0 ? 's' : '') + ', '));
+              (roll.benediction > 0 ? 's' : '') +
+              ', '));
     }
-    rollText.add(TextSpan( // Jonathan
+    rollText.add(TextSpan(
+        // Jonathan
         text: roll.rollerName,
-        style: TextStyle(
-            fontWeight: FontWeight.bold
-        )
-    ));
+        style: TextStyle(fontWeight: FontWeight.bold)));
     if (roll.focus) {
-      rollText.add(TextSpan( // se concentre et
+      rollText.add(TextSpan(
+        // se concentre et
         text: ' se ',
       ));
-      rollText.add(TextSpan( // se concentre et
+      rollText.add(TextSpan(
+          // se concentre et
           text: 'concentre',
-          style: TextStyle(
-              fontStyle: FontStyle.italic
-          ))
-      );
+          style: TextStyle(fontStyle: FontStyle.italic)));
       rollText.add(TextSpan(
         text: ' et',
       ));
     }
 
-    rollText.add(TextSpan( // fait un
-        text: ' fait un '
-    ));
-    rollText.add(TextSpan( // jet de Chair
+    rollText.add(TextSpan(
+        // fait un
+        text: ' fait un '));
+    rollText.add(TextSpan(
+        // jet de Chair
         text: roll.rollTypeText(),
-        style: TextStyle(
-            fontStyle: FontStyle.italic
-        )));
+        style: TextStyle(fontStyle: FontStyle.italic)));
 
     if (roll.focus) {
-      rollText.add(TextSpan( // se concentre et
+      rollText.add(TextSpan(
+        // se concentre et
         text: ' en y mettant toute sa ',
       ));
-      rollText.add(TextSpan( // se concentre et
+      rollText.add(TextSpan(
+          // se concentre et
           text: 'puissance',
-          style: TextStyle(
-              fontStyle: FontStyle.italic
-          ))
-      );
+          style: TextStyle(fontStyle: FontStyle.italic)));
     }
-    if(roll.rollType == RollType.ARCANE_FIXE) {
+    if (roll.rollType == RollType.ARCANE_FIXE) {
       rollText.add(TextSpan(
         text: '.',
       ));
@@ -393,7 +721,7 @@ class _CharacterPageState extends State<CharacterPage> {
         text: ' :\n',
       ));
     }
-    switch(roll.rollType){
+    switch (roll.rollType) {
       case RollType.CHAIR:
       case RollType.ESPRIT:
       case RollType.ESSENCE:
@@ -402,53 +730,35 @@ class _CharacterPageState extends State<CharacterPage> {
       case RollType.SOIN:
       case RollType.ARCANE_ESPRIT:
       case RollType.ARCANE_ESSENCE:
-        for(var value in roll.result) {
-          if(value <5) {
-            rollText.add(TextSpan(
-                text: Roll.diceValueToIcon(value)
-            ));
+        for (var value in roll.result) {
+          if (value < 5) {
+            rollText.add(TextSpan(text: Roll.diceValueToIcon(value)));
           } else if (value == 5) {
             rollText.add(TextSpan(
                 text: Roll.diceValueToIcon(value),
-                style: TextStyle(
-                    color: Colors.orange
-                )
-            ));
+                style: TextStyle(color: Colors.orange)));
           } else if (value == 6) {
             rollText.add(TextSpan(
                 text: Roll.diceValueToIcon(value),
-                style: TextStyle(
-                    color: Colors.red
-                )
-            ));
+                style: TextStyle(color: Colors.red)));
           }
         }
         break;
       case RollType.EMPIRIQUE:
-        for(var value in roll.result) {
-          rollText.add(TextSpan(
-              text: '[$value]'
-          ));
+        for (var value in roll.result) {
+          rollText.add(TextSpan(text: '[$value]'));
         }
         break;
       case RollType.ARCANE_FIXE:
         break;
       case RollType.SAUVEGARDE_VS_MORT:
-        for(var value in roll.result) {
+        for (var value in roll.result) {
           if (value < 10) {
             rollText.add(TextSpan(
-                text: '[$value]',
-                style: TextStyle(
-                    color: Colors.red
-                )
-            ));
+                text: '[$value]', style: TextStyle(color: Colors.red)));
           } else {
             rollText.add(TextSpan(
-                text: '[$value]',
-                style: TextStyle(
-                    color: Colors.green
-                )
-            ));
+                text: '[$value]', style: TextStyle(color: Colors.green)));
           }
         }
         break;
@@ -456,7 +766,7 @@ class _CharacterPageState extends State<CharacterPage> {
     rollText.add(TextSpan(
       text: '\n et obtient ${roll.success} succès',
     ));
-    if(roll.proficiency) {
+    if (roll.proficiency) {
       rollText.add(TextSpan(
         text: ', grâce à son heritage latent',
       ));
@@ -464,62 +774,57 @@ class _CharacterPageState extends State<CharacterPage> {
     rollText.add(TextSpan(
       text: '.',
     ));
-    return Text.rich(
-        TextSpan(
-            text: roll.dateText() + ' - ', // 10:19:22 -
-            children: rollText
-        )
-    );
+    return Text.rich(TextSpan(
+        text: roll.dateText() + ' - ', // 10:19:22 -
+        children: rollText));
   }
+
   Widget RollWidget(Roll roll) {
     List<TextSpan> rollText = [];
-    rollText.add(TextSpan( // (secret)
-        text: roll.secretText()
-    ));
-    rollText.add(TextSpan( // Jonathan
+    rollText.add(TextSpan(
+        // (secret)
+        text: roll.secretText()));
+    rollText.add(TextSpan(
+        // Jonathan
         text: roll.rollerName,
-        style: TextStyle(
-            fontWeight: FontWeight.bold
-        )
-    ));
+        style: TextStyle(fontWeight: FontWeight.bold)));
 
-    rollText.add(TextSpan( // fait un
-        text: ' fait un '
-    ));
-    rollText.add(TextSpan( // jet de Chair
+    rollText.add(TextSpan(
+        // fait un
+        text: ' fait un '));
+    rollText.add(TextSpan(
+        // jet de Chair
         text: roll.rollTypeText(),
-        style: TextStyle(
-            fontStyle: FontStyle.italic
-        )));
+        style: TextStyle(fontStyle: FontStyle.italic)));
 
     String textBonus = '';
-    if(roll.malediction > 0) {
-      textBonus+='${roll.malediction}m,';
+    if (roll.malediction > 0) {
+      textBonus += '${roll.malediction}m,';
     }
-    if(roll.benediction > 0) {
-      textBonus+='${roll.benediction}b,';
+    if (roll.benediction > 0) {
+      textBonus += '${roll.benediction}b,';
     }
-    if(roll.focus) {
-      textBonus+='pf,';
+    if (roll.focus) {
+      textBonus += 'pf,';
     }
-    if(roll.power) {
-      textBonus+='pp,';
+    if (roll.power) {
+      textBonus += 'pp,';
     }
-    if(roll.proficiency) {
-      textBonus+='h,';
+    if (roll.proficiency) {
+      textBonus += 'h,';
     }
-    if(textBonus.isNotEmpty){
-      textBonus=textBonus.substring(0, textBonus.length-3);
+    if (textBonus.isNotEmpty) {
+      textBonus = textBonus.substring(0, textBonus.length - 3);
       rollText.add(TextSpan(
-        text: ' ('+textBonus+')',
+        text: ' (' + textBonus + ')',
       ));
     }
-    if(roll.success!=null) {
+    if (roll.success != null) {
       rollText.add(TextSpan(
         text: ' et obtient ${roll.success} succès',
       ));
     }
-    if(roll.rollType == RollType.ARCANE_FIXE) {
+    if (roll.rollType == RollType.ARCANE_FIXE) {
       rollText.add(TextSpan(
         text: '.',
       ));
@@ -528,7 +833,7 @@ class _CharacterPageState extends State<CharacterPage> {
         text: ' :\n',
       ));
     }
-    switch(roll.rollType){
+    switch (roll.rollType) {
       case RollType.CHAIR:
       case RollType.ESPRIT:
       case RollType.ESSENCE:
@@ -537,82 +842,66 @@ class _CharacterPageState extends State<CharacterPage> {
       case RollType.SOIN:
       case RollType.ARCANE_ESPRIT:
       case RollType.ARCANE_ESSENCE:
-        for(var value in roll.result) {
-          if(value <5) {
-            rollText.add(TextSpan(
-                text: Roll.diceValueToIcon(value)
-            ));
+        for (var value in roll.result) {
+          if (value < 5) {
+            rollText.add(TextSpan(text: Roll.diceValueToIcon(value)));
           } else if (value == 5) {
             rollText.add(TextSpan(
                 text: Roll.diceValueToIcon(value),
-                style: TextStyle(
-                    color: Colors.orange
-                )
-            ));
+                style: TextStyle(color: Colors.orange)));
           } else if (value == 6) {
             rollText.add(TextSpan(
                 text: Roll.diceValueToIcon(value),
-                style: TextStyle(
-                    color: Colors.red
-                )
-            ));
+                style: TextStyle(color: Colors.red)));
           }
         }
         break;
       case RollType.EMPIRIQUE:
-        for(var value in roll.result) {
-            rollText.add(TextSpan(
-                text: '[$value]'
-            ));
+        for (var value in roll.result) {
+          rollText.add(TextSpan(text: '[$value]'));
         }
         break;
       case RollType.ARCANE_FIXE:
         break;
       case RollType.SAUVEGARDE_VS_MORT:
-        for(var value in roll.result) {
+        for (var value in roll.result) {
           if (value < 10) {
             rollText.add(TextSpan(
-                text: '[$value]',
-                style: TextStyle(
-                    color: Colors.red
-                )
-            ));
+                text: '[$value]', style: TextStyle(color: Colors.red)));
           } else {
             rollText.add(TextSpan(
-                text: '[$value]',
-                style: TextStyle(
-                    color: Colors.green
-                )
-            ));
+                text: '[$value]', style: TextStyle(color: Colors.green)));
           }
         }
         break;
     }
-      return Text.rich(
-          TextSpan(
-              text: roll.dateText() + ' - ', // 10:19:22 -
-              children: rollText
-          )
-      );
-    }
+    return Text.rich(TextSpan(
+        text: roll.dateText() + ' - ', // 10:19:22 -
+        children: rollText));
+  }
 
-  Future<void Function()> showEditStatAlertDialog(CharacterSheetViewModel characterSheetViewModel, Character character, String statToEdit) async {
+  Future<void Function()> showEditStatAlertDialog(
+      CharacterSheetViewModel characterSheetViewModel,
+      Character character,
+      String statToEdit) async {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     late String initialValue;
-    if(statToEdit == 'Chair') {
+    if (statToEdit == 'Chair') {
       initialValue = character.chair.toString();
-    } else if(statToEdit == 'Esprit') {
+    } else if (statToEdit == 'Esprit') {
       initialValue = character.esprit.toString();
-    } else {//if(statToEdit == 'Essence') {
+    } else {
+      //if(statToEdit == 'Essence') {
       initialValue = character.essence.toString();
     }
-    final TextEditingController _textEditingController = TextEditingController(text: initialValue);
+    final TextEditingController _textEditingController =
+        TextEditingController(text: initialValue);
     return await showDialog(
         context: context,
         builder: (context) {
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
-                title: Text(statToEdit),
+              title: Text(statToEdit),
               content: Form(
                   key: _formKey,
                   child: Column(
@@ -621,24 +910,16 @@ class _CharacterPageState extends State<CharacterPage> {
                       TextFormField(
                         controller: _textEditingController,
                         validator: (value) {
-                          return value != null ?((value.isNotEmpty && double.tryParse(value) != null)? null : "Enter any text") : null;
+                          return value != null
+                              ? ((value.isNotEmpty &&
+                                      double.tryParse(value) != null)
+                                  ? null
+                                  : "Enter any text")
+                              : null;
                         },
                         decoration:
-                        InputDecoration(hintText: "Nouvelle valeur"),
+                            InputDecoration(hintText: "Nouvelle valeur"),
                       ),
-                      /*Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Choice Box"),
-                          Checkbox(
-                              value: isChecked,
-                              onChanged: (checked) {
-                                setState(() {
-                                  isChecked = checked ?? false;
-                                });
-                              })
-                        ],
-                      )*/
                     ],
                   )),
               actions: <Widget>[
@@ -646,12 +927,18 @@ class _CharacterPageState extends State<CharacterPage> {
                   child: Text('OK   '),
                   onTap: () {
                     if (_formKey.currentState?.validate() ?? false) {
-                      if(statToEdit == 'Chair') {
-                        character.chair = int.tryParse(_textEditingController.value.text) ??character.chair;
-                      } else if(statToEdit == 'Esprit') {
-                        character.esprit = int.tryParse(_textEditingController.value.text) ??character.esprit;
-                      } else if(statToEdit == 'Essence') {
-                        character.essence = int.tryParse(_textEditingController.value.text) ??character.essence;
+                      if (statToEdit == 'Chair') {
+                        character.chair =
+                            int.tryParse(_textEditingController.value.text) ??
+                                character.chair;
+                      } else if (statToEdit == 'Esprit') {
+                        character.esprit =
+                            int.tryParse(_textEditingController.value.text) ??
+                                character.esprit;
+                      } else if (statToEdit == 'Essence') {
+                        character.essence =
+                            int.tryParse(_textEditingController.value.text) ??
+                                character.essence;
                       }
                       characterSheetViewModel.updateCharacter(character);
                       Navigator.of(context).pop();
@@ -663,7 +950,7 @@ class _CharacterPageState extends State<CharacterPage> {
           });
         });
   }
-  }
+}
 
 /*
 class CharacterPage extends Page {
