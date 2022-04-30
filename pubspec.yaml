@@ -57,6 +57,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - configs/app_config_dev.json
     - assets/images/background/vent.jpg
     - assets/images/background/border.png
     - assets/images/background/null.jpg

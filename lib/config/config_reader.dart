@@ -17,6 +17,7 @@ abstract class ConfigReader {
   static Config? config;
 
   static Future<void> initialize(String env) async {
+    // TODO check why it's not working
     final configString = await rootBundle.loadString('configs/app_config_$env.json');
     final configJson = json.decode(configString) as Map<String, dynamic>;
     config = Config.fromJson(configJson);

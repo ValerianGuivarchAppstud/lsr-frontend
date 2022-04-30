@@ -19,23 +19,10 @@ Future<void> mainCommon(String env) async {
 }
 
 void main() {
+  mainCommon("dev");
   runApp(MyApp());
 }
 
-class MyApp2 extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Les Sept Rois',
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-      ),
-      home: MainStatefulWidget(),
-    );
-  }
-}
 class MyApp extends StatelessWidget {
   final _characterService =
   SheetService(characterProvider: CharacterProvider(NetworkingConfig()), rollProvider: RollProvider(NetworkingConfig()));

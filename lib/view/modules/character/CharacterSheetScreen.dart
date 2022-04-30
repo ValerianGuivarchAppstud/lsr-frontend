@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:lsr/data/api/sse.dart';
 import 'package:lsr/domain/models/RollType.dart';
 
 import '../../../domain/models/Character.dart';
@@ -42,7 +41,7 @@ class _CharacterPageState extends State<CharacterPage> {
         Injector.of(context).characterSheetViewModel;
     return StreamBuilder<CharacterSheetState>(
         stream: characterSheetViewModel.streamController.stream,
-        initialData: CharacterSheetState.loading(),
+        initialData: characterSheetViewModel.getState(),
         builder: (context, state) {
           if (state.data?.showLoading ?? true) {
             Injector.of(context)
@@ -58,7 +57,7 @@ class _CharacterPageState extends State<CharacterPage> {
                       scrollDirection: Axis.vertical,
                       child: LayoutBuilder(builder: (context, constraints) {
                         if (state.data == null ||
-                            (state.data!.showLoading ?? true)) {
+                            (state.data!.showLoading)) {
                           return LoadingWidget(
                               key: Key(
                             "LoadingWidget",
@@ -154,8 +153,7 @@ class _CharacterPageState extends State<CharacterPage> {
                     sizeWidth / 4.3,
                     26,
                     Colors.blue,
-                    () => sendRoll(character, characterSheetViewModel,
-                        RollType.CHAIR, characterSheetState),
+                    () => sendRoll(characterSheetViewModel, RollType.CHAIR),
                     () => showEditStatAlertDialog(
                         characterSheetViewModel, character, "Chair")),
                 CharacterSheetButton(
@@ -164,39 +162,48 @@ class _CharacterPageState extends State<CharacterPage> {
                     sizeWidth / 4.3,
                     26,
                     Colors.blue,
-                    () => sendRoll(character, characterSheetViewModel,
-                        RollType.ESPRIT, characterSheetState),
-                    () => {}),
+                    () => sendRoll(characterSheetViewModel,
+                        RollType.ESPRIT),
+
+                        () => showEditStatAlertDialog(
+                        characterSheetViewModel, character, "Esprit")),
                 CharacterSheetButton(
                     "Essence",
                     character.essence.toString(),
                     sizeWidth / 4.3,
                     26,
                     Colors.blue,
-                    () => sendRoll(character, characterSheetViewModel,
-                        RollType.ESSENCE, characterSheetState),
-                    () => {}),
+                    () => sendRoll(characterSheetViewModel,
+                        RollType.ESSENCE),
+                        () => showEditStatAlertDialog(
+                        characterSheetViewModel, character, "Essence")),
                 CharacterSheetButton("Dettes", character.dettes.toString(),
-                    sizeWidth / 4.3, 26, Colors.blue, () => {}, () => {}),
+                    sizeWidth / 4.3, 26, Colors.blue, () => {},
+                        () => showEditStatAlertDialog(
+                        characterSheetViewModel, character, "Dettes")),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 CharacterSheetButton("Lux", character.lux.toString(),
-                    sizeWidth / 4.3, 12, Colors.blue, () => {}, () => {}),
+                    sizeWidth / 4.3, 12, characterSheetState.uiState.lux ? Colors.blueGrey : Colors.blue, () => {
+                  characterSheetViewModel.selectUi("Lux")
+                    },
+                        () => showEditStatAlertDialog(
+                        characterSheetViewModel, character, "Lux")),
                 CharacterSheetButton("Umbra", character.umbra.toString(),
-                    sizeWidth / 4.3, 12, Colors.blue, () => {}, () => {}),
+                    sizeWidth / 4.3, 12, characterSheetState.uiState.umbra ? Colors.blueGrey : Colors.blue, () => {characterSheetViewModel.selectUi("Umbra")}, () => {}),
                 CharacterSheetButton(
                     "Secunda",
                     character.secunda.toString(),
                     sizeWidth / 4.3,
                     12,
-                    Colors.blue,
-                    () => {
-                          Sse.connect(
+                    characterSheetState.uiState.secunda ? Colors.blueGrey : Colors.blue,
+                    () => {characterSheetViewModel.selectUi("Secunda")
+                         /* Sse.connect(
                             uri: Uri.parse(
-                                'http://192.168.1.177:8080/api/v1/sse'),
+                                'http://127.0.0.1:8080/api/v1/sse'),
                             closeOnError: true,
                             withCredentials: false,
                           ).stream.listen((event) {
@@ -206,11 +213,14 @@ class _CharacterPageState extends State<CharacterPage> {
                                     .toString() +
                                 ' : ' +
                                 event.toString());
-                          })
+                          })*/
                         },
-                    () => {}),
+                        () => showEditStatAlertDialog(
+                        characterSheetViewModel, character, "Umbra")),
                 CharacterSheetButton("Proficiency", 'Vitesse/Agilité',
-                    sizeWidth / 4.3, 10, Colors.blue, () => {}, () => {}),
+                    sizeWidth / 4.3, 10, characterSheetState.uiState.proficiency ? Colors.blueGrey : Colors.blue, () => {characterSheetViewModel.selectUi("Proficiency")},
+                        () => showEditStatAlertDialog(
+                        characterSheetViewModel, character, "Secunda")),
               ],
             ),
             Row(
@@ -227,7 +237,7 @@ class _CharacterPageState extends State<CharacterPage> {
                       icon: Icon(Icons.remove_circle),
                       onPressed: () {},
                     ),
-                    CharacterSheetButton("PV", '20/20', sizeWidth / 5, 26,
+                    CharacterSheetButton("PV", character.pv.toString()+ ' / '+character.pvMax.toString(), sizeWidth / 5, 26,
                         Colors.blue, () => {}, () => {}),
                     IconButton(
                       iconSize: sizeWidth / 18,
@@ -239,6 +249,7 @@ class _CharacterPageState extends State<CharacterPage> {
                     ),
                   ],
                 ),
+                Spacer(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -250,7 +261,7 @@ class _CharacterPageState extends State<CharacterPage> {
                       icon: Icon(Icons.remove_circle),
                       onPressed: () {},
                     ),
-                    CharacterSheetButton("PF", '20/20', sizeWidth / 5, 26,
+                    CharacterSheetButton("PF", character.pf.toString()+ ' / '+character.pfMax.toString(), sizeWidth / 5, 26,
                         Colors.blue, () => {}, () => {}),
                     IconButton(
                       iconSize: sizeWidth / 18,
@@ -262,6 +273,7 @@ class _CharacterPageState extends State<CharacterPage> {
                     ),
                   ],
                 ),
+                Spacer(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -273,55 +285,12 @@ class _CharacterPageState extends State<CharacterPage> {
                       icon: Icon(Icons.remove_circle),
                       onPressed: () {},
                     ),
-                    CharacterSheetButton("PV", '20/20', sizeWidth / 5, 26,
+                    CharacterSheetButton("PP", character.pp.toString()+ ' / '+character.ppMax.toString(), sizeWidth / 5, 26,
                         Colors.blue, () => {}, () => {}),
                     IconButton(
                       iconSize: sizeWidth / 18,
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
-                      color: Colors.blue,
-                      icon: Icon(Icons.add_circle),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CharacterSheetButton("PV", '20/20', sizeWidth / 5, 26,
-                        Colors.blue, () => {}, () => {}),
-                    IconButton(
-                      iconSize: sizeWidth / 12,
-                      color: Colors.blue,
-                      icon: Icon(Icons.remove_circle),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      iconSize: sizeWidth / 12,
-                      color: Colors.blue,
-                      icon: Icon(Icons.add_circle),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CharacterSheetButton("PV", '20/20', sizeWidth / 5, 26,
-                        Colors.blue, () => {}, () => {}),
-                    IconButton(
-                      iconSize: sizeWidth / 12,
-                      color: Colors.blue,
-                      icon: Icon(Icons.remove_circle),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      iconSize: sizeWidth / 12,
                       color: Colors.blue,
                       icon: Icon(Icons.add_circle),
                       onPressed: () {},
@@ -428,102 +397,37 @@ class _CharacterPageState extends State<CharacterPage> {
                     () => {}),
               ],
             ),*/
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    CharacterSheetButton("PV", '20/20', sizeWidth / 5, 26,
-                        Colors.blue, () => {}, () => {}),
-                    Padding(
-                        padding: EdgeInsets.only(right: sizeWidth / 4),
-                        child: IconButton(
-                          iconSize: sizeWidth / 12,
-                          color: Colors.blue,
-                          icon: Icon(Icons.remove_circle),
-                          onPressed: () {},
-                        )),
-                    Padding(
-                        padding: EdgeInsets.only(left: sizeWidth / 4),
-                        child: IconButton(
-                          iconSize: sizeWidth / 12,
-                          color: Colors.blue,
-                          icon: Icon(Icons.add_circle),
-                          onPressed: () {},
-                        ))
-                  ],
+                CharacterSheetButton("Arcane", character.arcanes.toString()+ ' / '+character.arcanesMax.toString(),
+                    sizeWidth / 4.3, 12, characterSheetState.uiState.lux ? Colors.blueGrey : Colors.blue,
+                        () => showArcaneAlertDialog(characterSheetViewModel),
+                        () => showEditStatAlertDialog(
+                        characterSheetViewModel, character, "Arcane")
                 ),
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    CharacterSheetButton("PV", '1', sizeWidth / 5, 26,
-                        Colors.blue, () => {}, () => {}),
-                    Padding(
-                        padding: EdgeInsets.only(right: sizeWidth / 4),
-                        child: IconButton(
-                          iconSize: sizeWidth / 12,
-                          color: Colors.blue,
-                          icon: Icon(Icons.remove_circle),
-                          onPressed: () {},
-                        )),
-                    Padding(
-                        padding: EdgeInsets.only(left: sizeWidth / 4),
-                        child: IconButton(
-                          iconSize: sizeWidth / 12,
-                          color: Colors.blue,
-                          icon: Icon(Icons.add_circle),
-                          onPressed: () {},
-                        ))
-                  ],
+                CharacterSheetButton("Magie", character.lux.toString(),
+                    sizeWidth / 4.3, 12, characterSheetState.uiState.lux ? Colors.blueGrey : Colors.blue,
+                        () => sendRoll(characterSheetViewModel,
+                        RollType.MAGIE_FORTE),
+                        () => showEditStatAlertDialog(
+                        characterSheetViewModel, character, "MagieForte")
                 ),
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    CharacterSheetButton("PV", '1', sizeWidth / 5, 26,
-                        Colors.blue, () => {}, () => {}),
-                    Padding(
-                        padding: EdgeInsets.only(right: sizeWidth / 4),
-                        child: IconButton(
-                          iconSize: sizeWidth / 12,
-                          color: Colors.blue,
-                          icon: Icon(Icons.remove_circle),
-                          onPressed: () {},
-                        )),
-                    Padding(
-                        padding: EdgeInsets.only(left: sizeWidth / 4),
-                        child: IconButton(
-                          iconSize: sizeWidth / 12,
-                          color: Colors.blue,
-                          icon: Icon(Icons.add_circle),
-                          onPressed: () {},
-                        ))
-                  ],
+                CharacterSheetButton("Magie mineure", character.lux.toString(),
+                    sizeWidth / 4.3, 12, characterSheetState.uiState.lux ? Colors.blueGrey : Colors.blue,
+                        () => sendRoll(characterSheetViewModel,
+                        RollType.MAGIE_LEGERE),
+                        () => showEditStatAlertDialog(
+                        characterSheetViewModel, character, "MagieLegere")
                 ),
-                CharacterSheetButton(
-                    "PV",
-                    character.pv.toString() + '/ ' + character.pvMax.toString(),
-                    sizeWidth / 4.3,
-                    26,
-                    Colors.blue,
-                    () => {},
-                    () => {}),
-                CharacterSheetButton(
-                    "PF",
-                    character.pf.toString() + '/ ' + character.pfMax.toString(),
-                    sizeWidth / 4.3,
-                    26,
-                    Colors.blue,
-                    () => {},
-                    () => {}),
-                CharacterSheetButton(
-                    "PP",
-                    character.pp.toString() + '/ ' + character.ppMax.toString(),
-                    sizeWidth / 4.3,
-                    26,
-                    Colors.blue,
-                    () => {},
-                    () => {}),
+                CharacterSheetButton("Empirique", character.lux.toString(),
+                    sizeWidth / 4.3, 12, characterSheetState.uiState.lux ? Colors.blueGrey : Colors.blue,
+                        () => sendRoll(characterSheetViewModel,
+                        RollType.EMPIRIQUE),
+                        () => showEditStatAlertDialog(
+                        characterSheetViewModel, character, "Empirique")
+                ),
               ],
             ),
             Row(
@@ -589,19 +493,9 @@ class _CharacterPageState extends State<CharacterPage> {
           ]);
 
   void sendRoll(
-      Character character,
       CharacterSheetViewModel characterSheetViewModel,
-      RollType rollType,
-      CharacterSheetState characterSheetState) {
-    characterSheetViewModel.sendRoll(
-        character: character,
-        rollType: rollType,
-        secret: characterSheetState.secret ?? false,
-        focus: characterSheetState.focus ?? false,
-        power: characterSheetState.power ?? false,
-        proficiency: characterSheetState.proficiency ?? false,
-        benediction: characterSheetState.benediction ?? 0,
-        malediction: characterSheetState.malediction ?? 0);
+      RollType rollType) {
+    characterSheetViewModel.sendRoll(rollType);
   }
 
   CharacterSheetButton(
@@ -890,9 +784,18 @@ class _CharacterPageState extends State<CharacterPage> {
       initialValue = character.chair.toString();
     } else if (statToEdit == 'Esprit') {
       initialValue = character.esprit.toString();
-    } else {
-      //if(statToEdit == 'Essence') {
+    } else if(statToEdit == 'Essence') {
       initialValue = character.essence.toString();
+    } else if(statToEdit == 'Dettes') {
+      initialValue = character.dettes.toString();
+    } else if(statToEdit == 'Lux') {
+      initialValue = character.lux;
+    } else if(statToEdit == 'Umbra') {
+      initialValue = character.umbra;
+    } else if(statToEdit == 'Secunda') {
+      initialValue = character.secunda;
+    } else if(statToEdit == 'Arcane') {
+      initialValue = character.secunda;
     }
     final TextEditingController _textEditingController =
         TextEditingController(text: initialValue);
@@ -939,6 +842,23 @@ class _CharacterPageState extends State<CharacterPage> {
                         character.essence =
                             int.tryParse(_textEditingController.value.text) ??
                                 character.essence;
+                      } else if (statToEdit == 'Dettes') {
+                        character.dettes =
+                            int.tryParse(_textEditingController.value.text) ??
+                                character.dettes;
+                      } else if (statToEdit == 'Lux') {
+                        character.lux =
+                            _textEditingController.value.text;
+                      } else if (statToEdit == 'Umbra') {
+                        character.umbra =
+                            _textEditingController.value.text;
+                      } else if (statToEdit == 'Secunda') {
+                        character.secunda =
+                            _textEditingController.value.text;
+                      } else if (statToEdit == 'Arcane') {
+                        character.arcanes =
+                            int.tryParse(_textEditingController.value.text) ??
+                                character.arcanes;
                       }
                       characterSheetViewModel.updateCharacter(character);
                       Navigator.of(context).pop();
@@ -950,7 +870,46 @@ class _CharacterPageState extends State<CharacterPage> {
           });
         });
   }
+
+
+  Future<void Function()> showArcaneAlertDialog(CharacterSheetViewModel characterSheetViewModel) async {
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              title: Text("Arcane"),
+              actions: <Widget>[
+                InkWell(
+                  child: Text('Fixe'),
+                  onTap: () {
+                    characterSheetViewModel.sendRoll(RollType.ARCANE_FIXE);
+                    Navigator.of(context).pop();
+                  },
+                ),
+                InkWell(
+                  child: Text('Esprit'),
+                  onTap: () {
+                    characterSheetViewModel.sendRoll(RollType.ARCANE_ESPRIT);
+                    Navigator.of(context).pop();
+                  },
+                ),
+                InkWell(
+                  child: Text('Essence'),
+                  onTap: () {
+                    characterSheetViewModel.sendRoll(RollType.ARCANE_ESSENCE);
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          });
+        });
+  }
+
 }
+
+
 
 /*
 class CharacterPage extends Page {
