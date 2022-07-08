@@ -11,6 +11,9 @@ abstract class IRollProvider {
     required bool power,
     required bool proficiency,
     required int benediction,
-    required int malediction
+    required int malediction,
+    String empirique
   });
+
+  Stream getRolList();
 }

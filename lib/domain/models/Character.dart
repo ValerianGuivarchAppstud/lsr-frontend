@@ -28,6 +28,7 @@ class Character {
   String notes;
   String category;
   bool genreMasculin;
+  int relance;
   Character({
       required this.name,
       required this.classe,
@@ -50,7 +51,8 @@ class Character {
       required this.secunda,
       required this.notes,
       required this.category,
-      required this.genreMasculin
+    required this.genreMasculin,
+    required this.relance
   });
 
 
@@ -122,5 +124,10 @@ class Character {
       case Bloodline.AUCUN:
         return "";
     }
+  }
+
+  int getInjury() {
+    double diff = (pvMax - pv + 1) / 6;
+    return diff.floor();
   }
 }

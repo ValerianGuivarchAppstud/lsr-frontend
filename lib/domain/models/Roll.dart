@@ -1,10 +1,9 @@
 import 'dart:core';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:lsr/domain/models/Character.dart';
+import 'dart:convert';
 
 import 'RollType.dart';
 part 'Roll.g.dart';
@@ -224,17 +223,17 @@ class Roll {
   static diceValueToIcon(int value) {
     switch(value) {
       case 1:
-        return '⚀';
+        return '1';
       case 2:
-        return '⚁';
+        return '2';
       case 3:
-        return '⚂';
+        return '3';
       case 4:
-        return '⚃';
+        return '4';
       case 5:
-        return '⚄';
+        return '5';
       case 6:
-        return '⚅';
+        return "6";
       default:
         return '[$value]';
     }

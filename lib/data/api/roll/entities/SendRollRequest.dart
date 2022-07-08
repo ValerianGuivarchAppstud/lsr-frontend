@@ -16,9 +16,10 @@ class SendRollRequest {
   bool proficiency;
   int benediction;
   int malediction;
+  String? empiriqueRoll;
 
   SendRollRequest({required this.rollerName, required this.rollType, required this.secret, required this.focus,
-      required this.power, required this.proficiency, required this.benediction, required this.malediction});
+      required this.power, required this.proficiency, required this.benediction, required this.malediction, this.empiriqueRoll});
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.

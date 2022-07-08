@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:meta/meta.dart';
 import 'package:universal_html/html.dart' as html;
 
 class Sse {
@@ -23,8 +22,8 @@ class Sse {
     ///close if the endpoint is not working
     if (closeOnError) {
       eventSource.onError.listen((event) {
-        eventSource?.close();
-        streamController?.close();
+        eventSource.close();
+        streamController.close();
       });
     }
     return Sse._internal(eventSource, streamController);
@@ -32,10 +31,10 @@ class Sse {
 
   Stream get stream => streamController.stream;
 
-  bool isClosed() => this.streamController == null || this.streamController.isClosed;
+  bool isClosed() => this.streamController.isClosed;
 
   void close() {
-    this.eventSource?.close();
-    this.streamController?.close();
+    this.eventSource.close();
+    this.streamController.close();
   }
 }

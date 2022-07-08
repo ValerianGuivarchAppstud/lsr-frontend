@@ -43,29 +43,8 @@ class CharacterSheetState {
         showLoading = true;
         error = null;
         break;
-      case CharacterSheetUISelected:
-        switch((partialState as CharacterSheetUISelected).uiName) {
-          case 'Lux':
-            uiState.lux =  !(uiState.lux);
-            break;
-          case 'Umbra':
-            uiState.umbra =  !(uiState.umbra);
-            break;
-          case 'Secunda':
-            uiState.secunda =  !(uiState.secunda);
-            break;
-          case 'Focus':
-            uiState.focus =  !(uiState.focus);
-            break;
-          case 'Power':
-            uiState.power =  !(uiState.power);
-            break;
-          case 'Secret':
-            uiState.secret =  !(uiState.secret);
-            break;
-          case 'Proficiency':
-            uiState.proficiency =  !(uiState.proficiency);
-        }
+      case CharacterSheetUIUpdated:
+        uiState = (partialState as CharacterSheetUIUpdated).state;
         break;
       default:
         break;
@@ -101,10 +80,8 @@ class CharacterSheetUIState {
   bool secret;
   bool power;
   bool proficiency;
+  bool help;
   bool focus;
-  bool lux;
-  bool umbra;
-  bool secunda;
   int benediction;
   int malediction;
 
@@ -112,9 +89,7 @@ class CharacterSheetUIState {
     this.power = false,
     this.proficiency = false,
     this.focus = false,
-    this.lux = false,
-    this.umbra = false,
-    this.secunda = false,
+    this.help = false,
     this.benediction = 0,
     this.malediction = 0});
 }
@@ -146,10 +121,10 @@ class CharacterSheetFailed extends CharacterSheetPartialState {
   CharacterSheetFailed(this.error);
 }
 
-class CharacterSheetUISelected extends CharacterSheetPartialState {
-  String uiName;
+class CharacterSheetUIUpdated extends CharacterSheetPartialState {
+  CharacterSheetUIState state;
 
-  CharacterSheetUISelected(this.uiName);
+  CharacterSheetUIUpdated(this.state);
 }
 
 class CharacterSheetLoading extends CharacterSheetPartialState {}
