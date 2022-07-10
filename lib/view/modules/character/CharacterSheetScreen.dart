@@ -85,7 +85,7 @@ class _CharacterPageState extends State<CharacterPage> {
         });
   }
 
-  static _buildCharacter(
+  _buildCharacter(
           Character character,
           double sizeWidth,
           CharacterSheetViewModel characterSheetViewModel,
@@ -626,7 +626,7 @@ class _CharacterPageState extends State<CharacterPage> {
     characterSheetViewModel.updateUi(uiState);
   }
 
-  static CharacterSheetButton(
+  CharacterSheetButton(
       String title,
       String value,
       double width,
