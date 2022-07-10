@@ -223,17 +223,17 @@ class Roll {
   static diceValueToIcon(int value) {
     switch(value) {
       case 1:
-        return '1';
+        return '⚀';
       case 2:
-        return '2';
+        return '⚁';
       case 3:
-        return '3';
+        return '⚂';
       case 4:
-        return '4';
+        return '⚃';
       case 5:
-        return '5';
+        return '⚄';
       case 6:
-        return "6";
+        return "⚅";
       default:
         return '[$value]';
     }

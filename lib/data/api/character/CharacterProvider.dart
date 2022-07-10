@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:lsr/domain/models/Character.dart';
@@ -8,6 +9,7 @@ import 'package:lsr/domain/providers/ICharacterProvider.dart';
 import '../../../utils/api/ErrorHandlerTransformer.dart';
 import '../../../utils/api/NetworkingConfig.dart';
 import 'entities/CreateOrUpdateRequest.dart';
+import 'dart:developer' as developer;
 
 class CharacterProvider implements ICharacterProvider {
   final NetworkingConfig _networkingConfig;
@@ -18,6 +20,8 @@ class CharacterProvider implements ICharacterProvider {
   Future<CharacterSheet> get(String name) async{
     Response response = await _networkingConfig.dio.get('character?name=' + name);
     CharacterSheet characterSheet = CharacterSheet.fromJson(response.data);
+    developer.log(characterSheet.character.picture ?? 'nooop');
+
     return characterSheet;
   }
 

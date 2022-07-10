@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:lsr/domain/models/Bloodline.dart';
 import 'package:lsr/domain/models/RollType.dart';
 
 import '../../../domain/models/Character.dart';
@@ -14,6 +15,7 @@ import 'CharacterSheetState.dart';
 import 'CharacterSheetViewModel.dart';
 
 class CharacterPage extends StatefulWidget {
+
   CharacterPage({required Key key}) : super(key: key);
 
   @override
@@ -22,6 +24,9 @@ class CharacterPage extends StatefulWidget {
 
 class _CharacterPageState extends State<CharacterPage> {
   late TextEditingController noteFieldController;
+
+
+  _CharacterPageState();
 
   @override
   void initState() {
@@ -53,13 +58,13 @@ class _CharacterPageState extends State<CharacterPage> {
                 oneSec,
                 (Timer t) => Injector.of(context)
                     .characterSheetViewModel
-                    .getCharacterSheet("Viktor"));
+                    .getCharacterSheet());
           }
           return Scaffold(
               body: Container(
                   height: height,
                   width: width,
-                  color: Colors.white,
+                  color: Colors.white30,
                   child: SingleChildScrollView(
                       scrollDirection: Axis.vertical,
                       child: LayoutBuilder(builder: (context, constraints) {
@@ -80,7 +85,7 @@ class _CharacterPageState extends State<CharacterPage> {
         });
   }
 
-  _buildCharacter(
+  static _buildCharacter(
           Character character,
           double sizeWidth,
           CharacterSheetViewModel characterSheetViewModel,
@@ -94,9 +99,10 @@ class _CharacterPageState extends State<CharacterPage> {
               alignment: Alignment.topLeft,
               children: [
                 Padding(
-                    padding: EdgeInsets.only(bottom: 50),
-                    child: Image.asset(
-                      "assets/images/background/${describeEnum(character.bloodline).toLowerCase()}.jpg",
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: Image.network(
+                      character.background ?? '',
+                      //"assets/images/background/${describeEnum(character.bloodline != Bloodline.AUCUN ? character.bloodline : character.classe).toLowerCase()}.jpg",
                       fit: BoxFit.fill,
                       height: 120,
                       width: sizeWidth,
@@ -113,14 +119,16 @@ class _CharacterPageState extends State<CharacterPage> {
                         CircleAvatar(
                           radius: 60,
                           backgroundColor: Colors.white,
-                          foregroundImage: AssetImage(
-                              "assets/images/portraits/${character.name}.png"),
+                          foregroundImage: NetworkImage(
+                            character.picture ?? ''),
+                              //"assets/images/portraits/${character.name}.png"),
                         )
                       ],
                     )),
                 Padding(
                     padding: EdgeInsets.fromLTRB(180, 10, 0, 0),
                     child: Card(
+                      color: Color(0x88FFFFFF),
                         child: Padding(
                             padding: EdgeInsets.all(8),
                             child:
@@ -465,7 +473,7 @@ class _CharacterPageState extends State<CharacterPage> {
                     '',
                     sizeWidth / 5,
                     14,
-                    33,
+                    34,
                     Colors.blue,
                     () => showArcaneAlertDialog(characterSheetViewModel),
                     () => showEditStatAlertDialog(
@@ -475,18 +483,18 @@ class _CharacterPageState extends State<CharacterPage> {
                     '',
                     sizeWidth / 5,
                     14,
-                    33,
+                    34,
                     Colors.blue,
                     () =>
                         sendRoll(characterSheetViewModel, RollType.MAGIE_FORTE),
                     () => showEditStatAlertDialog(
                         characterSheetViewModel, character, "MagieForte")),
                 CharacterSheetButton(
-                    "Countrip",
+                    "Cantrip",
                     '',
                     sizeWidth / 5,
                     14,
-                    33,
+                    34,
                     Colors.blue,
                     () => sendRoll(
                         characterSheetViewModel, RollType.MAGIE_LEGERE),
@@ -497,7 +505,7 @@ class _CharacterPageState extends State<CharacterPage> {
                     '',
                     sizeWidth / 5,
                     12,
-                    33,
+                    34,
                     Colors.blue,
                     () => sendRoll(
                         characterSheetViewModel, RollType.EMPIRIQUE, "1d6"),
@@ -513,7 +521,7 @@ class _CharacterPageState extends State<CharacterPage> {
                     '',
                     sizeWidth / 5,
                     14,
-                    33,
+                    34,
                     characterSheetState.uiState.proficiency
                         ? Colors.blueGrey
                         : Colors.blue, () {
@@ -525,7 +533,7 @@ class _CharacterPageState extends State<CharacterPage> {
                     '',
                     sizeWidth / 5,
                     14,
-                    33,
+                    34,
                     characterSheetState.uiState.help
                         ? Colors.blueGrey
                         : Colors.blue, () {
@@ -537,7 +545,7 @@ class _CharacterPageState extends State<CharacterPage> {
                     '',
                     sizeWidth / 5,
                     14,
-                    33,
+                    34,
                     characterSheetState.uiState.secret
                         ? Colors.blueGrey
                         : Colors.blue, () {
@@ -549,7 +557,7 @@ class _CharacterPageState extends State<CharacterPage> {
                     '',
                     sizeWidth / 5,
                     12,
-                    33,
+                    34,
                     Colors.blue,
                     () => sendRoll(
                         characterSheetViewModel, RollType.RELANCE),
@@ -564,7 +572,7 @@ class _CharacterPageState extends State<CharacterPage> {
             LayoutBuilder(builder: (context, constraints) {
               List<Widget> rolls = [];
               for (Roll roll in (characterSheetState.rollList ?? [])) {
-                rolls.add(RollWidget(roll));
+                rolls.addAll(RollWidget(roll));
               }
               return Column(
                 children: rolls,
@@ -618,7 +626,7 @@ class _CharacterPageState extends State<CharacterPage> {
     characterSheetViewModel.updateUi(uiState);
   }
 
-  CharacterSheetButton(
+  static CharacterSheetButton(
       String title,
       String value,
       double width,
@@ -651,7 +659,7 @@ class _CharacterPageState extends State<CharacterPage> {
                         //   style: TextStyle(fontSize: 10, color: Colors.black),
                         textAlign: TextAlign.center,
                       ),
-                      Text(
+                      if(value != '') Text(
                         value,
                         style: TextStyle(
                           fontSize: fontSize,
@@ -733,7 +741,7 @@ class _CharacterPageState extends State<CharacterPage> {
       ));
     } else {
       rollText.add(TextSpan(
-        text: ' :\n',
+        text: ' :',
       ));
     }
     switch (roll.rollType) {
@@ -749,15 +757,15 @@ class _CharacterPageState extends State<CharacterPage> {
           if (value < 5) {
             rollText.add(TextSpan(
                 text: Roll.diceValueToIcon(value),
-                style: TextStyle(fontSize: 24)));
+                style: TextStyle(fontSize: 36)));
           } else if (value == 5) {
             rollText.add(TextSpan(
                 text: Roll.diceValueToIcon(value),
-                style: TextStyle(color: Colors.orange, fontSize: 24)));
+                style: TextStyle(color: Colors.orange, fontSize: 36)));
           } else if (value == 6) {
             rollText.add(TextSpan(
                 text: Roll.diceValueToIcon(value),
-                style: TextStyle(color: Colors.red, fontSize: 24)));
+                style: TextStyle(color: Colors.red, fontSize: 36)));
           }
         }
         rollText.add(TextSpan(
@@ -798,8 +806,9 @@ class _CharacterPageState extends State<CharacterPage> {
         children: rollText));
   }
 
-  Widget RollWidget(Roll roll) {
+  List<Widget> RollWidget(Roll roll) {
     List<TextSpan> rollText = [];
+    List<TextSpan> rollDices = [];
     rollText.add(TextSpan(
         // (secret)
         text: roll.secretText()));
@@ -855,7 +864,7 @@ class _CharacterPageState extends State<CharacterPage> {
       case RollType.SAUVEGARDE_VS_MORT:
         if (roll.result[0] >= 10)
           rollText.add(TextSpan(
-            text: ' et TODO',
+            text: ' et TODO', // TODO
           ));
         break;
       case RollType.SOIN:
@@ -884,37 +893,38 @@ class _CharacterPageState extends State<CharacterPage> {
       case RollType.ARCANE_ESSENCE:
         for (var value in roll.result) {
           if (value < 5) {
-            rollText.add(TextSpan(
+            rollDices.add(TextSpan(
                 text: Roll.diceValueToIcon(value),
-                style: TextStyle(fontSize: 24)));
+                style: TextStyle(fontSize: 36)));
           } else if (value == 5) {
-            rollText.add(TextSpan(
+            rollDices.add(TextSpan(
                 text: Roll.diceValueToIcon(value),
-                style: TextStyle(color: Colors.orange, fontSize: 24)));
+                style: TextStyle(color: Colors.orange, fontSize: 36)));
           } else if (value == 6) {
-            rollText.add(TextSpan(
+            rollDices.add(TextSpan(
                 text: Roll.diceValueToIcon(value),
-                style: TextStyle(color: Colors.red, fontSize: 24)));
+                style: TextStyle(color: Colors.red, fontSize: 36)));
           }
         }
         break;
       case RollType.EMPIRIQUE:
+        // TODO si c'est d6, mettre le style visuel ?
         for (var value in roll.result) {
-          rollText.add(TextSpan(text: '[$value]'));
+          rollDices.add(TextSpan(text: '[$value]'));
         }
         break;
       case RollType.ARCANE_FIXE:
         for (var value in roll.result) {
-          rollText.add(TextSpan(text: '[$value]'));
+          rollDices.add(TextSpan(text: '[$value]'));
         }
         break;
       case RollType.SAUVEGARDE_VS_MORT:
         for (var value in roll.result) {
           if (value < 10) {
-            rollText.add(TextSpan(
+            rollDices.add(TextSpan(
                 text: '[$value]', style: TextStyle(color: Colors.red)));
           } else {
-            rollText.add(TextSpan(
+            rollDices.add(TextSpan(
                 text: '[$value]', style: TextStyle(color: Colors.green)));
           }
         }
@@ -922,9 +932,12 @@ class _CharacterPageState extends State<CharacterPage> {
       case RollType.RELANCE:
         break;
     }
-    return Text.rich(TextSpan(
+    return [Text.rich(TextSpan(
         text: roll.dateText() + ' - ', // 10:19:22 -
-        children: rollText));
+        children: rollText)),
+      Text.rich(TextSpan(// 10:19:22 -
+        children: rollDices)),
+    ];
   }
 
   Future<void Function()> showEditStatAlertDialog(

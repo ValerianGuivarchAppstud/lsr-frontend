@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:lsr/domain/models/Character.dart';
 import 'package:lsr/domain/models/RollLast.dart';
 import 'package:lsr/domain/models/RollType.dart';
+import 'package:lsr/domain/services/SettingsService.dart';
 import 'package:lsr/view/modules/character/CharacterSheetState.dart';
 import 'dart:convert';
 
@@ -10,25 +11,26 @@ import '../../../domain/services/SheetService.dart';
 
 class CharacterSheetViewModel with ChangeNotifier {
   final SheetService _sheetService;
+  final SettingsService _configService;
   late CharacterSheetState _currentState;
 
   final streamController =
       StreamController<CharacterSheetState>.broadcast(sync: true);
 
-  CharacterSheetViewModel(this._sheetService) {
+  CharacterSheetViewModel(this._sheetService, this._configService) {
     _currentState = CharacterSheetState();
-//    getRollList();
   }
 
   CharacterSheetState getState() {
     return _currentState;
   }
 
-  Future<void> getCharacterSheet(String name, [bool reload = false]) async {
+  Future<void> getCharacterSheet([bool reload = false]) async {
     if(reload) {
       streamController.add(_currentState.copy(CharacterSheetLoading()));
     }
-      _sheetService.get(name).then((value) {
+    String characterName = await this._configService.getCharacterName() ?? '';
+      _sheetService.get(characterName).then((value) {
         streamController.add(_currentState.copy(CharacterSheetLoaded(value.character, value.rollList)));
       }).onError((error, stackTrace) {
         streamController.add(_currentState.copy(CharacterSheetFailed(error.toString())));

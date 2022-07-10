@@ -30,12 +30,14 @@ Character _$CharacterFromJson(Map<String, dynamic> json) => Character(
       category: json['category'] as String,
       genreMasculin: json['genreMasculin'] as bool,
       relance: json['relance'] as int,
+      picture: json['picture'] as String?,
+      background: json['background'] as String?,
     );
 
 Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'name': instance.name,
-      'classe': _$ClasseEnumMap[instance.classe],
-      'bloodline': _$BloodlineEnumMap[instance.bloodline],
+      'classe': _$ClasseEnumMap[instance.classe]!,
+      'bloodline': _$BloodlineEnumMap[instance.bloodline]!,
       'chair': instance.chair,
       'esprit': instance.esprit,
       'essence': instance.essence,
@@ -56,6 +58,8 @@ Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'category': instance.category,
       'genreMasculin': instance.genreMasculin,
       'relance': instance.relance,
+      'picture': instance.picture,
+      'background': instance.background,
     };
 
 const _$ClasseEnumMap = {

@@ -29,6 +29,8 @@ class Character {
   String category;
   bool genreMasculin;
   int relance;
+  String? picture;
+  String? background;
   Character({
       required this.name,
       required this.classe,
@@ -52,7 +54,9 @@ class Character {
       required this.notes,
       required this.category,
     required this.genreMasculin,
-    required this.relance
+    required this.relance,
+    required this.picture,
+    required this.background
   });
 
 

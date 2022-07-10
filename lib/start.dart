@@ -11,7 +11,7 @@ import 'config/config_reader.dart';
 import 'data/api/character/CharacterProvider.dart';
 import 'data/api/roll/RollProvider.dart';
 
-
+/*
 Future<void> mainCommon(String env) async {
   // Always call this if the main method is asynchronous
   WidgetsFlutterBinding.ensureInitialized();
@@ -78,7 +78,7 @@ class _MainStatefulWidgetState extends State<MainStatefulWidget> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  Widget characterPage = CharacterPage(key: Key('CharacterPage'));
+  Widget characterPage = CharacterPage(characterName: "ToCheck",key: Key('CharacterPage'));
 
   void _onItemTapped(int index) {
     setState(() {
@@ -134,3 +134,4 @@ class _MainStatefulWidgetState extends State<MainStatefulWidget> {
     }
   }
 }
+*/

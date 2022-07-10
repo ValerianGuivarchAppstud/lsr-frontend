@@ -24,7 +24,7 @@ Roll _$RollFromJson(Map<String, dynamic> json) => Roll(
 Map<String, dynamic> _$RollToJson(Roll instance) => <String, dynamic>{
       'id': instance.id,
       'rollerName': instance.rollerName,
-      'rollType': _$RollTypeEnumMap[instance.rollType],
+      'rollType': _$RollTypeEnumMap[instance.rollType]!,
       'date': instance.date.toIso8601String(),
       'secret': instance.secret,
       'focus': instance.focus,

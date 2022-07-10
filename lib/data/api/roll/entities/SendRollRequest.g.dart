@@ -22,7 +22,7 @@ SendRollRequest _$SendRollRequestFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$SendRollRequestToJson(SendRollRequest instance) =>
     <String, dynamic>{
       'rollerName': instance.rollerName,
-      'rollType': _$RollTypeEnumMap[instance.rollType],
+      'rollType': _$RollTypeEnumMap[instance.rollType]!,
       'secret': instance.secret,
       'focus': instance.focus,
       'power': instance.power,
