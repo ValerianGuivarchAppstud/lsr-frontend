@@ -8,6 +8,7 @@ import 'package:lsr/utils/Injector.dart';
 import 'package:lsr/utils/api/NetworkingConfig.dart';
 import 'package:lsr/view/modules/character/CharacterSheetScreen.dart';
 import 'package:lsr/view/modules/character/CharacterSheetViewModel.dart';
+import 'package:lsr/view/modules/heal/pages/call.dart';
 import 'package:lsr/view/modules/mj/MjScreen.dart';
 import 'package:lsr/view/modules/mj/MjViewModel.dart';
 import 'package:lsr/view/modules/settings/SettingsScreen.dart';
@@ -57,7 +58,7 @@ class MyApp extends StatelessWidget {
           onGenerateRoute: (settings) {
               return MaterialPageRoute(
                 builder: (context) {
-                  return MainStatefulWidget(true);
+                  return MainStatefulWidget(false);
                 },
               );
           },
@@ -91,6 +92,7 @@ class _MainStatefulWidgetState extends State<MainStatefulWidget> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   Widget characterPage = CharacterPage(Key('CharacterPage'), null);
+  Widget healPage = CallPage(key: Key("CallPage"),);
   late Widget settingsPage;
   Widget mjPage = MjPage(key: Key('MjPage'));
 
@@ -160,6 +162,8 @@ class _MainStatefulWidgetState extends State<MainStatefulWidget> {
     if(pj) {
       if (_selectedIndex == 0) {
         return characterPage;
+      } else if (_selectedIndex == 1) {
+        return healPage;
       } else if (_selectedIndex == 3) {
         return settingsPage;
       } else {

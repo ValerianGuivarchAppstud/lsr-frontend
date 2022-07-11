@@ -214,9 +214,8 @@ class Roll {
   }
 
   dateText() {
-    final DateTime now = DateTime.now();
-    final DateFormat formatter = DateFormat('hh-mm-ss');
-    final String formatted = formatter.format(now);
+    final DateFormat formatter = DateFormat('HH-mm-ss');
+    final String formatted = formatter.format(date.toLocal());
     return formatted; // something like 2013-04-20
   }
 

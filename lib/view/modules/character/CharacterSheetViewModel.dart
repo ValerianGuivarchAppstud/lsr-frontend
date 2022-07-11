@@ -56,8 +56,8 @@ class CharacterSheetViewModel with ChangeNotifier {
     streamController.add(_currentState.copy(CharacterSheetUIUpdated(state)));
   }
 
-  Future<void> updateCharacter(Character character) async {
-    _sheetService.update(character).then((value) {
+  Future<void> createOrUpdateCharacter(Character character) async {
+    _sheetService.createOrUpdateCharacter(character).then((value) {
       streamController.add(_currentState.copy(CharacterLoaded(value)));
     }).onError((error, stackTrace) {
       streamController.add(_currentState.copy(CharacterSheetFailed(error.toString())));
@@ -95,5 +95,15 @@ class CharacterSheetViewModel with ChangeNotifier {
 
       streamController.add(_currentState.copy(RollListLoaded(RollLast.fromJson(jsonDecode(event.toString())).rollList)));
     });
+  }
+
+  void saveNotesIfEnoughTime(DateTime timeUpdate) {
+    if(((_currentState.lastTimeNoteSaved?.difference(timeUpdate).inSeconds) ?? 0) <= 0) {
+      _currentState.lastTimeNoteSaved = null;
+      if(_currentState.character != null) {
+        _currentState.character!.notes = _currentState.notes;
+        this.createOrUpdateCharacter(_currentState.character!);
+      }
+    }
   }
 }

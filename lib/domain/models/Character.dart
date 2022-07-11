@@ -36,6 +36,7 @@ class Character {
   late int relance;
   late String? picture;
   late String? background;
+  late String? playerName;
   Character({
       required this.name,
       required this.classe,
@@ -61,7 +62,8 @@ class Character {
     required this.genre,
     required this.relance,
     required this.picture,
-    required this.background
+    required this.background,
+    required this.playerName
   });
 
 

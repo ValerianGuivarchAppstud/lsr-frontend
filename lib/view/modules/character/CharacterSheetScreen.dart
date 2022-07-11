@@ -62,9 +62,9 @@ class _CharacterPageState extends State<CharacterPage> {
             developer.log("Timer : " + (characterName ?? "personne"));
             Timer.periodic(
                 oneSec,
-                (Timer t) => Injector.of(context)
-                    .characterSheetViewModel
-                    .getCharacterSheet());
+                (Timer t) =>
+                  Injector.of(context).characterSheetViewModel.getCharacterSheet()
+                );
           }
           return Container(
                   height: height,
@@ -83,13 +83,20 @@ class _CharacterPageState extends State<CharacterPage> {
                             child: Text("Aucun personnage..."),
                           );
                         } else {
+                          if(state.data!.lastTimeNoteSaved == null && state.data!.character?.notes != null) {
+                            if(state.data!.notes != state.data!.character?.notes) {
+                              state.data!.notes= state.data!.character!.notes;
+                              noteFieldController.text =
+                                  state.data!.character?.notes ?? '';
+                            }
+                          }
                           return CharacterWidgets.buildCharacter(context, true, state.data!.character!, 1,1,
-                              characterSheetViewModel, state.data!, noteFieldController);
+                              characterSheetViewModel, state.data!, noteFieldController, state.data!.rollList);
                         }
                       })));
         });
   }
-  Widget RollWidget2(Roll roll) {
+  /*Widget RollWidget2(Roll roll) {
     List<TextSpan> rollText = [];
     rollText.add(TextSpan(
         // (secret)
@@ -221,5 +228,5 @@ class _CharacterPageState extends State<CharacterPage> {
     return Text.rich(TextSpan(
         text: roll.dateText() + ' - ', // 10:19:22 -
         children: rollText));
-  }
+  }*/
 }

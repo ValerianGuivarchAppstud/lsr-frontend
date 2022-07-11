@@ -21,6 +21,7 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
+  agora_rtc_engine: ^5.1.0
   flutter_web_plugins:
     sdk: flutter
   flutter:
@@ -28,7 +29,7 @@ dependencies:
   rxdart: ^0.27.3
   json_annotation: ^4.4.0
   dio: ^4.0.6
-  provider: ^5.0.0
+  provider: ^6.0.0
   intl: ^0.17.0
   universal_html: ^2.0.8
 
@@ -39,6 +40,7 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   shared_preferences: ^2.0.15
+  permission_handler: ^10.0.0
 
 
 dev_dependencies:

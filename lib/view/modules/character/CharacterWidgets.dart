@@ -11,24 +11,24 @@ import '../../../utils/view/Const.dart';
 import '../mj/MjWidgets.dart';
 import 'CharacterSheetState.dart';
 import 'CharacterSheetViewModel.dart';
+import 'dart:developer' as developer;
 
 class CharacterWidgets {
-  static void sendRoll(
-      CharacterSheetViewModel characterSheetViewModel, RollType rollType,
+  static void sendRoll(CharacterSheetViewModel characterSheetViewModel,
+      RollType rollType,
       [String empirique = '']) {
     characterSheetViewModel.sendRoll(rollType, empirique);
   }
 
-  static buildCharacter(
-    BuildContext context,
-    bool playerDisplay,
-    Character character,
+  static buildCharacter(BuildContext context,
+      bool playerDisplay,
+      Character character,
       double sizeRatio,
       double sizeRatioFont,
-    CharacterSheetViewModel characterSheetViewModel,
-    CharacterSheetState characterSheetState,
-    TextEditingController? noteFieldController,
-  ) =>
+      CharacterSheetViewModel characterSheetViewModel,
+      CharacterSheetState characterSheetState,
+      TextEditingController? noteFieldController,
+      List<Roll>? rollList) =>
       Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -45,30 +45,37 @@ class CharacterWidgets {
                         //"assets/images/background/${describeEnum(character.bloodline != Bloodline.AUCUN ? character.bloodline : character.classe).toLowerCase()}.jpg",
                         fit: BoxFit.fill,
                         height: 120,
-                        width: (sizeRatio*WIDTH_SCREEN),
+                        width: (sizeRatio * WIDTH_SCREEN),
                       )),
                   Padding(
                       padding: EdgeInsets.all(10),
                       child: GestureDetector(
-                        onLongPress: () => {
-                          MjWidgets.addCharacter(null, context, mjViewModel, mjSheet.playersName)
-                        },
-                      child:Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          CircleAvatar(
-                            radius: 62,
-                            backgroundColor: Colors.white,
-                          ),
-                          CircleAvatar(
-                            radius: 60,
-                            backgroundColor: Colors.white,
-                            foregroundImage:
+                          onLongPress: () =>
+                          {
+                            developer.log(
+                                characterSheetState.character?.playerName ??
+                                    ''),
+                            MjWidgets.addCharacter(
+                                characterSheetState.character, context, [
+                              characterSheetState.character?.playerName ?? ''
+                            ], characterSheetViewModel.createOrUpdateCharacter)
+                          },
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              CircleAvatar(
+                                radius: 62,
+                                backgroundColor: Colors.white,
+                              ),
+                              CircleAvatar(
+                                radius: 60,
+                                backgroundColor: Colors.white,
+                                foregroundImage:
                                 NetworkImage(character.picture ?? ''),
-                            //"assets/images/portraits/${character.name}.png"),
+                                //"assets/images/portraits/${character.name}.png"),
+                              )
+                            ],
                           )
-                        ],
-                      )
                       )),
                   Padding(
                       padding: EdgeInsets.fromLTRB(180, 10, 0, 0),
@@ -87,7 +94,7 @@ class CharacterWidgets {
                                               character.description(),
                                           style: TextStyle(
                                             color: Colors.black,
-                                            fontSize: sizeRatioFont*16,
+                                            fontSize: sizeRatioFont * 16,
                                             fontWeight: FontWeight.bold,
                                           ),
                                           textAlign: TextAlign.start,
@@ -96,7 +103,7 @@ class CharacterWidgets {
                                           'Lux : ' + character.lux,
                                           style: TextStyle(
                                             color: Colors.black,
-                                            fontSize: sizeRatioFont*16,
+                                            fontSize: sizeRatioFont * 16,
                                           ),
                                           textAlign: TextAlign.start,
                                         ),
@@ -104,7 +111,7 @@ class CharacterWidgets {
                                           'Umbra : ' + character.umbra,
                                           style: TextStyle(
                                             color: Colors.black,
-                                            fontSize: sizeRatioFont*16,
+                                            fontSize: sizeRatioFont * 16,
                                           ),
                                           textAlign: TextAlign.start,
                                         ),
@@ -112,7 +119,7 @@ class CharacterWidgets {
                                           'Secunda : ' + character.secunda,
                                           style: TextStyle(
                                             color: Colors.black,
-                                            fontSize: sizeRatioFont*16,
+                                            fontSize: sizeRatioFont * 16,
                                           ),
                                           textAlign: TextAlign.start,
                                         ),
@@ -133,20 +140,34 @@ class CharacterWidgets {
                   textAlign: TextAlign.start,
                 )
               ]),
-            if (noteFieldController!=null)
+            if (noteFieldController != null)
               Padding(
                 padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
                 child: TextField(
+
                   controller: noteFieldController,
                   keyboardType: TextInputType.multiline,
                   maxLines: 3,
+                  onChanged: (value) =>
+                  {
+                    characterSheetState.lastTimeNoteSaved = DateTime.now(),
+                    characterSheetState.notes = value,
+                    Timer(Duration(seconds: 3), () {
+                      characterSheetViewModel.saveNotesIfEnoughTime(
+                          DateTime.now().add(Duration(seconds: -3)));
+                    })
+                  },
                   decoration: InputDecoration(
                       hintText: "Entrez vos notes ici",
                       enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(width: 1, color: Colors.blue)),
+                          borderSide: BorderSide(width: 1,
+                              color: characterSheetState.lastTimeNoteSaved !=
+                                  null ? Colors.redAccent : Colors.blue)),
                       focusedBorder: OutlineInputBorder(
                           borderSide:
-                              BorderSide(width: 1, color: Colors.redAccent))),
+                          BorderSide(width: 1,
+                              color: characterSheetState.lastTimeNoteSaved !=
+                                  null ? Colors.redAccent : Colors.blue))),
                 ),
               ),
             Row(
@@ -155,19 +176,22 @@ class CharacterWidgets {
                 _buildCharacterSheetButton(
                     playerDisplay ? "Chair" : "Ch",
                     character.chair.toString(),
-                    (sizeRatio*WIDTH_SCREEN) / 4.3,
-                    sizeRatioFont*26,
+                    (sizeRatio * WIDTH_SCREEN) / 4.3,
+                    sizeRatioFont * 26,
                     50,
                     Colors.blue,
                     playerDisplay,
-                    () => sendRoll(characterSheetViewModel, RollType.CHAIR, ''),
-                    () => showEditStatAlertDialog(
-                        context, characterSheetViewModel, character, "Chair")),
+                        () =>
+                        sendRoll(characterSheetViewModel, RollType.CHAIR, ''),
+                        () =>
+                        showEditStatAlertDialog(
+                            context, characterSheetViewModel, character,
+                            "Chair")),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
-                      iconSize: (sizeRatioFont*WIDTH_SCREEN) / 18,
+                      iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
                       color: Colors.blue,
@@ -182,16 +206,17 @@ class CharacterWidgets {
                         character.pv.toString() +
                             ' / ' +
                             character.pvMax.toString(),
-                        (sizeRatio*WIDTH_SCREEN) / 5,
-                        sizeRatioFont*26,
+                        (sizeRatio * WIDTH_SCREEN) / 5,
+                        sizeRatioFont * 26,
                         50,
                         Colors.blue,
                         playerDisplay,
-                    () => {},
-                        () => showEditStatAlertDialog(context,
-                            characterSheetViewModel, character, "PV_MAX")),
+                            () => {},
+                            () =>
+                            showEditStatAlertDialog(context,
+                                characterSheetViewModel, character, "PV_MAX")),
                     IconButton(
-                      iconSize: (sizeRatioFont*WIDTH_SCREEN) / 18,
+                      iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
                       color: Colors.blue,
@@ -207,7 +232,7 @@ class CharacterWidgets {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
-                      iconSize: (sizeRatioFont*WIDTH_SCREEN) / 18,
+                      iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
                       color: Colors.blue,
@@ -220,15 +245,15 @@ class CharacterWidgets {
                     _buildCharacterSheetButton(
                         "Bonus",
                         characterSheetState.uiState.benediction.toString(),
-                        (sizeRatio*WIDTH_SCREEN) / 5,
-                        sizeRatioFont*26,
+                        (sizeRatio * WIDTH_SCREEN) / 5,
+                        sizeRatioFont * 26,
                         50,
                         Colors.blue,
                         playerDisplay,
-                    () => {},
-                        () => {}),
+                            () => {},
+                            () => {}),
                     IconButton(
-                      iconSize: (sizeRatioFont*WIDTH_SCREEN) / 18,
+                      iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
                       color: Colors.blue,
@@ -248,20 +273,22 @@ class CharacterWidgets {
                 _buildCharacterSheetButton(
                     playerDisplay ? "Esprit" : "Esp",
                     character.esprit.toString(),
-                    (sizeRatio*WIDTH_SCREEN) / 4.3,
-                    sizeRatioFont*26,
+                    (sizeRatio * WIDTH_SCREEN) / 4.3,
+                    sizeRatioFont * 26,
                     50,
                     Colors.blue,
                     playerDisplay,
-                    () =>
+                        () =>
                         sendRoll(characterSheetViewModel, RollType.ESPRIT, ''),
-                    () => showEditStatAlertDialog(
-                        context, characterSheetViewModel, character, "Esprit")),
+                        () =>
+                        showEditStatAlertDialog(
+                            context, characterSheetViewModel, character,
+                            "Esprit")),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
-                      iconSize: (sizeRatioFont*WIDTH_SCREEN) / 18,
+                      iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
                       color: Colors.blue,
@@ -276,8 +303,8 @@ class CharacterWidgets {
                         character.pf.toString() +
                             ' / ' +
                             character.pfMax.toString(),
-                        (sizeRatio*WIDTH_SCREEN) / 5,
-                        sizeRatioFont*26,
+                        (sizeRatio * WIDTH_SCREEN) / 5,
+                        sizeRatioFont * 26,
                         50,
                         characterSheetState.uiState.focus
                             ? Colors.blueGrey
@@ -286,10 +313,11 @@ class CharacterWidgets {
                       changeUiSelect(characterSheetViewModel,
                           characterSheetState.uiState, 'PF');
                     },
-                        () => showEditStatAlertDialog(context,
-                            characterSheetViewModel, character, "PF_MAX")),
+                            () =>
+                            showEditStatAlertDialog(context,
+                                characterSheetViewModel, character, "PF_MAX")),
                     IconButton(
-                      iconSize: (sizeRatioFont*WIDTH_SCREEN) / 18,
+                      iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
                       color: Colors.blue,
@@ -305,7 +333,7 @@ class CharacterWidgets {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
-                      iconSize: (sizeRatioFont*WIDTH_SCREEN) / 18,
+                      iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
                       color: Colors.blue,
@@ -320,18 +348,18 @@ class CharacterWidgets {
                         characterSheetState.uiState.malediction.toString() +
                             (character.getInjury() > 0
                                 ? (' (' +
-                                    character.getInjury().toString() +
-                                    ')')
+                                character.getInjury().toString() +
+                                ')')
                                 : ('')),
-                        (sizeRatio*WIDTH_SCREEN) / 5,
-                        sizeRatioFont*26,
+                        (sizeRatio * WIDTH_SCREEN) / 5,
+                        sizeRatioFont * 26,
                         50,
                         Colors.blue,
                         playerDisplay,
-                    () => {},
-                        () => {}),
+                            () => {},
+                            () => {}),
                     IconButton(
-                      iconSize: (sizeRatioFont*WIDTH_SCREEN) / 18,
+                      iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
                       color: Colors.blue,
@@ -351,20 +379,21 @@ class CharacterWidgets {
                 _buildCharacterSheetButton(
                     playerDisplay ? "Essence" : "Ess",
                     character.essence.toString(),
-                    (sizeRatio*WIDTH_SCREEN) / 4.3,
-                    sizeRatioFont*26,
+                    (sizeRatio * WIDTH_SCREEN) / 4.3,
+                    sizeRatioFont * 26,
                     50,
                     Colors.blue,
                     playerDisplay,
-                    () =>
+                        () =>
                         sendRoll(characterSheetViewModel, RollType.ESSENCE, ''),
-                    () => showEditStatAlertDialog(context,
-                        characterSheetViewModel, character, "Essence")),
+                        () =>
+                        showEditStatAlertDialog(context,
+                            characterSheetViewModel, character, "Essence")),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
-                      iconSize: (sizeRatioFont*WIDTH_SCREEN) / 18,
+                      iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
                       color: Colors.blue,
@@ -379,8 +408,8 @@ class CharacterWidgets {
                         character.pp.toString() +
                             ' / ' +
                             character.ppMax.toString(),
-                        (sizeRatio*WIDTH_SCREEN) / 5,
-                        sizeRatioFont*26,
+                        (sizeRatio * WIDTH_SCREEN) / 5,
+                        sizeRatioFont * 26,
                         50,
                         characterSheetState.uiState.power
                             ? Colors.blueGrey
@@ -389,10 +418,11 @@ class CharacterWidgets {
                       changeUiSelect(characterSheetViewModel,
                           characterSheetState.uiState, 'PP');
                     },
-                        () => showEditStatAlertDialog(context,
-                            characterSheetViewModel, character, "PP_MAX")),
+                            () =>
+                            showEditStatAlertDialog(context,
+                                characterSheetViewModel, character, "PP_MAX")),
                     IconButton(
-                      iconSize: (sizeRatioFont*WIDTH_SCREEN) / 18,
+                      iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
                       color: Colors.blue,
@@ -408,7 +438,7 @@ class CharacterWidgets {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
-                      iconSize: (sizeRatioFont*WIDTH_SCREEN) / 18,
+                      iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
                       color: Colors.blue,
@@ -421,15 +451,15 @@ class CharacterWidgets {
                     _buildCharacterSheetButton(
                         "Dettes",
                         character.dettes.toString(),
-                        (sizeRatio*WIDTH_SCREEN) / 5,
-                        sizeRatioFont*26,
+                        (sizeRatio * WIDTH_SCREEN) / 5,
+                        sizeRatioFont * 26,
                         50,
                         Colors.blue,
                         playerDisplay,
-                    () => {},
-                        () => {}),
+                            () => {},
+                            () => {}),
                     IconButton(
-                      iconSize: (sizeRatioFont*WIDTH_SCREEN) / 18,
+                      iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(),
                       color: Colors.blue,
@@ -452,51 +482,59 @@ class CharacterWidgets {
                         character.arcanes.toString() +
                         ' / ' +
                         character.arcanesMax.toString(),
-                    (sizeRatio*WIDTH_SCREEN) / 5,
-                    sizeRatioFont*14,
+                    (sizeRatio * WIDTH_SCREEN) / 5,
+                    sizeRatioFont * 14,
                     34,
                     Colors.blue,
                     playerDisplay,
-                    () =>
+                        () =>
                         showArcaneAlertDialog(context, characterSheetViewModel),
-                    () => showEditStatAlertDialog(
-                        context, characterSheetViewModel, character, "Arcane")),
+                        () =>
+                        showEditStatAlertDialog(
+                            context, characterSheetViewModel, character,
+                            "Arcane")),
                 _buildCharacterSheetButton(
                     '',
                     "Magie",
-                    (sizeRatio*WIDTH_SCREEN) / 5,
-                    sizeRatioFont*14,
+                    (sizeRatio * WIDTH_SCREEN) / 5,
+                    sizeRatioFont * 14,
                     34,
                     Colors.blue,
                     playerDisplay,
-                    () => sendRoll(
-                        characterSheetViewModel, RollType.MAGIE_FORTE, ''),
-                    () => showEditStatAlertDialog(context,
-                        characterSheetViewModel, character, "MagieForte")),
+                        () =>
+                        sendRoll(
+                            characterSheetViewModel, RollType.MAGIE_FORTE, ''),
+                        () =>
+                        showEditStatAlertDialog(context,
+                            characterSheetViewModel, character, "MagieForte")),
                 _buildCharacterSheetButton(
                     '',
                     "Cantrip",
-                    (sizeRatio*WIDTH_SCREEN) / 5,
-                    sizeRatioFont*14,
+                    (sizeRatio * WIDTH_SCREEN) / 5,
+                    sizeRatioFont * 14,
                     34,
                     Colors.blue,
                     playerDisplay,
-                    () => sendRoll(
-                        characterSheetViewModel, RollType.MAGIE_LEGERE, ''),
-                    () => showEditStatAlertDialog(context,
-                        characterSheetViewModel, character, "MagieLegere")),
+                        () =>
+                        sendRoll(
+                            characterSheetViewModel, RollType.MAGIE_LEGERE, ''),
+                        () =>
+                        showEditStatAlertDialog(context,
+                            characterSheetViewModel, character, "MagieLegere")),
                 _buildCharacterSheetButton(
                     '',
                     playerDisplay ? "Empirique" : "Emp",
-                    (sizeRatio*WIDTH_SCREEN) / 5,
-                    sizeRatioFont*12,
+                    (sizeRatio * WIDTH_SCREEN) / 5,
+                    sizeRatioFont * 12,
                     34,
                     Colors.blue,
                     playerDisplay,
-                    () => sendRoll(
-                        characterSheetViewModel, RollType.EMPIRIQUE, "1d6"),
-                    () => showEmpiriqueRollAlertDialog(
-                        context, characterSheetViewModel, character)),
+                        () =>
+                        sendRoll(
+                            characterSheetViewModel, RollType.EMPIRIQUE, "1d6"),
+                        () =>
+                        showEmpiriqueRollAlertDialog(
+                            context, characterSheetViewModel, character)),
               ],
             ),
             Row(
@@ -505,8 +543,8 @@ class CharacterWidgets {
                 _buildCharacterSheetButton(
                     '',
                     playerDisplay ? "Proficiency" : "Pr",
-                    (sizeRatio*WIDTH_SCREEN) / 5,
-                    sizeRatioFont*14,
+                    (sizeRatio * WIDTH_SCREEN) / 5,
+                    sizeRatioFont * 14,
                     34,
                     characterSheetState.uiState.proficiency
                         ? Colors.blueGrey
@@ -518,8 +556,8 @@ class CharacterWidgets {
                 _buildCharacterSheetButton(
                     '',
                     "Aide",
-                    (sizeRatio*WIDTH_SCREEN) / 5,
-                    sizeRatioFont*14,
+                    (sizeRatio * WIDTH_SCREEN) / 5,
+                    sizeRatioFont * 14,
                     34,
                     characterSheetState.uiState.help
                         ? Colors.blueGrey
@@ -531,8 +569,8 @@ class CharacterWidgets {
                 _buildCharacterSheetButton(
                     '',
                     "Secret",
-                    (sizeRatio*WIDTH_SCREEN) / 5,
-                    sizeRatioFont*14,
+                    (sizeRatio * WIDTH_SCREEN) / 5,
+                    sizeRatioFont * 14,
                     34,
                     characterSheetState.uiState.secret
                         ? Colors.blueGrey
@@ -544,31 +582,39 @@ class CharacterWidgets {
                 _buildCharacterSheetButton(
                     '',
                     "Relance : " + character.relance.toString(),
-                    (sizeRatio*WIDTH_SCREEN) / 5,
-                    sizeRatioFont*12,
+                    (sizeRatio * WIDTH_SCREEN) / 5,
+                    sizeRatioFont * 12,
                     34,
                     Colors.blue,
                     playerDisplay,
-                    () =>
+                        () =>
                         sendRoll(characterSheetViewModel, RollType.RELANCE, ''),
-                    () => showEditStatAlertDialog(context,
-                        characterSheetViewModel, character, "Relance")),
+                        () =>
+                        showEditStatAlertDialog(context,
+                            characterSheetViewModel, character, "Relance")),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [],
             ),
-            LayoutBuilder(builder: (context, constraints) {
-              List<Widget> rolls = [];
-              for (Roll roll in (characterSheetState.rollList ?? [])) {
-                rolls.addAll(getRollWidget(roll));
-              }
-              return Column(
-                children: rolls,
-              );
-            }),
-          ]);
+            if(rollList != null) buildRollList(rollList, character.name)
+          ],
+      );
+
+  static buildRollList(List<Roll>? rollList, String? characterName) {
+    return
+      LayoutBuilder(builder: (context, constraints) {
+        List<Widget> rolls = [];
+        for (Roll roll in (rollList ?? [])) {
+          if(!roll.secret || characterName == null || roll.rollerName == characterName )
+            rolls.addAll(getRollWidget(roll));
+        }
+        return Column(
+          children: rolls,
+        );
+      });
+  }
 
   static _buildCharacterSheetButton(
       String title,
@@ -645,7 +691,7 @@ class CharacterWidgets {
     } else if (carac == 'Dettes') {
       character.dettes += diff;
     }
-    characterSheetViewModel.updateCharacter(character);
+    characterSheetViewModel.createOrUpdateCharacter(character);
   }
 
   static void changeUiValue(CharacterSheetViewModel characterSheetViewModel,
@@ -918,7 +964,7 @@ class CharacterWidgets {
                             int.tryParse(_textEditingController.value.text) ??
                                 character.ppMax;
                       }
-                      characterSheetViewModel.updateCharacter(character);
+                      characterSheetViewModel.createOrUpdateCharacter(character);
                       Navigator.of(context).pop();
                     }
                   },

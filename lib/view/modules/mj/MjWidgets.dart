@@ -8,14 +8,13 @@ import 'package:lsr/domain/models/Classe.dart';
 
 import '../../../domain/models/Bloodline.dart';
 import '../../../domain/models/Genre.dart';
-import 'MjViewModel.dart';
 
 class MjWidgets {
   static Future<void Function()> addCharacter(
       Character? initialCharacter,
       BuildContext context,
-      MjViewModel mjViewModel,
-      List<String> playersName) async {
+      List<String> playersName,
+      void Function(Character character) addCharacterList) async {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     final TextEditingController _name =
         TextEditingController(text: initialCharacter?.name ?? '');
@@ -43,11 +42,11 @@ class MjWidgets {
         TextEditingController(text: initialCharacter?.picture ?? '');
     final TextEditingController _background =
         TextEditingController(text: initialCharacter?.background ?? '');
-    Classe? classe = null;
-    Bloodline? bloodline = null;
-    Genre? genre = null;
-    Category? category = null;
-    String? player = null;
+    Classe? classe = initialCharacter?.classe ?? null;
+    Bloodline? bloodline =  initialCharacter?.bloodline ?? null;
+    Genre? genre =  initialCharacter?.genre ?? null;
+    Category? category =  initialCharacter?.category ?? null;
+    String? player =  initialCharacter?.playerName ?? null;
     return await showDialog(
         context: context,
         builder: (context) {
@@ -339,17 +338,15 @@ class MjWidgets {
                               ),
                             ),
                           ]),
-                      Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(0.0, 0.0, 5.0, 0.0),
+                      SizedBox(
+                          width: 300.0,
                           child: TextFormField(
                             controller: _picture,
                             decoration: InputDecoration(hintText: "Picture"),
                           )),
-                      Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(0.0, 0.0, 5.0, 0.0),
-                          child: TextFormField(
+                      SizedBox(
+                          width: 300.0,
+                          child:  TextFormField(
                             controller: _background,
                             decoration: InputDecoration(hintText: "Background"),
                           )),
@@ -360,7 +357,7 @@ class MjWidgets {
                   child: Text('OK   '),
                   onTap: () {
                     if (_formKey.currentState?.validate() ?? false) {
-                      mjViewModel.createOrUpdateCharacter(Character(
+                      addCharacterList(Character(
                           name: _name.value.text,
                           classe: classe ??
                               initialCharacter?.classe ??
@@ -407,7 +404,8 @@ class MjWidgets {
                               Category.PNJ,
                           genre:
                               genre ?? initialCharacter?.genre ?? Genre.AUTRE,
-                          relance: initialCharacter?.relance ?? 0));
+                          relance: initialCharacter?.relance ?? 0,
+                      playerName: player ?? initialCharacter?.playerName ?? null));
                       Navigator.of(context).pop();
                     }
                   },

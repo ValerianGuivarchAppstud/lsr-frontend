@@ -8,12 +8,16 @@ class CharacterSheetState {
   List<Roll>? rollList;
   String? error;
   late CharacterSheetUIState uiState;
+  DateTime? lastTimeNoteSaved;
+  String notes;
 
   CharacterSheetState({
     this.showLoading = true,
     this.character,
     this.error,
-    this.rollList}) {
+    this.rollList,
+    this.lastTimeNoteSaved,
+  this.notes = ''}) {
     this.uiState = CharacterSheetUIState();
   }
 
@@ -52,9 +56,10 @@ class CharacterSheetState {
     return this;
   }
 
+
   @override
   String toString() {
-    return 'CharacterState {showLoading: $showLoading, character: $character, rollList: $rollList, error: $error}';
+    return 'CharacterSheetState{showLoading: $showLoading, character: $character, uiState: $uiState, lastTimeNoteSaved: $lastTimeNoteSaved}';
   }
 
   @override

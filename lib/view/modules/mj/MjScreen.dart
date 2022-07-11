@@ -59,86 +59,36 @@ class _MjPageState extends State<MjPage> {
                               WIDTH_SCREEN * RATIO_SCREEN
                           ? MediaQuery.of(context).size.width
                           : WIDTH_SCREEN * RATIO_SCREEN;
+                      var widthScreen = MediaQuery.of(context).size.width;
                       return _buildMj(state.data!.mjSheet!, state.data!.uiState,
-                          mjViewModel, width);
+                          mjViewModel, width, widthScreen);
                     }
                   })));
         });
   }
 
   _buildMj(MjSheet mjSheet, MjUIState uiState, MjViewModel mjViewModel,
-          double width) =>
-      Column(
-//        mainAxisSize: MainAxisSize.min,
+          double width, double widthScreen) =>
+      Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(children: [
-              Text(
-                'PJ ',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.start,
-              ),
-              DropdownButton<String>(
-                hint: Text('Ajouter PJ'),
-                value: null,
-                icon: const Icon(Icons.arrow_downward),
-                elevation: 16,
-                style: const TextStyle(color: Colors.deepPurple),
-                underline: Container(
-                  height: 2,
-                  color: Colors.deepPurpleAccent,
-                ),
-                onChanged: (String? newValue) {
-                  if (newValue != null) {
-                    mjViewModel.addCharacterList(newValue);
-                  }
-                  setState(() {});
-                },
-                items: mjSheet.pjNames
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-            ]),
-            Align(
-                alignment: Alignment.topLeft,
-                child: Wrap(
-                    children: mjSheet.characters
-                        .where((character) => character.category == Category.PJ)
-                        .map((character) {
-                  return Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black)),
-                      width: width,
-                      child: CharacterWidgets.buildCharacter(
-                          context,
-                          false,
-                          character,
-                          RATIO_BUTTON,
-                          RATIO_FONT,
-                          mjViewModel.getCharacterViewModel(character.name),
-                          mjViewModel.getCharacterStateData(character.name),
-                          null));
-                }).toList())),
-            Row(children: [
-              Text(
-                'PNJ ',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.start,
-              ),
+        SizedBox(
+            width: widthScreen * 2 / 3,
+            child: Column(children: [
               Row(children: [
+                Text(
+                  'PJ ',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
                 DropdownButton<String>(
-                  hint: Text('Ajouter PNJ'),
+                  hint: Text('Ajouter PJ'),
                   value: null,
                   icon: const Icon(Icons.arrow_downward),
                   elevation: 16,
@@ -153,7 +103,7 @@ class _MjPageState extends State<MjPage> {
                     }
                     setState(() {});
                   },
-                  items: mjSheet.pnjNames
+                  items: mjSheet.pjNames
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
@@ -161,35 +111,105 @@ class _MjPageState extends State<MjPage> {
                     );
                   }).toList(),
                 ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.grey)),
-                  child: Text("Ajouter"),
-                  onPressed: () => {MjWidgets.addCharacter(null, context, mjViewModel, mjSheet.playersName)},
-                )
               ]),
-            ]),
-            Align(
-                alignment: Alignment.topLeft,
-                child: Wrap(
-                    children: mjSheet.characters
-                        .where((character) => character.category != Category.PJ)
-                        .map((character) {
-                  return Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black)),
-                      width: width,
-                      child: CharacterWidgets.buildCharacter(
-                          context,
-                          false,
-                          character,
-                          RATIO_BUTTON,
-                          RATIO_FONT,
-                          mjViewModel.getCharacterViewModel(character.name),
-                          mjViewModel.getCharacterStateData(character.name),
-                          null));
-                }).toList())),
-          ]);
-
+              Align(
+                  alignment: Alignment.topLeft,
+                  child: Wrap(
+                      children: mjSheet.characters
+                          .where(
+                              (character) => character.category == Category.PJ)
+                          .map((character) {
+                    return Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black)),
+                        width: width,
+                        child: CharacterWidgets.buildCharacter(
+                            context,
+                            false,
+                            character,
+                            RATIO_BUTTON,
+                            RATIO_FONT,
+                            mjViewModel.getCharacterViewModel(character.name),
+                            mjViewModel.getCharacterStateData(character.name),
+                            null,
+                            null));
+                  }).toList())),
+              Row(children: [
+                Text(
+                  'PNJ ',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+                Row(children: [
+                  DropdownButton<String>(
+                    hint: Text('Ajouter PNJ'),
+                    value: null,
+                    icon: const Icon(Icons.arrow_downward),
+                    elevation: 16,
+                    style: const TextStyle(color: Colors.deepPurple),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        mjViewModel.addCharacterList(newValue);
+                      }
+                      setState(() {});
+                    },
+                    items: mjSheet.pnjNames
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.grey)),
+                    child: Text("Ajouter"),
+                    onPressed: () => {
+                      MjWidgets.addCharacter(null, context, mjSheet.playersName,
+                          mjViewModel.createOrUpdateCharacter)
+                    },
+                  )
+                ]),
+              ]),
+              Align(
+                  alignment: Alignment.topLeft,
+                  child: Wrap(
+                      children: mjSheet.characters
+                          .where(
+                              (character) => character.category != Category.PJ)
+                          .map((character) {
+                    return Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black)),
+                        width: width,
+                        child: CharacterWidgets.buildCharacter(
+                            context,
+                            false,
+                            character,
+                            RATIO_BUTTON,
+                            RATIO_FONT,
+                            mjViewModel.getCharacterViewModel(character.name),
+                            mjViewModel.getCharacterStateData(character.name),
+                            null,
+                            null));
+                  }).toList())),
+            ])),
+        SizedBox(
+            width: widthScreen * 0.9 / 3,
+            child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [CharacterWidgets.buildRollList(mjSheet.rollList, null)]))
+      ]);
 }

@@ -13,7 +13,7 @@ class SheetService {
 
   Future<CharacterSheet> get(String name) => characterProvider.get(name);
 
-  Future<Character> update(Character character) {
+  Future<Character> createOrUpdateCharacter(Character character) {
     return characterProvider.createOrUpdateCharacter(character);
   }
 
