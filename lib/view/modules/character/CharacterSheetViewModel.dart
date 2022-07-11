@@ -8,17 +8,31 @@ import 'package:lsr/view/modules/character/CharacterSheetState.dart';
 import 'dart:convert';
 
 import '../../../domain/services/SheetService.dart';
+import 'dart:developer' as developer;
 
 class CharacterSheetViewModel with ChangeNotifier {
   final SheetService _sheetService;
-  final SettingsService _configService;
+  late final SettingsService? _configService;
+  late final String? _characterName;
+  late final bool _isPlayer;
   late CharacterSheetState _currentState;
 
   final streamController =
       StreamController<CharacterSheetState>.broadcast(sync: true);
 
-  CharacterSheetViewModel(this._sheetService, this._configService) {
+  String? getCharacterName() {
+    return _characterName;
+  }
+
+  CharacterSheetViewModel.playerConstructor(this._sheetService, this._configService) {
     _currentState = CharacterSheetState();
+    _characterName = null;
+    _isPlayer = true;
+  }
+
+  CharacterSheetViewModel.mjConstructor(this._sheetService, this._characterName, this._currentState) {
+    _configService = null;
+    _isPlayer = false;
   }
 
   CharacterSheetState getState() {
@@ -29,7 +43,8 @@ class CharacterSheetViewModel with ChangeNotifier {
     if(reload) {
       streamController.add(_currentState.copy(CharacterSheetLoading()));
     }
-    String characterName = await this._configService.getCharacterName() ?? '';
+    String characterName = _isPlayer ? (await this._configService!.getCharacterName() ?? '') : _characterName!;
+
       _sheetService.get(characterName).then((value) {
         streamController.add(_currentState.copy(CharacterSheetLoaded(value.character, value.rollList)));
       }).onError((error, stackTrace) {
@@ -50,7 +65,11 @@ class CharacterSheetViewModel with ChangeNotifier {
   }
 
   Future<void> sendRoll(RollType rollType, [String empirique = '']) async {
+    developer.log(_currentState.toString());
+
     if(_currentState.character != null) {
+      developer.log('sendRoll2');
+
       _sheetService.sendRoll(
           rollType: rollType,
           rollerName: _currentState.character!.name,

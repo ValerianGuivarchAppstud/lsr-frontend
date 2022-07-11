@@ -4,29 +4,31 @@ import 'package:lsr/domain/models/RollType.dart';
 
 import '../../../domain/models/Roll.dart';
 import '../../../domain/models/Settings.dart';
+import '../../../main.dart';
 import '../../../utils/Injector.dart';
+import '../../../utils/view/Const.dart';
 import '../../widgets/common/LoadingWidget.dart';
 import 'SettingsState.dart';
 import 'SettingsViewModel.dart';
 
 class SettingsPage extends StatefulWidget {
-
-  SettingsPage({required Key key, String SettingsName = ''}) : super(key: key);
+  bool pj;
+  SettingsPage(this.pj, {required Key key, String SettingsName = ''}) : super(key: key);
 
   @override
-  _SettingsPageState createState() => _SettingsPageState();
+  _SettingsPageState createState() => _SettingsPageState(this.pj);
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-
-  _SettingsPageState();
+  bool pj;
+  _SettingsPageState(this.pj);
 
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width < 600
+    var width = MediaQuery.of(context).size.width < WIDTH_SCREEN
         ? MediaQuery.of(context).size.width
-        : 600.0;
+        : WIDTH_SCREEN;
     SettingsViewModel settingsViewModel =
         Injector.of(context).settingsViewModel;
     Injector.of(context).settingsViewModel.getSettings();
@@ -34,14 +36,6 @@ class _SettingsPageState extends State<SettingsPage> {
         stream: settingsViewModel.streamController.stream,
         initialData: settingsViewModel.getState(),
         builder: (context, state) {
-          /*if (state.data?.showLoading ?? true) {
-            const oneSec = Duration(seconds: 1);
-            Timer.periodic(
-                oneSec,
-                (Timer t) => Injector.of(context)
-                    .SettingsViewModel
-                    .getSettings(this.SettingsName));
-          }*/
           return Scaffold(
               body: Container(
                   height: height,
@@ -60,7 +54,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             child: Text("Paramètres indisponibles..."),
                           );
                         } else {
-                          return _buildSettings(state.data!.settings!, 600,
+                          return _buildSettings(state.data!.settings!, WIDTH_SCREEN,
                               settingsViewModel);
                         }
                       }))));
@@ -119,7 +113,15 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Text(value),
               );
             }).toList(),
-          )
+          ),
+  ElevatedButton(
+  child: pj ? const Text('Devenir MJ') : Text('Devenir joueuse'),
+  onPressed: () {
+  Navigator.push(
+  context,
+  MaterialPageRoute(builder: (context) => MainStatefulWidget(!pj)),
+  );
+  },)
         ]);
   }
 

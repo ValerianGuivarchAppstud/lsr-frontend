@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lsr/data/api/mj/MjProvider.dart';
 import 'package:lsr/data/api/settings/SettingsProvider.dart';
 import 'package:lsr/data/storage/StorageProvider.dart';
 import 'package:lsr/domain/services/SettingsService.dart';
@@ -7,6 +8,8 @@ import 'package:lsr/utils/Injector.dart';
 import 'package:lsr/utils/api/NetworkingConfig.dart';
 import 'package:lsr/view/modules/character/CharacterSheetScreen.dart';
 import 'package:lsr/view/modules/character/CharacterSheetViewModel.dart';
+import 'package:lsr/view/modules/mj/MjScreen.dart';
+import 'package:lsr/view/modules/mj/MjViewModel.dart';
 import 'package:lsr/view/modules/settings/SettingsScreen.dart';
 import 'package:lsr/view/modules/settings/SettingsViewModel.dart';
 import 'package:lsr/view/widgets/fonts/FontIconCharacter.dart';
@@ -15,6 +18,8 @@ import 'config/config_reader.dart';
 import 'data/api/character/CharacterProvider.dart';
 import 'data/api/roll/RollProvider.dart';
 import 'dart:developer' as developer;
+
+import 'domain/services/MjService.dart';
 
 
 Future<void> mainCommon(String env) async {
@@ -35,13 +40,16 @@ class MyApp extends StatelessWidget {
   final _settingsService = SettingsService(
       settingsProvider: SettingsProvider(NetworkingConfig()),
       storageProvider: StorageProvider());
-
+  final _mjService = MjService(
+    characterProvider: CharacterProvider(NetworkingConfig()),
+      mjProvider: MjProvider(NetworkingConfig()));
   @override
   Widget build(BuildContext context) {
     return Injector(
       sheetService: _characterService,
-      characterSheetViewModel: CharacterSheetViewModel(_characterService, _settingsService),
+      characterSheetViewModel: CharacterSheetViewModel.playerConstructor(_characterService, _settingsService),
       settingsViewModel: SettingsViewModel(_settingsService),
+      mjViewModel: MjViewModel(_mjService, _characterService),
       key: Key("Main"),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -49,7 +57,7 @@ class MyApp extends StatelessWidget {
           onGenerateRoute: (settings) {
               return MaterialPageRoute(
                 builder: (context) {
-                  return MainStatefulWidget();
+                  return MainStatefulWidget(true);
                 },
               );
           },
@@ -60,48 +68,35 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/*
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Les Sept Rois',
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-      ),
-      home: MainStatefulWidget(),
-    );
-  }
-}
-*/
-
-
 
 class MainStatefulWidget extends StatefulWidget {
-
-  MainStatefulWidget({Key? key}) : super(key: key);
+  bool pj;
+  MainStatefulWidget(this.pj, {Key? key}) : super(key: key);
 
   @override
-  State<MainStatefulWidget> createState() => _MainStatefulWidgetState();
+  State<MainStatefulWidget> createState() => _MainStatefulWidgetState(this.pj);
 }
 
 class _MainStatefulWidgetState extends State<MainStatefulWidget> {
   // TODO check, pkoi il est deux fois ?
-  final _characterService = SheetService(
-      characterProvider: CharacterProvider(NetworkingConfig()), rollProvider: RollProvider(NetworkingConfig()));
+  final bool pj;
+  final _characterService = SheetService(characterProvider:CharacterProvider(NetworkingConfig()), rollProvider: RollProvider(NetworkingConfig()));
   final _settingsService = SettingsService(
-    settingsProvider: SettingsProvider(NetworkingConfig()),
+      settingsProvider: SettingsProvider(NetworkingConfig()),
       storageProvider: StorageProvider());
+  final _mjService = MjService(
+      mjProvider: MjProvider(NetworkingConfig()),
+  characterProvider: CharacterProvider(NetworkingConfig()));
 
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  Widget characterPage = CharacterPage(key: Key('CharacterPage'));
-  Widget settingsPage = SettingsPage(key: Key('SettingsPage'));
+  static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  Widget characterPage = CharacterPage(Key('CharacterPage'), null);
+  late Widget settingsPage;
+  Widget mjPage = MjPage(key: Key('MjPage'));
 
-  _MainStatefulWidgetState();
+  _MainStatefulWidgetState(this.pj) {
+    settingsPage = SettingsPage(pj, key: Key('SettingsPage'));
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -111,16 +106,10 @@ class _MainStatefulWidgetState extends State<MainStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-    /*List<String> characterList = [];
-    _characterService.getCharacterList().then((value) {
-      characterList.addAll(value);
-    });*/
-
-    bool pj = false;
-
     return Injector(
         sheetService: _characterService,
-        characterSheetViewModel: CharacterSheetViewModel(_characterService, _settingsService),
+        characterSheetViewModel: CharacterSheetViewModel.playerConstructor(_characterService, _settingsService),
+        mjViewModel: MjViewModel(_mjService, _characterService),
         settingsViewModel: SettingsViewModel(_settingsService),
         key: Key("main"),
         child: Scaffold(
@@ -178,7 +167,7 @@ class _MainStatefulWidgetState extends State<MainStatefulWidget> {
       }
     } else {
       if (_selectedIndex == 0) {
-        return characterPage;
+        return mjPage;
       } else if (_selectedIndex == 1) {
         return characterPage;
       } else if (_selectedIndex == 2) {

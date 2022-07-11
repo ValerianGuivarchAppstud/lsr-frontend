@@ -12,15 +12,24 @@ class MjProvider implements IMjProvider {
   MjProvider(this._networkingConfig);
 
   @override
-  Future<MjSheet> get(List<String> pj, List<String> pnj) async{
-    final params = <String, dynamic>{
-      'pj': pj,
-      'pnj': pnj,
-    };
-    Response response = await _networkingConfig.dio.get('character', queryParameters: params);
+  Future<MjSheet> get() async{
+    Response response = await _networkingConfig.dio.get('mj');
     MjSheet mjSheet = MjSheet.fromJson(response.data);
-//    developer.log(MjSheet.character.picture ?? 'nooop');
+    return mjSheet;
+  }
 
+
+  @override
+  Future<MjSheet> addCharacterList(String characterName) async{
+    Response response = await _networkingConfig.dio.put('mj/character?characterName=' + (characterName), data: '{}');
+    MjSheet mjSheet = MjSheet.fromJson(response.data);
+    return mjSheet;
+  }
+
+  @override
+  Future<MjSheet> removeCharacterList(String characterName) async{
+    Response response = await _networkingConfig.dio.delete('mj/character?characterName=' + (characterName));
+    MjSheet mjSheet = MjSheet.fromJson(response.data);
     return mjSheet;
   }
 }

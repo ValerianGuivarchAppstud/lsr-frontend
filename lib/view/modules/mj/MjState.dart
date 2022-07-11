@@ -1,16 +1,23 @@
-import 'package:lsr/domain/models/Character.dart';
 import 'package:lsr/domain/models/MjSheet.dart';
+
+import '../character/CharacterSheetState.dart';
+import 'dart:developer' as developer;
 
 class MjState {
   bool showLoading;
   MjSheet? mjSheet;
-  late Map<String, CharacterSheetUIState> uiState;
+  late Map<String, CharacterSheetState> charactersState;
   String? error;
+  late MjUIState uiState;
+
 
   MjState({
     this.showLoading = true,
     this.mjSheet,
-    this.error});
+    this.error}) {
+    this.charactersState = {};
+    this.uiState = MjUIState();
+  }
 
   MjState copy(MjPartialState partialState) {
     switch (partialState.runtimeType) {
@@ -21,11 +28,14 @@ class MjState {
         break;
       case MjFailed:
         showLoading = false;
-        error = 'Unable to load characters list';
+        error = 'Unable to load MJ page';
         break;
       case MjLoading:
         showLoading = true;
         error = null;
+        break;
+      case MjUIUpdated:
+        uiState = (partialState as MjUIUpdated).state;
         break;
       default:
         break;
@@ -50,6 +60,13 @@ class MjState {
   @override
   int get hashCode =>
       showLoading.hashCode ^ mjSheet.hashCode ^ error.hashCode;
+
+  CharacterSheetState getCharacterStateData(String name) {
+    if(charactersState[name] == null) {
+      charactersState[name] = new CharacterSheetState();
+    }
+    return charactersState[name]!;
+  }
 }
 
 abstract class MjPartialState {}
@@ -67,3 +84,16 @@ class MjFailed extends MjPartialState {
 }
 
 class MjLoading extends MjPartialState {}
+
+
+class MjUIUpdated extends MjPartialState {
+  MjUIState state;
+
+  MjUIUpdated(this.state);
+}
+
+class MjUIState {
+ // List<String>? characters;
+
+  MjUIState(); //{this.characters = null});
+}

@@ -1,36 +1,41 @@
+import 'dart:math';
+import 'dart:ui';
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:lsr/domain/models/Bloodline.dart';
+import 'package:lsr/domain/models/Category.dart';
 
 import 'Classe.dart';
+import 'Genre.dart';
 part 'Character.g.dart';
 
 @JsonSerializable()
 class Character {
   String name;
-  Classe classe;
-  Bloodline bloodline;
+  late Classe classe;
+  late Bloodline bloodline;
   int chair;
   int esprit;
   int essence;
-  int pv;
-  int pvMax;
-  int pf;
-  int pfMax;
-  int pp;
-  int ppMax;
-  int dettes;
-  int arcanes;
-  int arcanesMax;
-  int niveau;
-  String lux;
-  String umbra;
-  String secunda;
-  String notes;
-  String category;
-  bool genreMasculin;
-  int relance;
-  String? picture;
-  String? background;
+  late int pv;
+  late int pvMax;
+  late int pf;
+  late int pfMax;
+  late int pp;
+  late int ppMax;
+  late int dettes;
+  late int arcanes;
+  late int arcanesMax;
+  late int niveau;
+  late String lux;
+  late String umbra;
+  late String secunda;
+  late String notes;
+  late Category category;
+  late Genre genre;
+  late int relance;
+  late String? picture;
+  late String? background;
   Character({
       required this.name,
       required this.classe,
@@ -53,11 +58,12 @@ class Character {
       required this.secunda,
       required this.notes,
       required this.category,
-    required this.genreMasculin,
+    required this.genre,
     required this.relance,
     required this.picture,
     required this.background
   });
+
 
 
   /// A necessary factory constructor for creating a new User instance
@@ -77,19 +83,23 @@ class Character {
   String getClasseDescription() {
     switch(classe){
       case Classe.CHAMPION:
-        return genreMasculin ? "Champion" : "Championne";
+        return genre == Genre.HOMME ? "Champion" : genre == Genre.FEMME ? "Championne" : "Champion.ne";
       case Classe.CORROMPU:
-        return genreMasculin ? "Corrompu" : "Corrompue";
+        return genre == Genre.HOMME ? "Corrompu" : genre == Genre.FEMME ?  "Corrompue" : "Corrompu.e";
       case Classe.REJETE:
-        return genreMasculin ? "Rejeté" : "Rejetée";
+        return genre == Genre.HOMME ? "Rejeté" : genre == Genre.FEMME ?  "Rejetée" : "Rejeté.e";
       case Classe.PACIFICATEUR:
-        return genreMasculin ? "Pacificateur" : "Pacificatrice";
+        return genre == Genre.HOMME ? "Pacificateur" : genre == Genre.FEMME ?  "Pacificatrice" : "Pacificateurice";
       case Classe.SPIRITE:
-        return genreMasculin ? "Spirite" : "Spirite";
+        return genre == Genre.HOMME ? "Spirit" : genre == Genre.FEMME ?  "Spirite" : "Spirit.e";
       case Classe.ARCANISTE:
-        return genreMasculin ? "Arcaniste" : "Arcaniste";
+        return "Arcaniste";
       case Classe.CHAMPION_ARCANIQUE:
-        return genreMasculin ? "Champion Arcanique" : "Championne Arcanique";
+        return genre == Genre.HOMME ? "Champion Arcanique" : genre == Genre.FEMME ?  "Championne Arcanique" :  "Champion.ne Arcanique";
+      case Classe.SOLDAT:
+        return genre == Genre.HOMME ? "Soldat" : genre == Genre.FEMME ?  "Soldate" : "Soldat.e";
+      case Classe.INCONNU:
+        return "Classe inconnue";
     }
   }
 
@@ -133,5 +143,10 @@ class Character {
   int getInjury() {
     double diff = (pvMax - pv + 1) / 6;
     return diff.floor();
+  }
+
+  @override
+  String toString() {
+    return 'Character{name: $name}';
   }
 }

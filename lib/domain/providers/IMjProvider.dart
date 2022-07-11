@@ -5,5 +5,7 @@ import 'package:lsr/domain/models/Settings.dart';
 import '../models/CharacterSheet.dart';
 
 abstract class IMjProvider {
-  Future<MjSheet> get(List<String> pj, List<String> pnj);
+  Future<MjSheet> get();
+  Future<MjSheet> addCharacterList(String characterName);
+  Future<MjSheet> removeCharacterList(String characterName);
 }

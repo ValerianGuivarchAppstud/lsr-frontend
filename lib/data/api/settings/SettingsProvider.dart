@@ -13,11 +13,8 @@ class SettingsProvider implements ISettingsProvider {
 
   @override
   Future<Settings> get(String? playerName) async{
-    developer.log("------------");
     Response response = await _networkingConfig.dio.get('settings?playerName=' + (playerName ?? ''));
-    developer.log(response.toString());
     Settings settings = Settings.fromJson(response.data);
-    developer.log(settings.toString());
 
     return settings;
   }

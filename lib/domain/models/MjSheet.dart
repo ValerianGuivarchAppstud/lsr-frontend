@@ -7,13 +7,24 @@ part 'MjSheet.g.dart';
 
 @JsonSerializable()
 class MjSheet {
-  List<Character> pj;
-  List<Character> pnj;
+
+  @override
+  String toString() {
+    return 'MjSheet{characters: $characters, pjNames: $pjNames, pnjNames: $pnjNames, tempoNames: $tempoNames, rollList: $rollList}';
+  }
+  List<Character> characters;
+  List<String> pjNames;
+  List<String> pnjNames;
+  List<String> tempoNames;
   List<Roll> rollList;
+  List<String> playersName;
   MjSheet({
-      required this.pj,
-      required this.pnj,
-      required this.rollList
+      required this.characters,
+    required this.rollList,
+    required this.pjNames,
+    required this.pnjNames,
+    required this.tempoNames,
+    required this.playersName
   });
 
 

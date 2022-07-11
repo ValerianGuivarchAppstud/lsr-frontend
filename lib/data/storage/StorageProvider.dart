@@ -31,6 +31,18 @@ class StorageProvider implements IStorageProvider {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('playerName', playerName);
     return prefs.getString('playerName');
+  }
 
+  @override
+  Future<bool> getPlayerMjStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    return await prefs.getBool('playerMjStatus') ?? false;
+  }
+
+  @override
+  Future<bool> setPlayerMjStatus(bool playerMjStatus) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('playerMjStatus', playerMjStatus);
+    return prefs.getBool('playerMjStatus') ?? false;
   }
 }

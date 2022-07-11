@@ -14,7 +14,7 @@ class SheetService {
   Future<CharacterSheet> get(String name) => characterProvider.get(name);
 
   Future<Character> update(Character character) {
-    return characterProvider.update(character);
+    return characterProvider.createOrUpdateCharacter(character);
   }
 
   void sendRoll(

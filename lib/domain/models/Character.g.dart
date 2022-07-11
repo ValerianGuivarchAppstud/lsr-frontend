@@ -27,8 +27,8 @@ Character _$CharacterFromJson(Map<String, dynamic> json) => Character(
       umbra: json['umbra'] as String,
       secunda: json['secunda'] as String,
       notes: json['notes'] as String,
-      category: json['category'] as String,
-      genreMasculin: json['genreMasculin'] as bool,
+      category: $enumDecode(_$CategoryEnumMap, json['category']),
+      genre: $enumDecode(_$GenreEnumMap, json['genre']),
       relance: json['relance'] as int,
       picture: json['picture'] as String?,
       background: json['background'] as String?,
@@ -55,8 +55,8 @@ Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'umbra': instance.umbra,
       'secunda': instance.secunda,
       'notes': instance.notes,
-      'category': instance.category,
-      'genreMasculin': instance.genreMasculin,
+      'category': _$CategoryEnumMap[instance.category]!,
+      'genre': _$GenreEnumMap[instance.genre]!,
       'relance': instance.relance,
       'picture': instance.picture,
       'background': instance.background,
@@ -70,6 +70,8 @@ const _$ClasseEnumMap = {
   Classe.SPIRITE: 'SPIRITE',
   Classe.ARCANISTE: 'ARCANISTE',
   Classe.CHAMPION_ARCANIQUE: 'CHAMPION_ARCANIQUE',
+  Classe.SOLDAT: 'SOLDAT',
+  Classe.INCONNU: 'INCONNU',
 };
 
 const _$BloodlineEnumMap = {
@@ -89,4 +91,16 @@ const _$BloodlineEnumMap = {
   Bloodline.ILLITHIDE: 'ILLITHIDE',
   Bloodline.ARBRE: 'ARBRE',
   Bloodline.AUCUN: 'AUCUN',
+};
+
+const _$CategoryEnumMap = {
+  Category.PJ: 'PJ',
+  Category.PNJ: 'PNJ',
+  Category.TEMPO: 'TEMPO',
+};
+
+const _$GenreEnumMap = {
+  Genre.HOMME: 'HOMME',
+  Genre.FEMME: 'FEMME',
+  Genre.AUTRE: 'AUTRE',
 };
