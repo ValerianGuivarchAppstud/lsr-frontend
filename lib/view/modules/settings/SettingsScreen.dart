@@ -12,18 +12,20 @@ import 'SettingsViewModel.dart';
 
 class SettingsPage extends StatefulWidget {
   bool pj;
+  bool camera;
 
-  SettingsPage(this.pj, {required Key key, String SettingsName = ''})
+  SettingsPage(this.pj, this.camera, {required Key key, String SettingsName = ''})
       : super(key: key);
 
   @override
-  _SettingsPageState createState() => _SettingsPageState(this.pj);
+  _SettingsPageState createState() => _SettingsPageState(this.pj, this.camera);
 }
 
 class _SettingsPageState extends State<SettingsPage> {
   bool pj;
+  bool camera;
 
-  _SettingsPageState(this.pj);
+  _SettingsPageState(this.pj, this.camera);
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +117,7 @@ class _SettingsPageState extends State<SettingsPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => MainStatefulWidget(!pj)),
+              MaterialPageRoute(builder: (context) => MainStatefulWidget(!pj, camera)),
             );
           },
         )

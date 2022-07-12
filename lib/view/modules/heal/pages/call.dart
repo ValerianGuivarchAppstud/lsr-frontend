@@ -7,7 +7,7 @@ import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:flutter/material.dart';
 
 const appId = "3eac4da1625d4bde816a6686c73e7b03";
-const token = "0063eac4da1625d4bde816a6686c73e7b03IACa8d78xrzxisxVQwDCiCCrYdZN/pkBzoLMdTBCfKqvl2eH5lEAAAAAEACPl0pWJYPNYgEAAQAkg81i";
+const token = "0063eac4da1625d4bde816a6686c73e7b03IAD9G/NSUs6ruVCu8cVM/er5SjRFsG4bl2r7D3HOdqfNwmeH5lEAAAAAEAAh21UY6cjOYgEAAQDpyM5i";
 const channel = "L7R-visio";
 
 
