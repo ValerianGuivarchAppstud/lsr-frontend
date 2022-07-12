@@ -26,6 +26,7 @@ class SheetService {
           required bool proficiency,
           required int benediction,
           required int malediction,
+          required String? characterToHelp,
             String empirique = ''}) =>
       rollProvider.send(
           rollerName: rollerName,
@@ -36,6 +37,7 @@ class SheetService {
           proficiency: proficiency,
           benediction: benediction,
           malediction: malediction,
+          characterToHelp: characterToHelp,
           empirique: empirique);
 
   Stream getRollList() {

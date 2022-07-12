@@ -17,6 +17,7 @@ SendRollRequest _$SendRollRequestFromJson(Map<String, dynamic> json) =>
       benediction: json['benediction'] as int,
       malediction: json['malediction'] as int,
       empiriqueRoll: json['empiriqueRoll'] as String?,
+      characterToHelp: json['characterToHelp'] as String?,
     );
 
 Map<String, dynamic> _$SendRollRequestToJson(SendRollRequest instance) =>
@@ -29,6 +30,7 @@ Map<String, dynamic> _$SendRollRequestToJson(SendRollRequest instance) =>
       'proficiency': instance.proficiency,
       'benediction': instance.benediction,
       'malediction': instance.malediction,
+      'characterToHelp': instance.characterToHelp,
       'empiriqueRoll': instance.empiriqueRoll,
     };
 

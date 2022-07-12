@@ -12,6 +12,7 @@ abstract class IRollProvider {
     required bool proficiency,
     required int benediction,
     required int malediction,
+    required String? characterToHelp,
     String empirique
   });
 

@@ -91,7 +91,7 @@ class _CharacterPageState extends State<CharacterPage> {
                             }
                           }
                           return CharacterWidgets.buildCharacter(context, true, state.data!.character!, 1,1,
-                              characterSheetViewModel, state.data!, noteFieldController, state.data!.rollList);
+                              characterSheetViewModel, state.data!, noteFieldController, state.data!.rollList, state.data!.pjAlliesNames);
                         }
                       })));
         });

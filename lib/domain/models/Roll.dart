@@ -12,6 +12,18 @@ part 'Roll.g.dart';
 @JsonSerializable()
 class Roll {
   String id;
+  String rollerName;
+  RollType rollType;
+  DateTime date;
+  bool secret;
+  bool focus;
+  bool power;
+  bool proficiency;
+  int benediction;
+  int malediction;
+  List<int> result;
+  int? success;
+  String? characterToHelp;
 
   Roll(
       this.id,
@@ -27,129 +39,11 @@ class Roll {
       this.result,
       this.success);
 
-  String rollerName;
-  RollType rollType;
-  DateTime date;
-  bool secret;
-  bool focus;
-  bool power;
-  bool proficiency;
-  int benediction;
-  int malediction;
-  List<int> result;
-  int? success;
-
-  /*
-  static successRoll(RollType rollType) {
-    switch(rollType) {
-      case RollType.CHAIR:
-      case RollType.ESPRIT :
-      case RollType.ESSENCE:
-      case RollType.MAGIE:
-      case RollType.MAGIE:
-      case RollType.ARCANE_ESPRIT:
-      case RollType.ARCANE_ESSENCE:
-      case RollType.SOIN:
-        return true;
-      case RollType.SAUVEGARDE_VS_MORT:
-      case RollType.EMPIRIQUE :
-        return false;
-    }
-  }
-
-  Roll({required this.rollType, required this.secret, required this.focus, required this.power,
-    required this.proficiency, required this.benediction, required this.malediction,
-    required int diceNumber, required int diceValue}){
-    diceNumber = diceNumber + benediction - malediction + (focus ? 1 : 0);
-    result = [];
-    success = 0;
-    var rng = new Random();
-    for(var i = 0 ; i < diceNumber; i++ ) {
-      result.add(rng.nextInt(diceValue - 1)+1);
-    }
-  }
-
-  factory Roll.rollChair({required Character roller, required bool secret, required bool focus, required bool power,
-    required bool proficiency, required bool benediction, required bool malediction}) {
-    Roll()
-  }
-
-
-  factory Roll.statRoll({required Character roller, required RollType rollType, required bool secret, required bool focus, required bool power,
-    required bool proficiency, required bool benediction, required bool malediction}) {
-    int state = 0;
-    switch(rollType) {
-      case RollType.CHAIR:
-        state = roller.chair;
-        break;
-      case RollType.ESPRIT:
-        state = roller.esprit;
-        break;
-      case RollType.ESSENCE:
-        state = roller.essence;
-        break;
-      case RollType.MAGIE:
-        state = roller.essence; // TODO check Tibo
-        break;
-      case RollType.SOIN:
-        state = roller.essence;
-        break;
-      case RollType.ARCANE_ESPRIT:
-        state = roller.esprit;
-        break;
-      case RollType.ARCANE_ESSENCE:
-        state = roller.essence;
-        break;
-      case RollType.SAUVEGARDE_VS_MORT:
-        state = roller.essence; // TODO check
-        break;
-    }
-  }
-
-  Roll({required Character roller, required this.rollType, required this.secret, required this.focus, required this.power,
-    required this.proficiency, required this.benediction, required this.malediction}){
-    rollerName = roller.name;
-    int state = 0;
-    switch(rollType) {
-      case RollType.CHAIR:
-        state = roller.chair;
-        break;
-      case RollType.ESPRIT:
-        state = roller.esprit;
-        break;
-      case RollType.ESSENCE:
-        state = roller.essence;
-        break;
-      case RollType.EMPIRIQUE:
-        state = roller.chair; // TODO add
-        break;
-      case RollType.MAGIE:
-        state = roller.essence; // TODO check Tibo
-        break;
-      case RollType.SOIN:
-        state = roller.essence;
-        break;
-      case RollType.ARCANE_ESPRIT:
-        state = roller.esprit;
-        break;
-      case RollType.ARCANE_ESSENCE:
-        state = roller.essence;
-        break;
-      case RollType.SAUVEGARDE_VS_MORT:
-        state = roller.essence; // TODO check
-        break;
-    }
-
-    this.result = [];
-  }
-*/
-
   secretText() {
     return secret ? '(secret) ' : '';
   }
 
   bonusMalusText() {
-    String text = '';
     if(malediction==0 && benediction==0) {
       return '';
     } else if (malediction>0 && benediction==0) {
@@ -184,6 +78,8 @@ class Roll {
       case RollType.ARCANE_ESSENCE:
         return 'Jet d\'Arcane d\'Essence';
       case RollType.SAUVEGARDE_VS_MORT:
+        return ;
+      case RollType.RELANCE:
         return ;
     }
   }

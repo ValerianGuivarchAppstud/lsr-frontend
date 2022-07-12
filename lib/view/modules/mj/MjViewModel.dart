@@ -37,7 +37,7 @@ class MjViewModel with ChangeNotifier {
         streamController.add(_currentState.copy(MjFailed('No mj')));
       } else {
         for(CharacterSheetViewModel _characterViewModel in _charactersViewModel.values) {
-          _characterViewModel.getState().copy(CharacterSheetLoaded(value.characters.firstWhere((element) => element.name == _characterViewModel.getCharacterName()), []));
+          _characterViewModel.getState().copy(CharacterSheetLoaded(value.characters.firstWhere((element) => element.name == _characterViewModel.getCharacterName()), [], []));
         }
         streamController.add(_currentState.copy(MjLoaded(value)));
       }

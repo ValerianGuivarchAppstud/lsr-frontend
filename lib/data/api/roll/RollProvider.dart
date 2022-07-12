@@ -27,6 +27,7 @@ class RollProvider implements IRollProvider {
     required bool proficiency,
     required int benediction,
     required int malediction,
+    required String? characterToHelp,
     String empirique = ''
   }) {
     developer.log(rollType.toString());
@@ -38,6 +39,7 @@ class RollProvider implements IRollProvider {
         proficiency: proficiency,
         benediction: benediction,
         malediction: malediction,
+        characterToHelp: characterToHelp,
         empiriqueRoll: empirique);
 
     _networkingConfig.dio.post('roll', data: sendRollRequest.toJson());

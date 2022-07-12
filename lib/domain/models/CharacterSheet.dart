@@ -9,9 +9,11 @@ part 'CharacterSheet.g.dart';
 class CharacterSheet {
   Character character;
   List<Roll> rollList;
+  late List<String> pjAlliesNames;
   CharacterSheet({
       required this.character,
-      required this.rollList
+      required this.rollList,
+    required this.pjAlliesNames
   });
 
 

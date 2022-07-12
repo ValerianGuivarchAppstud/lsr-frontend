@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:lsr/domain/models/Character.dart';
 import 'package:lsr/domain/models/RollLast.dart';
 import 'package:lsr/domain/models/RollType.dart';
+import 'package:lsr/domain/services/MjService.dart';
 import 'package:lsr/domain/services/SettingsService.dart';
 import 'package:lsr/view/modules/character/CharacterSheetState.dart';
 import 'dart:convert';
@@ -13,6 +14,7 @@ import 'dart:developer' as developer;
 class CharacterSheetViewModel with ChangeNotifier {
   final SheetService _sheetService;
   late final SettingsService? _configService;
+  late final MjService? _mjService;
   late final String? _characterName;
   late final bool _isPlayer;
   late CharacterSheetState _currentState;
@@ -46,7 +48,7 @@ class CharacterSheetViewModel with ChangeNotifier {
     String characterName = _isPlayer ? (await this._configService!.getCharacterName() ?? '') : _characterName!;
 
       _sheetService.get(characterName).then((value) {
-        streamController.add(_currentState.copy(CharacterSheetLoaded(value.character, value.rollList)));
+        streamController.add(_currentState.copy(CharacterSheetLoaded(value.character, value.rollList, value.pjAlliesNames)));
       }).onError((error, stackTrace) {
         streamController.add(_currentState.copy(CharacterSheetFailed(error.toString())));
       });
@@ -65,11 +67,8 @@ class CharacterSheetViewModel with ChangeNotifier {
   }
 
   Future<void> sendRoll(RollType rollType, [String empirique = '']) async {
-    developer.log(_currentState.toString());
 
     if(_currentState.character != null) {
-      developer.log('sendRoll2');
-
       _sheetService.sendRoll(
           rollType: rollType,
           rollerName: _currentState.character!.name,
@@ -79,7 +78,11 @@ class CharacterSheetViewModel with ChangeNotifier {
           proficiency: _currentState.uiState.proficiency,
           benediction: _currentState.uiState.benediction,
           malediction: _currentState.uiState.malediction,
+          characterToHelp: _currentState.uiState.characterToHelp,
           empirique: empirique);
+      if(_currentState.uiState.characterToHelp != null) {
+        _currentState.uiState.characterToHelp = null;
+      }
     }
   }
 

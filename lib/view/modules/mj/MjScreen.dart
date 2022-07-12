@@ -132,6 +132,7 @@ class _MjPageState extends State<MjPage> {
                             mjViewModel.getCharacterViewModel(character.name),
                             mjViewModel.getCharacterStateData(character.name),
                             null,
+                            null,
                             null));
                   }).toList())),
               Row(children: [
@@ -200,6 +201,7 @@ class _MjPageState extends State<MjPage> {
                             RATIO_FONT,
                             mjViewModel.getCharacterViewModel(character.name),
                             mjViewModel.getCharacterStateData(character.name),
+                            null,
                             null,
                             null));
                   }).toList())),

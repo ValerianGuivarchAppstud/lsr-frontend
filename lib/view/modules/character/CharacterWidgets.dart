@@ -28,7 +28,8 @@ class CharacterWidgets {
       CharacterSheetViewModel characterSheetViewModel,
       CharacterSheetState characterSheetState,
       TextEditingController? noteFieldController,
-      List<Roll>? rollList) =>
+      List<Roll>? rollList,
+      List<String>? pjAlliesNames) =>
       Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -555,16 +556,23 @@ class CharacterWidgets {
                 }, () => {}),
                 _buildCharacterSheetButton(
                     '',
-                    "Aide",
+                    (characterSheetState.uiState.characterToHelp == null) ? "Aider" : "Aider ${characterSheetState.uiState.characterToHelp}",
                     (sizeRatio * WIDTH_SCREEN) / 5,
                     sizeRatioFont * 14,
                     34,
                     characterSheetState.uiState.help
                         ? Colors.blueGrey
                         : Colors.blue,
-                    playerDisplay, () {
-                  changeUiSelect(characterSheetViewModel,
-                      characterSheetState.uiState, 'Help');
+                    playerDisplay,
+                        () {
+                          if (characterSheetState.uiState.characterToHelp == null) {
+                            showHelpingRollAlertDialog(
+                                context, characterSheetViewModel, pjAlliesNames ?? [],
+                                characterSheetState.uiState);
+                          } else {
+                            characterSheetState.uiState.characterToHelp = null;
+                            characterSheetViewModel.updateUi(characterSheetState.uiState);
+                          }
                 }, () => {}),
                 _buildCharacterSheetButton(
                     '',
@@ -723,14 +731,18 @@ class CharacterWidgets {
   static List<Widget> getRollWidget(Roll roll) {
     List<TextSpan> rollText = [];
     List<TextSpan> rollDices = [];
+    List<TextSpan> rollResist = [];
     rollText.add(TextSpan(
         // (secret)
-        text: roll.secretText()));
+        text: roll.secretText(),
+        style: TextStyle(
+        height: 0 //You can set your custom height here
+    )
+    ));
     rollText.add(TextSpan(
         // Jonathan
         text: roll.rollerName,
         style: TextStyle(fontWeight: FontWeight.bold)));
-
     rollText.add(TextSpan(
         // fait un
         text: ' fait un '));
@@ -759,6 +771,12 @@ class CharacterWidgets {
       textBonus = textBonus.substring(0, textBonus.length - 1);
       rollText.add(TextSpan(
         text: ' (' + textBonus + ')',
+      ));
+    }
+
+    if(roll.characterToHelp != null){
+      rollText.add(TextSpan(
+        text: ' pour aider ${roll.characterToHelp}',
       ));
     }
 
@@ -850,9 +868,21 @@ class CharacterWidgets {
       Text.rich(TextSpan(
           text: roll.dateText() + ' - ', // 10:19:22 -
           children: rollText)),
-      Text.rich(TextSpan(
+      Wrap(
+    children:[ Text.rich(TextSpan(
           // 10:19:22 -
-          children: rollDices)),
+          children: rollDices))]),
+        _buildCharacterSheetButton(
+            "R-Chair",
+            "",
+            WIDTH_SCREEN / 12,
+            20,
+            20,
+            Colors.blue,
+            false,
+                () => {},
+//                sendRoll(characterSheetViewModel, RollType.CHAIR, ''),
+                () => {}),
     ];
   }
 
@@ -975,6 +1005,71 @@ class CharacterWidgets {
         });
   }
 
+  static Future<void Function()> showHelpingRollAlertDialog(
+      BuildContext context,
+      CharacterSheetViewModel characterSheetViewModel,
+      List<String> pjAlliesNames,
+      CharacterSheetUIState uiState) async {
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    String? characterToHelp = null;
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              title: Text("Jet d'aide"),
+              content: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding:
+                        const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                        child: DropdownButton<String>(
+                          hint: Text('Qui aides-tu ?'),
+                          value: characterToHelp,
+                          icon: const Icon(Icons.arrow_downward),
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              characterToHelp = newValue;
+                            });
+                          },
+                          style:
+                          const TextStyle(color: Colors.deepPurple),
+                          underline: Container(
+                            height: 2,
+                            color: Colors.deepPurpleAccent,
+                          ),
+                          items: pjAlliesNames.map<DropdownMenuItem<String>>(
+                                  (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                        ),
+                      ),
+                    ],
+                  )),
+              actions: <Widget>[
+                InkWell(
+                  child: Text('OK   '),
+                  onTap: () {
+                    if (characterToHelp != null) {
+                      uiState.characterToHelp = characterToHelp;
+                      characterSheetViewModel.updateUi(uiState);
+                      Navigator.of(context).pop();
+                    }
+                  },
+                ),
+              ],
+            );
+          });
+        });
+  }
+
   static Future<void Function()> showEmpiriqueRollAlertDialog(
       BuildContext context,
       CharacterSheetViewModel characterSheetViewModel,
@@ -982,7 +1077,7 @@ class CharacterWidgets {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     late String initialValue = "1d6";
     final TextEditingController _textEditingController =
-        TextEditingController(text: initialValue);
+    TextEditingController(text: initialValue);
     return await showDialog(
         context: context,
         builder: (context) {
