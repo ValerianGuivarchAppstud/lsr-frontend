@@ -65,18 +65,12 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - configs/app_config_dev.json
-    - assets/images/background/eau.jpg
-    - assets/images/background/vent.jpg
-    - assets/images/background/border.png
-    - assets/images/background/null.jpg
     - assets/images/icons/Chair.png
     - assets/images/icons/Esprit.png
     - assets/images/icons/Essence.png
     - assets/images/icons/Lux.png
     - assets/images/icons/Umbra.png
     - assets/images/icons/Secunda.png
-    - assets/images/portraits/null.png
-    - assets/images/portraits/Viktor.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
