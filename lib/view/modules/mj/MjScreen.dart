@@ -14,14 +14,18 @@ import 'MjState.dart';
 import 'MjViewModel.dart';
 
 class MjPage extends StatefulWidget {
-  MjPage({required Key key}) : super(key: key);
+  bool camera;
+
+  MjPage(this.camera, {required Key key}) : super(key: key);
 
   @override
-  _MjPageState createState() => _MjPageState();
+  _MjPageState createState() => _MjPageState(this.camera);
 }
 
 class _MjPageState extends State<MjPage> {
-  _MjPageState();
+  bool camera;
+
+  _MjPageState(this.camera);
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +63,9 @@ class _MjPageState extends State<MjPage> {
                               WIDTH_SCREEN * RATIO_SCREEN
                           ? MediaQuery.of(context).size.width
                           : WIDTH_SCREEN * RATIO_SCREEN;
-                      var widthScreen = MediaQuery.of(context).size.width - WIDTH_CAMERA;
+                      var widthScreen = MediaQuery.of(context).size.width;
                       return _buildMj(state.data!.mjSheet!, state.data!.uiState,
-                          mjViewModel, width, widthScreen);
+                          mjViewModel, camera ? (width - WIDTH_CAMERA) : width, widthScreen);
                     }
                   })));
         });

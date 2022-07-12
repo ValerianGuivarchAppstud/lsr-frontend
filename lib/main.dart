@@ -7,9 +7,9 @@ import 'package:lsr/domain/services/SheetService.dart';
 import 'package:lsr/utils/Injector.dart';
 import 'package:lsr/utils/api/NetworkingConfig.dart';
 import 'package:lsr/utils/view/Const.dart';
+import 'package:lsr/view/modules/call/call.dart';
 import 'package:lsr/view/modules/character/CharacterSheetScreen.dart';
 import 'package:lsr/view/modules/character/CharacterSheetViewModel.dart';
-import 'package:lsr/view/modules/heal/pages/call.dart';
 import 'package:lsr/view/modules/mj/MjScreen.dart';
 import 'package:lsr/view/modules/mj/MjViewModel.dart';
 import 'package:lsr/view/modules/settings/SettingsScreen.dart';
@@ -22,7 +22,7 @@ import 'data/api/roll/RollProvider.dart';
 import 'domain/services/MjService.dart';
 
 const bool INITIAL_STATE_PJ = false;
-const bool INITIAL_STATE_CAMERA = true;
+const bool INITIAL_STATE_CAMERA = false;
 
 Future<void> mainCommon(String env) async {
   // Always call this if the main method is asynchronous
@@ -33,10 +33,21 @@ Future<void> mainCommon(String env) async {
 
 void main() {
   mainCommon("dev");
-  runApp(MyApp());
+  runApp(MyApp(key : Key("MyApp")));
 }
 
-class MyApp extends StatelessWidget {
+
+class MyApp extends StatefulWidget {
+
+  MyApp({required Key key})
+      : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _MyAppState();
+
+}
+
+class _MyAppState extends State<MyApp> {
   final _characterService = SheetService(
       characterProvider: CharacterProvider(NetworkingConfig()),
       rollProvider: RollProvider(NetworkingConfig()));
@@ -104,10 +115,11 @@ class _MainStatefulWidgetState extends State<MainStatefulWidget> {
     key: Key("CallPage"),
   );
   late Widget settingsPage;
-  Widget mjPage = MjPage(key: Key('MjPage'));
+  late MjPage mjPage;
 
   _MainStatefulWidgetState(this.pj, this.camera) {
     settingsPage = SettingsPage(pj, camera, key: Key('SettingsPage'));
+    mjPage = MjPage(camera, key: Key('MjPage'));
   }
 
   void _onItemTapped(int index) {
@@ -182,15 +194,13 @@ class _MainStatefulWidgetState extends State<MainStatefulWidget> {
           )),
         if(camera) SizedBox(
             width: WIDTH_CAMERA,//* 0.9 / 3,
-            child: Text("lol")
+            child: CallPage(key: Key("call"))
         )]),
             IconButton(
             icon: Icon(Icons.camera_alt),
               onPressed: () => {
-              Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MainStatefulWidget(pj, !camera)),
-              )
+              camera = !camera,
+              setState(() {})
               },
             )])
         ));

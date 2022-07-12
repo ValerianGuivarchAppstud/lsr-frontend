@@ -6,6 +6,8 @@ import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:flutter/material.dart';
 
+import 'dart:developer' as developer;
+
 const appId = "3eac4da1625d4bde816a6686c73e7b03";
 const token = "0063eac4da1625d4bde816a6686c73e7b03IAD9G/NSUs6ruVCu8cVM/er5SjRFsG4bl2r7D3HOdqfNwmeH5lEAAAAAEAAh21UY6cjOYgEAAQDpyM5i";
 const channel = "L7R-visio";
@@ -30,7 +32,22 @@ class _CallPageState extends State<CallPage> {
     initAgora();
   }
 
+  @override
+  void dispose() {
+    stopAgora();
+    super.dispose();
+  }
 
+
+  Future<void> stopAgora() async {
+    developer.log("STOP");
+    // TODO finish here
+    await _engine.disableVideo();
+    await _engine.stopAllEffects();
+    _engine.destroy();
+    await window.navigator.getUserMedia(audio: false, video: false);
+
+  }
   Future<void> initAgora() async {
     // retrieve permissions
     await window.navigator.getUserMedia(audio: true, video: true);
