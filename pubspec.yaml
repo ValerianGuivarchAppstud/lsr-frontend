@@ -48,6 +48,8 @@ dev_dependencies:
     sdk: flutter
   build_runner: ^2.1.10
   json_serializable: ^6.1.6
+  build_test: ^2.1.0
+  build_web_compilers: ^3.0.0
 
 
 
