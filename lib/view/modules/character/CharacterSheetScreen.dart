@@ -1,21 +1,15 @@
 import 'dart:async';
-import 'dart:ui';
+import 'dart:developer' as developer;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:lsr/domain/models/RollType.dart';
 
-import '../../../domain/models/Character.dart';
-import '../../../domain/models/Roll.dart';
 import '../../../utils/Injector.dart';
 import '../../../utils/view/Const.dart';
 import '../../widgets/common/LoadingWidget.dart';
 import 'CharacterSheetState.dart';
 import 'CharacterSheetViewModel.dart';
-
-import 'dart:developer' as developer;
-
 import 'CharacterWidgets.dart';
 
 class CharacterPage extends StatefulWidget {

@@ -1,7 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:lsr/domain/models/Bloodline.dart';
 
-import 'Classe.dart';
 part 'Settings.g.dart';
 
 @JsonSerializable()

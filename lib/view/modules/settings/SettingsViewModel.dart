@@ -1,10 +1,9 @@
 import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 
-import '../../../domain/models/Settings.dart';
 import '../../../domain/services/SettingsService.dart';
 import 'SettingsState.dart';
-import 'dart:developer' as developer;
 
 class SettingsViewModel with ChangeNotifier {
   final SettingsService _settingsService;

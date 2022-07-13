@@ -1,5 +1,3 @@
-import 'package:lsr/domain/models/Roll.dart';
-
 import '../models/RollType.dart';
 
 abstract class IRollProvider {
@@ -15,6 +13,4 @@ abstract class IRollProvider {
     required String? characterToHelp,
     String empirique
   });
-
-  Stream getRolList();
 }

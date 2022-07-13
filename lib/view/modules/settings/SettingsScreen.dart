@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lsr/domain/models/RollType.dart';
 
-import '../../../domain/models/Roll.dart';
 import '../../../domain/models/Settings.dart';
 import '../../../main.dart';
 import '../../../utils/Injector.dart';

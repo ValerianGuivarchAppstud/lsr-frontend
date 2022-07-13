@@ -1,7 +1,6 @@
 import 'package:lsr/domain/models/MjSheet.dart';
 
 import '../character/CharacterSheetState.dart';
-import 'dart:developer' as developer;
 
 class MjState {
   bool showLoading;

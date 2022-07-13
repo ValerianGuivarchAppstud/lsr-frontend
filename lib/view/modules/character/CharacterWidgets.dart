@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as developer;
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -11,7 +12,6 @@ import '../../../utils/view/Const.dart';
 import '../mj/MjWidgets.dart';
 import 'CharacterSheetState.dart';
 import 'CharacterSheetViewModel.dart';
-import 'dart:developer' as developer;
 
 class CharacterWidgets {
   static void sendRoll(CharacterSheetViewModel characterSheetViewModel,

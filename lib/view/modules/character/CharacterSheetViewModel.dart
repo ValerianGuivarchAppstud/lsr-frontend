@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:lsr/domain/models/Character.dart';
 import 'package:lsr/domain/models/RollLast.dart';
@@ -6,10 +8,8 @@ import 'package:lsr/domain/models/RollType.dart';
 import 'package:lsr/domain/services/MjService.dart';
 import 'package:lsr/domain/services/SettingsService.dart';
 import 'package:lsr/view/modules/character/CharacterSheetState.dart';
-import 'dart:convert';
 
 import '../../../domain/services/SheetService.dart';
-import 'dart:developer' as developer;
 
 class CharacterSheetViewModel with ChangeNotifier {
   final SheetService _sheetService;
@@ -84,20 +84,6 @@ class CharacterSheetViewModel with ChangeNotifier {
         _currentState.uiState.characterToHelp = null;
       }
     }
-  }
-
-  void getRollList() {
-    _sheetService.getRollList().listen((event) {
-      print('Received:' +
-          DateTime
-              .now()
-              .millisecondsSinceEpoch
-              .toString() +
-          ' : ' +
-          event.toString());
-
-      streamController.add(_currentState.copy(RollListLoaded(RollLast.fromJson(jsonDecode(event.toString())).rollList)));
-    });
   }
 
   void saveNotesIfEnoughTime(DateTime timeUpdate) {

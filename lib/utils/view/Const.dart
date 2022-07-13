@@ -1,8 +1,5 @@
 
-import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
-import 'package:rxdart/rxdart.dart';
 
 const double WIDTH_CAMERA = 400.0;
 

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:lsr/domain/providers/IStorageProvider.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageProvider implements IStorageProvider {

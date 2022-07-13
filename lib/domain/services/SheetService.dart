@@ -40,7 +40,4 @@ class SheetService {
           characterToHelp: characterToHelp,
           empirique: empirique);
 
-  Stream getRollList() {
-    return rollProvider.getRolList();
-  }
 }

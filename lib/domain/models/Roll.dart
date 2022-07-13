@@ -3,9 +3,9 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'dart:convert';
 
 import 'RollType.dart';
+
 part 'Roll.g.dart';
 
 //  flutter pub run build_runner build

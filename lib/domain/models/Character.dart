@@ -1,12 +1,10 @@
-import 'dart:math';
-import 'dart:ui';
-
 import 'package:json_annotation/json_annotation.dart';
 import 'package:lsr/domain/models/Bloodline.dart';
 import 'package:lsr/domain/models/Category.dart';
 
 import 'Classe.dart';
 import 'Genre.dart';
+
 part 'Character.g.dart';
 
 @JsonSerializable()
