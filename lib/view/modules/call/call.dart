@@ -86,7 +86,7 @@ class _CallPageState extends State<CallPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Agora Video Call'),
+        title: const Text('L7R - visio'),
       ),
       body: Stack(
         children: [
