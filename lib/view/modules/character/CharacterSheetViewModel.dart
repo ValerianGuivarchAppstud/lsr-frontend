@@ -66,8 +66,7 @@ class CharacterSheetViewModel with ChangeNotifier {
     });
   }
 
-  Future<void> sendRoll(RollType rollType, [String empirique = '']) async {
-
+  Future<void> sendRoll(RollType rollType, [String empirique = '', String? resistRoll = null]) async {
     if(_currentState.character != null) {
       _sheetService.sendRoll(
           rollType: rollType,
@@ -79,6 +78,7 @@ class CharacterSheetViewModel with ChangeNotifier {
           benediction: _currentState.uiState.benediction,
           malediction: _currentState.uiState.malediction,
           characterToHelp: _currentState.uiState.characterToHelp,
+          resistRoll: resistRoll,
           empirique: empirique);
       if(_currentState.uiState.characterToHelp != null) {
         _currentState.uiState.characterToHelp = null;

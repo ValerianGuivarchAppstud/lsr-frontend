@@ -74,7 +74,7 @@ class _CharacterPageState extends State<CharacterPage> {
                           ));
                         } else if (state.data?.character == null) {
                           return Center(
-                            child: Text("Aucun personnage..."),
+                            child: Text(state.error?.toString() ?? 'nop'),
                           );
                         } else {
                           if(state.data!.lastTimeNoteSaved == null && state.data!.character?.notes != null) {
@@ -85,7 +85,8 @@ class _CharacterPageState extends State<CharacterPage> {
                             }
                           }
                           return CharacterWidgets.buildCharacter(context, true, state.data!.character!, 1,1,
-                              characterSheetViewModel, state.data!, noteFieldController, state.data!.rollList, state.data!.pjAlliesNames);
+                              characterSheetViewModel, state.data!, noteFieldController,  state.data!.pjAlliesNames,
+                            CharacterWidgets.buildRollList(state.data!.rollList, characterName, characterSheetViewModel, null, null));
                         }
                       })));
         });

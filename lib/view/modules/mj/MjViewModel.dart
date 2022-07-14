@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:lsr/domain/models/Character.dart';
+import 'package:lsr/domain/models/RollType.dart';
 import 'package:lsr/view/modules/character/CharacterSheetState.dart';
 import 'package:lsr/view/modules/character/CharacterSheetViewModel.dart';
 

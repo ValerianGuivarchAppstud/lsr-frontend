@@ -1,6 +1,5 @@
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:lsr/domain/models/Roll.dart';
 
 import '../../../../domain/models/RollType.dart';
 
@@ -18,9 +17,12 @@ class SendRollRequest {
   int malediction;
   String? characterToHelp;
   String? empiriqueRoll;
+  String? resistRoll;
+
 
   SendRollRequest({required this.rollerName, required this.rollType, required this.secret, required this.focus,
-      required this.power, required this.proficiency, required this.benediction, required this.malediction, this.empiriqueRoll, this.characterToHelp});
+      required this.power, required this.proficiency, required this.benediction, required this.malediction, this.empiriqueRoll,
+    this.characterToHelp, this.resistRoll});
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.

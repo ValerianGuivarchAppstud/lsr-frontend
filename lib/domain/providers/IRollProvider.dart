@@ -1,7 +1,8 @@
+import '../models/Roll.dart';
 import '../models/RollType.dart';
 
 abstract class IRollProvider {
-  send({
+  Future<Roll> send({
     required String rollerName,
     required RollType rollType,
     required bool secret,
@@ -11,6 +12,7 @@ abstract class IRollProvider {
     required int benediction,
     required int malediction,
     required String? characterToHelp,
+    required String? resistRoll,
     String empirique
   });
 }

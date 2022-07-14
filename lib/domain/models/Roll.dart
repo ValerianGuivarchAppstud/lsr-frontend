@@ -24,6 +24,8 @@ class Roll {
   List<int> result;
   int? success;
   String? characterToHelp;
+  String? picture;
+  List<Roll> resistRollList;
 
   Roll(
       this.id,
@@ -37,7 +39,9 @@ class Roll {
       this.benediction,
       this.malediction,
       this.result,
-      this.success);
+      this.picture,
+      this.success,
+      this.resistRollList);
 
   secretText() {
     return secret ? '(secret) ' : '';

@@ -4,14 +4,16 @@ import '../../../domain/models/Character.dart';
 
 class HealSheetState {
   bool showLoading;
-  Character? healer;
+  Character? character;
   List<Roll>? rollList;
+  List<Character>? pjAllies;
   String? error;
   late HealSheetUIState uiState;
 
   HealSheetState({
     this.showLoading = true,
-    this.healer,
+    this.character,
+    this.pjAllies,
     this.error,
     this.rollList}) {
     this.uiState = HealSheetUIState();
@@ -22,18 +24,9 @@ class HealSheetState {
       case HealSheetLoaded:
         showLoading = false;
         error = null;
-          healer = (partialState as HealSheetLoaded).healer;
+        character = (partialState as HealSheetLoaded).character;
+        pjAllies = (partialState).pjAllies;
           rollList = (partialState).rollList;
-        break;
-      case HealLoaded:
-        showLoading = false;
-        error = null;
-          healer = (partialState as HealLoaded).heal;
-        break;
-      case RollListLoaded:
-        showLoading = false;
-        error = null;
-          rollList = (partialState as RollListLoaded).rollList;
         break;
       case HealSheetFailed:
         showLoading = false;
@@ -54,7 +47,7 @@ class HealSheetState {
 
   @override
   String toString() {
-    return 'HealState {showLoading: $showLoading, healer: $healer, rollList: $rollList, error: $error}';
+    return 'HealState {showLoading: $showLoading, character: $character, rollList: $rollList, error: $error}';
   }
 
   @override
@@ -62,14 +55,14 @@ class HealSheetState {
     return identical(this, other) ||
         other is HealSheetState &&
             showLoading == other.showLoading &&
-            healer == other.healer &&
+            character == other.character &&
             error == other.error &&
             rollList == other.rollList;
   }
 
   @override
   int get hashCode =>
-      showLoading.hashCode ^ healer.hashCode ^ error.hashCode;
+      showLoading.hashCode ^ character.hashCode ^ error.hashCode;
 
 
 
@@ -77,19 +70,18 @@ class HealSheetState {
 
 
 class HealSheetUIState {
-  bool secret;
   bool power;
-  bool proficiency;
-  bool help;
   bool focus;
   int benediction;
   int malediction;
+  int heal;
+  int healMax;
 
-  HealSheetUIState({this.secret = false,
+  HealSheetUIState({
     this.power = false,
-    this.proficiency = false,
     this.focus = false,
-    this.help = false,
+    this.heal = 0,
+    this.healMax = 0,
     this.benediction = 0,
     this.malediction = 0});
 }
@@ -97,10 +89,11 @@ class HealSheetUIState {
 abstract class HealSheetPartialState {}
 
 class HealSheetLoaded extends HealSheetPartialState {
-  Character healer;
+  Character character;
+  List<Character> pjAllies;
   List<Roll> rollList;
 
-  HealSheetLoaded(this.healer, this.rollList);
+  HealSheetLoaded(this.character, this.pjAllies, this.rollList);
 }
 
 class HealLoaded extends HealSheetPartialState {

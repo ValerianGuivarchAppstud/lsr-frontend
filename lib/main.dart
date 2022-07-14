@@ -10,6 +10,8 @@ import 'package:lsr/utils/view/Const.dart';
 import 'package:lsr/view/modules/call/call.dart';
 import 'package:lsr/view/modules/character/CharacterSheetScreen.dart';
 import 'package:lsr/view/modules/character/CharacterSheetViewModel.dart';
+import 'package:lsr/view/modules/heal/HealSheetScreen.dart';
+import 'package:lsr/view/modules/heal/HealSheetViewModel.dart';
 import 'package:lsr/view/modules/mj/MjScreen.dart';
 import 'package:lsr/view/modules/mj/MjViewModel.dart';
 import 'package:lsr/view/modules/settings/SettingsScreen.dart';
@@ -18,10 +20,11 @@ import 'package:lsr/view/widgets/fonts/FontIconCharacter.dart';
 
 import 'config/config_reader.dart';
 import 'data/api/character/CharacterProvider.dart';
+import 'data/api/heal/HealProvider.dart';
 import 'data/api/roll/RollProvider.dart';
 import 'domain/services/MjService.dart';
 
-const bool INITIAL_STATE_PJ = false;
+const bool INITIAL_STATE_PJ = true;
 const bool INITIAL_STATE_CAMERA = false;
 
 Future<void> mainCommon(String env) async {
@@ -50,7 +53,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final _characterService = SheetService(
       characterProvider: CharacterProvider(NetworkingConfig()),
-      rollProvider: RollProvider(NetworkingConfig()));
+      rollProvider: RollProvider(NetworkingConfig()),
+      healProvider: HealProvider(NetworkingConfig()));
   final _settingsService = SettingsService(
       settingsProvider: SettingsProvider(NetworkingConfig()),
       storageProvider: StorageProvider());
@@ -65,6 +69,7 @@ class _MyAppState extends State<MyApp> {
       characterSheetViewModel: CharacterSheetViewModel.playerConstructor(
           _characterService, _settingsService),
       settingsViewModel: SettingsViewModel(_settingsService),
+      healSheetViewModel: HealSheetViewModel(_characterService, _settingsService),
       mjViewModel: MjViewModel(_mjService, _characterService),
       key: Key("Main"),
       child: MaterialApp(
@@ -101,7 +106,9 @@ class _MainStatefulWidgetState extends State<MainStatefulWidget> {
   bool camera;
   final _characterService = SheetService(
       characterProvider: CharacterProvider(NetworkingConfig()),
-      rollProvider: RollProvider(NetworkingConfig()));
+      rollProvider: RollProvider(NetworkingConfig()),
+      healProvider: HealProvider(NetworkingConfig()),
+  );
   final _settingsService = SettingsService(
       settingsProvider: SettingsProvider(NetworkingConfig()),
       storageProvider: StorageProvider());
@@ -111,9 +118,7 @@ class _MainStatefulWidgetState extends State<MainStatefulWidget> {
 
   int _selectedIndex = 0;
   Widget characterPage = CharacterPage(Key('CharacterPage'), null);
-  Widget healPage = CallPage(
-    key: Key("CallPage"),
-  );
+  Widget healPage = HealSheetPage(Key("HealPage"), null);
   late Widget settingsPage;
   late MjPage mjPage;
 
@@ -136,6 +141,7 @@ class _MainStatefulWidgetState extends State<MainStatefulWidget> {
         characterSheetViewModel: CharacterSheetViewModel.playerConstructor(
             _characterService, _settingsService),
         mjViewModel: MjViewModel(_mjService, _characterService),
+        healSheetViewModel: HealSheetViewModel(_characterService, _settingsService),
         settingsViewModel: SettingsViewModel(_settingsService),
         key: Key("main"),
         child: Scaffold(
@@ -196,7 +202,7 @@ class _MainStatefulWidgetState extends State<MainStatefulWidget> {
             width: WIDTH_CAMERA,//* 0.9 / 3,
             child: CallPage(key: Key("call"))
         )]),
-            IconButton(
+            IconButton(//TODO photo des perso à côté des lancers
             icon: Icon(Icons.camera_alt),
               onPressed: () => {
               camera = !camera,

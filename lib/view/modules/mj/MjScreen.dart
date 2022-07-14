@@ -216,6 +216,6 @@ class _MjPageState extends State<MjPage> {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [CharacterWidgets.buildRollList(mjSheet.rollList, null)]))
+                children: [CharacterWidgets.buildRollList(mjSheet.rollList, null, null, mjViewModel, mjViewModel.getState().mjSheet?.characters.map((e) => e.name).toList())]))
       ]);
 }

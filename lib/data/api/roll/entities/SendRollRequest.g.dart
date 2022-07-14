@@ -18,6 +18,7 @@ SendRollRequest _$SendRollRequestFromJson(Map<String, dynamic> json) =>
       malediction: json['malediction'] as int,
       empiriqueRoll: json['empiriqueRoll'] as String?,
       characterToHelp: json['characterToHelp'] as String?,
+      resistRoll: json['resistRoll'] as String?,
     );
 
 Map<String, dynamic> _$SendRollRequestToJson(SendRollRequest instance) =>
@@ -32,6 +33,7 @@ Map<String, dynamic> _$SendRollRequestToJson(SendRollRequest instance) =>
       'malediction': instance.malediction,
       'characterToHelp': instance.characterToHelp,
       'empiriqueRoll': instance.empiriqueRoll,
+      'resistRoll': instance.resistRoll,
     };
 
 const _$RollTypeEnumMap = {

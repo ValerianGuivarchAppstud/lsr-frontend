@@ -18,7 +18,11 @@ Roll _$RollFromJson(Map<String, dynamic> json) => Roll(
       json['benediction'] as int,
       json['malediction'] as int,
       (json['result'] as List<dynamic>).map((e) => e as int).toList(),
+      json['picture'] as String?,
       json['success'] as int?,
+      (json['resistRollList'] as List<dynamic>)
+          .map((e) => Roll.fromJson(e as Map<String, dynamic>))
+          .toList(),
     )..characterToHelp = json['characterToHelp'] as String?;
 
 Map<String, dynamic> _$RollToJson(Roll instance) => <String, dynamic>{
@@ -35,6 +39,8 @@ Map<String, dynamic> _$RollToJson(Roll instance) => <String, dynamic>{
       'result': instance.result,
       'success': instance.success,
       'characterToHelp': instance.characterToHelp,
+      'picture': instance.picture,
+      'resistRollList': instance.resistRollList,
     };
 
 const _$RollTypeEnumMap = {

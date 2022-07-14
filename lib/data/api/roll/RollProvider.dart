@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:developer' as developer;
 
+import 'package:dio/dio.dart';
+import 'package:lsr/domain/models/Roll.dart';
 import 'package:lsr/domain/providers/IRollProvider.dart';
 
 import '../../../domain/models/RollType.dart';
@@ -13,7 +15,7 @@ class RollProvider implements IRollProvider {
   RollProvider(this._networkingConfig);
 
   @override
-  send({
+  Future<Roll> send({
     required String rollerName,
     required RollType rollType,
     required bool secret,
@@ -23,9 +25,9 @@ class RollProvider implements IRollProvider {
     required int benediction,
     required int malediction,
     required String? characterToHelp,
+    required String? resistRoll,
     String empirique = ''
-  }) {
-    developer.log(rollType.toString());
+  }) async {
     SendRollRequest sendRollRequest = new SendRollRequest(rollerName: rollerName,
         rollType: rollType,
         secret: secret,
@@ -35,8 +37,10 @@ class RollProvider implements IRollProvider {
         benediction: benediction,
         malediction: malediction,
         characterToHelp: characterToHelp,
-        empiriqueRoll: empirique);
+        empiriqueRoll: empirique,
+        resistRoll: resistRoll);
 
-    _networkingConfig.dio.post('roll', data: sendRollRequest.toJson());
+    Response response = await _networkingConfig.dio.post('roll', data: sendRollRequest.toJson());
+    return Roll.fromJson(response.data);
   }
 }
