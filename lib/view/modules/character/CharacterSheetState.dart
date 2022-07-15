@@ -1,6 +1,7 @@
 import 'package:lsr/domain/models/Roll.dart';
 
 import '../../../domain/models/Character.dart';
+import '../../../domain/models/Settings.dart';
 
 class CharacterSheetState {
   bool showLoading;
@@ -11,6 +12,7 @@ class CharacterSheetState {
   late CharacterSheetUIState uiState;
   DateTime? lastTimeNoteSaved;
   String notes;
+  Settings? settings;
 
   CharacterSheetState({
     this.showLoading = true,
@@ -34,7 +36,12 @@ class CharacterSheetState {
       case CharacterLoaded:
         showLoading = false;
         error = null;
-          character = (partialState as CharacterLoaded).character;
+        character = (partialState as CharacterLoaded).character;
+        break;
+      case SettingsLoaded:
+        showLoading = false;
+        error = null;
+        settings = (partialState as SettingsLoaded).settings;
         break;
       case RollListLoaded:
         showLoading = false;
@@ -117,6 +124,12 @@ class CharacterLoaded extends CharacterSheetPartialState {
   Character character;
 
   CharacterLoaded(this.character);
+}
+
+class SettingsLoaded extends CharacterSheetPartialState {
+  Settings settings;
+
+  SettingsLoaded(this.settings);
 }
 
 class RollListLoaded extends CharacterSheetPartialState {

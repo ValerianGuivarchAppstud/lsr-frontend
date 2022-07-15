@@ -35,11 +35,7 @@ class SettingsViewModel with ChangeNotifier {
     }
 
     _settingsService.getSettings().then((value) {
-      if(value==null) {
-        streamController.add(_currentState.copy(SettingsFailed('No settings')));
-      } else {
         streamController.add(_currentState.copy(SettingsLoaded(value)));
-      }
     }).onError((error, stackTrace) {
         streamController.add(_currentState.copy(SettingsFailed(error.toString())));
       });

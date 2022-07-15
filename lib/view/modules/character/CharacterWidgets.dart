@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:developer' as developer;
-import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:lsr/domain/models/RollType.dart';
@@ -32,7 +30,8 @@ class CharacterWidgets {
           CharacterSheetState characterSheetState,
           TextEditingController? noteFieldController,
           List<String>? pjAlliesNames,
-          LayoutBuilder? rollList) =>
+          LayoutBuilder? rollList,
+      MjViewModel? mjViewModel) =>
       Column(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -45,7 +44,7 @@ class CharacterWidgets {
                 Padding(
                     padding: EdgeInsets.only(bottom: 10),
                     child: Image.network(
-                      character.background ?? '',
+                      character.background,
                       //"assets/images/background/${describeEnum(character.bloodline != Bloodline.AUCUN ? character.bloodline : character.classe).toLowerCase()}.jpg",
                       fit: BoxFit.fill,
                       height: 120,
@@ -58,7 +57,7 @@ class CharacterWidgets {
                               developer.log(
                                   characterSheetState.character?.playerName ??
                                       ''),
-                              MjWidgets.addCharacter(
+                              MjWidgets.buildCreateCharacterAlertDialog(
                                   characterSheetState.character,
                                   context,
                                   [
@@ -79,7 +78,7 @@ class CharacterWidgets {
                               radius: 60,
                               backgroundColor: Colors.white,
                               foregroundImage:
-                                  NetworkImage(character.picture ?? ''),
+                                  NetworkImage(character.picture),
                               //"assets/images/portraits/${character.name}.png"),
                             )
                           ],
@@ -135,7 +134,9 @@ class CharacterWidgets {
               ],
             )
           else
-            Stack(alignment: Alignment.topLeft, children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+                children: [
               Text(
                 character.name,
                 style: TextStyle(
@@ -144,7 +145,16 @@ class CharacterWidgets {
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.start,
-              )
+              ),
+                  IconButton(
+                      color: Colors.transparent,
+                      onPressed: () {
+                        mjViewModel?.removeCharacterList(character.name);
+                      },
+                      icon: const Icon(
+                        Icons.close,
+                        color: Colors.red,
+                      )),
             ]),
           if (noteFieldController != null)
             Padding(
@@ -474,8 +484,8 @@ class CharacterWidgets {
                   '',
                   (playerDisplay ? "Arcane : " : "Arc ") +
                       character.arcanes.toString() +
-                      ' / ' +
-                      character.arcanesMax.toString(),
+                      (playerDisplay ? ' / ' +
+                      character.arcanesMax.toString() : ''),
                   (sizeRatio * WIDTH_SCREEN) / 5,
                   sizeRatioFont * 14,
                   34,
@@ -863,19 +873,6 @@ class CharacterWidgets {
       ));
       rollText.add(TextSpan(text: ')'));
     }
-    /*rollText.add(_buildCharacterSheetButton(
-        "R-Chair",
-        "",
-        WIDTH_SCREEN / 12,
-        20,
-        20,
-        Colors.blue,
-        false,
-            () =>
-        {
-          sendResistingRoll(RollType.CHAIR, roll.id, characterSheetViewModel, mjViewModel, resistingCharacters)
-        },
-            () => {}));*/
     switch (roll.rollType) {
       case RollType.CHAIR:
       case RollType.ESPRIT:
@@ -1256,7 +1253,6 @@ class CharacterWidgets {
       RollType rollType) async {
     Map<String, bool> characterList = {};
 
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     List<bool> characterNamesChecked = [];
     for( var i = 0 ; i < characterNames.length; i++ ) {
       characterList[characterNames[i]] = false;

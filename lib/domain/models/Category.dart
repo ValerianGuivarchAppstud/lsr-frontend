@@ -1,5 +1,7 @@
 enum Category {
   PJ,
-  PNJ,
-  TEMPO
+  PNJ_ALLY,
+  PNJ_ENNEMY,
+  TEMPO,
+  TEMPLATE
 }

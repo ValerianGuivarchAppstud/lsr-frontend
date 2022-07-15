@@ -5,9 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../../domain/models/Settings.dart';
 import '../../../utils/Injector.dart';
 import '../../../utils/view/Const.dart';
 import '../../widgets/common/LoadingWidget.dart';
+import '../settings/SettingsWidgets.dart';
 import 'CharacterSheetState.dart';
 import 'CharacterSheetViewModel.dart';
 import 'CharacterWidgets.dart';
@@ -72,9 +74,13 @@ class _CharacterPageState extends State<CharacterPage> {
                               key: Key(
                             "LoadingWidget",
                           ));
-                        } else if (state.data?.character == null) {
+                        } else if (state.data?.error != null) {
                           return Center(
-                            child: Text(state.error?.toString() ?? 'nop'),
+                            child: Text(state.data!.error.toString()),
+                          );
+                        } else if (state.data?.character == null && state.data?.settings != null) {
+                          return Center(
+                            child: SettingsWidgets.buildCharacterSelection(state.data!.settings!, null, characterSheetViewModel, setState)
                           );
                         } else {
                           if(state.data!.lastTimeNoteSaved == null && state.data!.character?.notes != null) {
@@ -86,7 +92,7 @@ class _CharacterPageState extends State<CharacterPage> {
                           }
                           return CharacterWidgets.buildCharacter(context, true, state.data!.character!, 1,1,
                               characterSheetViewModel, state.data!, noteFieldController,  state.data!.pjAlliesNames,
-                            CharacterWidgets.buildRollList(state.data!.rollList, characterName, characterSheetViewModel, null, null));
+                            CharacterWidgets.buildRollList(state.data!.rollList, characterName, characterSheetViewModel, null, null), null);
                         }
                       })));
         });

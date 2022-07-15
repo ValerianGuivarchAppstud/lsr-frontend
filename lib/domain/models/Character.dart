@@ -32,8 +32,8 @@ class Character {
   late Category category;
   late Genre genre;
   late int relance;
-  late String? picture;
-  late String? background;
+  late String picture;
+  late String background;
   late String? playerName;
   Character({
       required this.name,

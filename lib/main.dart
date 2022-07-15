@@ -70,7 +70,7 @@ class _MyAppState extends State<MyApp> {
           _characterService, _settingsService),
       settingsViewModel: SettingsViewModel(_settingsService),
       healSheetViewModel: HealSheetViewModel(_characterService, _settingsService),
-      mjViewModel: MjViewModel(_mjService, _characterService),
+      mjViewModel: MjViewModel(_mjService, _characterService, _settingsService),
       key: Key("Main"),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -140,7 +140,7 @@ class _MainStatefulWidgetState extends State<MainStatefulWidget> {
         sheetService: _characterService,
         characterSheetViewModel: CharacterSheetViewModel.playerConstructor(
             _characterService, _settingsService),
-        mjViewModel: MjViewModel(_mjService, _characterService),
+        mjViewModel: MjViewModel(_mjService, _characterService, _settingsService),
         healSheetViewModel: HealSheetViewModel(_characterService, _settingsService),
         settingsViewModel: SettingsViewModel(_settingsService),
         key: Key("main"),

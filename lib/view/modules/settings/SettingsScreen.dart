@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lsr/view/modules/settings/SettingsWidgets.dart';
 
 import '../../../domain/models/Settings.dart';
 import '../../../main.dart';
@@ -12,7 +13,8 @@ class SettingsPage extends StatefulWidget {
   bool pj;
   bool camera;
 
-  SettingsPage(this.pj, this.camera, {required Key key, String SettingsName = ''})
+  SettingsPage(this.pj, this.camera,
+      {required Key key, String SettingsName = ''})
       : super(key: key);
 
   @override
@@ -68,54 +70,14 @@ class _SettingsPageState extends State<SettingsPage> {
   _buildSettings(Settings settings, double sizeWidth,
           SettingsViewModel settingsViewModel) =>
       Column(mainAxisSize: MainAxisSize.min, children: [
-        DropdownButton<String>(
-          value: settings.currentPlayer ?? '',
-          icon: const Icon(Icons.arrow_downward),
-          elevation: 16,
-          style: const TextStyle(color: Colors.deepPurple),
-          underline: Container(
-            height: 2,
-            color: Colors.deepPurpleAccent,
-          ),
-          onChanged: (String? newValue) {
-            settingsViewModel.selectPlayerName(newValue);
-            setState(() {});
-          },
-          items: settings.playersName
-              .map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-        ),
-        DropdownButton<String>(
-          value: settings.currentCharacter ?? '',
-          icon: const Icon(Icons.arrow_downward),
-          elevation: 16,
-          style: const TextStyle(color: Colors.deepPurple),
-          underline: Container(
-            height: 2,
-            color: Colors.deepPurpleAccent,
-          ),
-          onChanged: (String? newValue) {
-            settingsViewModel.selectCharacterName(newValue);
-            setState(() {});
-          },
-          items: settings.charactersName
-              .map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-        ),
+        SettingsWidgets.buildCharacterSelection(settings, settingsViewModel, null, setState),
         ElevatedButton(
           child: pj ? const Text('Devenir MJ') : Text('Devenir joueuse'),
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => MainStatefulWidget(!pj, camera)),
+              MaterialPageRoute(
+                  builder: (context) => MainStatefulWidget(!pj, camera)),
             );
           },
         )

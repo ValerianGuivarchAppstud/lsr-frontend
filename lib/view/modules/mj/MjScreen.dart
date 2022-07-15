@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsr/domain/models/Category.dart';
 import 'package:lsr/domain/models/MjSheet.dart';
@@ -92,7 +91,7 @@ class _MjPageState extends State<MjPage> {
                   textAlign: TextAlign.start,
                 ),
                 DropdownButton<String>(
-                  hint: Text('Ajouter PJ'),
+                  hint: Text('Ajout PJ'),
                   value: null,
                   icon: const Icon(Icons.arrow_downward),
                   elevation: 16,
@@ -137,7 +136,8 @@ class _MjPageState extends State<MjPage> {
                             mjViewModel.getCharacterStateData(character.name),
                             null,
                             null,
-                            null));
+                            null,
+                        mjViewModel));
                   }).toList())),
               Row(children: [
                 Text(
@@ -151,7 +151,7 @@ class _MjPageState extends State<MjPage> {
                 ),
                 Row(children: [
                   DropdownButton<String>(
-                    hint: Text('Ajouter PNJ'),
+                    hint: Text('Ajout PNJ'),
                     value: null,
                     icon: const Icon(Icons.arrow_downward),
                     elevation: 16,
@@ -174,14 +174,63 @@ class _MjPageState extends State<MjPage> {
                       );
                     }).toList(),
                   ),
+                  DropdownButton<String>(
+                    hint: Text('Ajout tempo'),
+                    value: null,
+                    icon: const Icon(Icons.arrow_downward),
+                    elevation: 16,
+                    style: const TextStyle(color: Colors.deepPurple),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        mjViewModel.addCharacterList(newValue);
+                      }
+                      setState(() {});
+                    },
+                    items: mjSheet.tempoNames
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                  DropdownButton<String>(
+                    hint: Text('Ajout template'),
+                    value: null,
+                    icon: const Icon(Icons.arrow_downward),
+                    elevation: 16,
+                    style: const TextStyle(color: Colors.deepPurple),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        MjWidgets.buildCreateCharacterWithTemplateAlertDialog(context, newValue,
+                            mjViewModel.addCharacterWithTemplate);
+                      }
+                      setState(() {});
+                    },
+                    items: mjSheet.templateNames
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
                   ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.all<Color>(Colors.grey)),
                     child: Text("Ajouter"),
                     onPressed: () => {
-                      MjWidgets.addCharacter(null, context, mjSheet.playersName,
-                          mjViewModel.createOrUpdateCharacter)
+                      MjWidgets.buildCreateCharacterAlertDialog(null, context, mjSheet.playersName,
+                          mjViewModel.createNewCharacter)
                     },
                   )
                 ]),
@@ -207,7 +256,8 @@ class _MjPageState extends State<MjPage> {
                             mjViewModel.getCharacterStateData(character.name),
                             null,
                             null,
-                            null));
+                            null,
+                            mjViewModel));
                   }).toList())),
             ])),
         SizedBox(

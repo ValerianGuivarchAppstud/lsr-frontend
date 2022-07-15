@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsr/domain/models/Category.dart';
 import 'package:lsr/domain/models/Character.dart';
@@ -10,7 +9,7 @@ import '../../../domain/models/Bloodline.dart';
 import '../../../domain/models/Genre.dart';
 
 class MjWidgets {
-  static Future<void Function()> addCharacter(
+  static Future<void Function()> buildCreateCharacterAlertDialog(
       Character? initialCharacter,
       BuildContext context,
       List<String> playersName,
@@ -43,10 +42,10 @@ class MjWidgets {
     final TextEditingController _background =
         TextEditingController(text: initialCharacter?.background ?? '');
     Classe? classe = initialCharacter?.classe ?? null;
-    Bloodline? bloodline =  initialCharacter?.bloodline ?? null;
-    Genre? genre =  initialCharacter?.genre ?? null;
-    Category? category =  initialCharacter?.category ?? null;
-    String? player =  initialCharacter?.playerName ?? null;
+    Bloodline? bloodline = initialCharacter?.bloodline ?? null;
+    Genre? genre = initialCharacter?.genre ?? null;
+    Category? category = initialCharacter?.category ?? null;
+    String? player = initialCharacter?.playerName ?? null;
     return await showDialog(
         context: context,
         builder: (context) {
@@ -202,7 +201,7 @@ class MjWidgets {
                           padding:
                               const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                           child: DropdownButton<Bloodline>(
-                            hint: Text('Lignee'),
+                            hint: Text('Ligne'),
                             value: bloodline,
                             icon: const Icon(Icons.arrow_downward),
                             elevation: 16,
@@ -346,7 +345,7 @@ class MjWidgets {
                           )),
                       SizedBox(
                           width: 300.0,
-                          child:  TextFormField(
+                          child: TextFormField(
                             controller: _background,
                             decoration: InputDecoration(hintText: "Background"),
                           )),
@@ -396,16 +395,88 @@ class MjWidgets {
                           secunda: _secunda.value.text,
                           dettes:
                               initialCharacter?.dettes ?? Random().nextInt(11),
-                          picture: initialCharacter?.picture,
-                          background: initialCharacter?.background,
+                          picture: _picture.value.text,
+                          background: _background.value.text,
                           notes: initialCharacter?.notes ?? '',
                           category: category ??
                               initialCharacter?.category ??
-                              Category.PNJ,
+                              Category.TEMPO,
                           genre:
                               genre ?? initialCharacter?.genre ?? Genre.AUTRE,
                           relance: initialCharacter?.relance ?? 0,
-                      playerName: player ?? initialCharacter?.playerName ?? null));
+                          playerName:
+                              player ?? initialCharacter?.playerName ?? null));
+                      Navigator.of(context).pop();
+                    }
+                  },
+                ),
+              ],
+            );
+          });
+        });
+  }
+
+  static Future<void Function()> buildCreateCharacterWithTemplateAlertDialog(
+      BuildContext context,
+      String templateName,
+      void Function(String templateName, String customName, int level, int number) addCharacterWithTemplate) async {
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    final TextEditingController _name =
+        TextEditingController(text: templateName);
+    final TextEditingController _level = TextEditingController(text: '');
+    final TextEditingController _number = TextEditingController(text: '');
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              title: Text("Ajouter ${templateName}"),
+              content: Form(
+                  key: _formKey,
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
+                    Row(children: [
+                      Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(0.0, 0.0, 5.0, 0.0),
+                          child: SizedBox(
+                              width: 100.0,
+                              child: TextFormField(
+                                controller: _name,
+                                validator: (value) {
+                                  return value != null
+                                      ? ((value.isNotEmpty)
+                                          ? null
+                                          : "Entrez un nom de personnage")
+                                      : null;
+                                },
+                                decoration: InputDecoration(hintText: "Nom"),
+                              ))),
+                      Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                          child: SizedBox(
+                              width: 100.0,
+                              child: TextFormField(
+                                controller: _level,
+                                decoration: InputDecoration(hintText: "Niveau"),
+                              ))),
+                      Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                          child: SizedBox(
+                              width: 100.0,
+                              child: TextFormField(
+                                controller: _number,
+                                decoration: InputDecoration(hintText: "Nombre"),
+                              ))),
+                    ]),
+                  ])),
+              actions: <Widget>[
+                InkWell(
+                  child: Text('OK   '),
+                  onTap: () {
+                    if (_formKey.currentState?.validate() ?? false) {
+                      addCharacterWithTemplate(templateName, _name.value.text, int.parse(_level.value.text),  int.parse(_number.value.text));
                       Navigator.of(context).pop();
                     }
                   },

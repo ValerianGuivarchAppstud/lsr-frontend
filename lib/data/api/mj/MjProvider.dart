@@ -1,10 +1,13 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:lsr/domain/models/Character.dart';
 
 import '../../../domain/models/MjSheet.dart';
 import '../../../domain/providers/IMjProvider.dart';
 import '../../../utils/api/NetworkingConfig.dart';
+import 'entities/SendCreateWithTemplateRequest.dart';
+import 'entities/SendCreateWithTemplateResponse.dart';
 
 class MjProvider implements IMjProvider {
   final NetworkingConfig _networkingConfig;
@@ -32,4 +35,13 @@ class MjProvider implements IMjProvider {
     MjSheet mjSheet = MjSheet.fromJson(response.data);
     return mjSheet;
   }
+
+  @override
+  Future<List<Character>> addCharacterWithTemplate(String templateName, String customName, int level, int number) async{
+    SendCreateWithTemplateRequest request = SendCreateWithTemplateRequest(templateName:templateName, customName:templateName, level:level, number:number);
+    Response response = await _networkingConfig.dio.put('mj/template', data: request.toJson());
+    SendCreateWithTemplateResponse templateNewCharacters = await SendCreateWithTemplateResponse.fromJson(response.data);
+    return templateNewCharacters.templateNewCharacters;
+  }
+
 }

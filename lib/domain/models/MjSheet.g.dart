@@ -20,6 +20,9 @@ MjSheet _$MjSheetFromJson(Map<String, dynamic> json) => MjSheet(
       tempoNames: (json['tempoNames'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
+      templateNames: (json['templateNames'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
       playersName: (json['playersName'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
@@ -30,6 +33,7 @@ Map<String, dynamic> _$MjSheetToJson(MjSheet instance) => <String, dynamic>{
       'pjNames': instance.pjNames,
       'pnjNames': instance.pnjNames,
       'tempoNames': instance.tempoNames,
+      'templateNames': instance.templateNames,
       'rollList': instance.rollList,
       'playersName': instance.playersName,
     };

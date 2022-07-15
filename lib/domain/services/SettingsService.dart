@@ -15,7 +15,7 @@ class SettingsService {
   Future<String?> getPlayerName() => storageProvider.getPlayerName();
   Future<String?> setPlayerName(String playerName) => storageProvider.setPlayerName(playerName);
 
-  Future<Settings?> getSettings() async {
+  Future<Settings> getSettings() async {
     String? currentPlayer = await this.getPlayerName();
     String? currentCharacter = await this.getCharacterName();
     Settings settings = await this.settingsProvider.get(currentPlayer);

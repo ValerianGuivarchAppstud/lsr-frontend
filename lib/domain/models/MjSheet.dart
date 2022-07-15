@@ -16,6 +16,7 @@ class MjSheet {
   List<String> pjNames;
   List<String> pnjNames;
   List<String> tempoNames;
+  List<String> templateNames;
   List<Roll> rollList;
   List<String> playersName;
   MjSheet({
@@ -24,6 +25,7 @@ class MjSheet {
     required this.pjNames,
     required this.pnjNames,
     required this.tempoNames,
+    required this.templateNames,
     required this.playersName
   });
 

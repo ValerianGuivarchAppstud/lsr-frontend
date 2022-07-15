@@ -25,4 +25,8 @@ class MjService {
   Future<MjSheet> removeCharacterList(String characterName) async {
     return await this.mjProvider.removeCharacterList(characterName);
   }
+
+  Future<List<Character>> addCharacterWithTemplate(String templateName, String customName, int level, int number) async {
+    return await this.mjProvider.addCharacterWithTemplate(templateName, customName, level, number);
+  }
 }

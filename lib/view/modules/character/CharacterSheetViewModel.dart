@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:lsr/domain/models/Character.dart';
-import 'package:lsr/domain/models/RollLast.dart';
 import 'package:lsr/domain/models/RollType.dart';
-import 'package:lsr/domain/services/MjService.dart';
 import 'package:lsr/domain/services/SettingsService.dart';
 import 'package:lsr/view/modules/character/CharacterSheetState.dart';
 
@@ -14,8 +11,7 @@ import '../../../domain/services/SheetService.dart';
 
 class CharacterSheetViewModel with ChangeNotifier {
   final SheetService _sheetService;
-  late final SettingsService? _configService;
-  late final MjService? _mjService;
+  late final SettingsService _configService;
   late final String? _characterName;
   late final bool _isPlayer;
   late CharacterSheetState _currentState;
@@ -33,8 +29,7 @@ class CharacterSheetViewModel with ChangeNotifier {
     _isPlayer = true;
   }
 
-  CharacterSheetViewModel.mjConstructor(this._sheetService, this._characterName, this._currentState) {
-    _configService = null;
+  CharacterSheetViewModel.mjConstructor(this._sheetService, this._configService, this._characterName, this._currentState) {
     _isPlayer = false;
   }
 
@@ -46,13 +41,33 @@ class CharacterSheetViewModel with ChangeNotifier {
     if(reload) {
       streamController.add(_currentState.copy(CharacterSheetLoading()));
     }
-    String characterName = _isPlayer ? (await this._configService!.getCharacterName() ?? '') : _characterName!;
+    String characterName = _isPlayer ? (await this._configService.getCharacterName() ?? '') : _characterName!;
 
-      _sheetService.get(characterName).then((value) {
-        streamController.add(_currentState.copy(CharacterSheetLoaded(value.character, value.rollList, value.pjAlliesNames)));
+    if(characterName == '') {
+      _configService.getSettings().then((value) {
+        streamController.add(_currentState.copy(SettingsLoaded(
+            value)));
       }).onError((error, stackTrace) {
-        streamController.add(_currentState.copy(CharacterSheetFailed(error.toString())));
+        streamController.add(
+            _currentState.copy(CharacterSheetFailed(error.toString())));
       });
+    } else {
+      _sheetService.get(characterName).then((value) {
+        streamController.add(_currentState.copy(CharacterSheetLoaded(
+            value.character, value.rollList, value.pjAlliesNames)));
+      }).onError((error, stackTrace) {
+        streamController.add(
+            _currentState.copy(CharacterSheetFailed(error.toString())));
+      });
+    }
+  }
+
+  Future<void> selectCharacterName(String? characterName) async {
+    await this._configService.setCharacterName(characterName ?? '');
+  }
+
+  Future<void> selectPlayerName(String? playerName) async {
+    await this._configService.setPlayerName(playerName ?? '');
   }
 
   updateUi(CharacterSheetUIState state) {

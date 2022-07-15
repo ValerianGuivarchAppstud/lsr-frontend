@@ -30,8 +30,8 @@ Character _$CharacterFromJson(Map<String, dynamic> json) => Character(
       category: $enumDecode(_$CategoryEnumMap, json['category']),
       genre: $enumDecode(_$GenreEnumMap, json['genre']),
       relance: json['relance'] as int,
-      picture: json['picture'] as String?,
-      background: json['background'] as String?,
+      picture: json['picture'] as String,
+      background: json['background'] as String,
       playerName: json['playerName'] as String?,
     );
 
@@ -97,8 +97,10 @@ const _$BloodlineEnumMap = {
 
 const _$CategoryEnumMap = {
   Category.PJ: 'PJ',
-  Category.PNJ: 'PNJ',
+  Category.PNJ_ALLY: 'PNJ_ALLY',
+  Category.PNJ_ENNEMY: 'PNJ_ENNEMY',
   Category.TEMPO: 'TEMPO',
+  Category.TEMPLATE: 'TEMPLATE',
 };
 
 const _$GenreEnumMap = {
