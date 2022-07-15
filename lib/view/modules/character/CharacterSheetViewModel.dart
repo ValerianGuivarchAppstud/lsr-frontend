@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:lsr/domain/models/Character.dart';
@@ -93,6 +94,13 @@ class CharacterSheetViewModel with ChangeNotifier {
         _currentState.character!.notes = _currentState.notes;
         this.createOrUpdateCharacter(_currentState.character!);
       }
+    }
+  }
+
+  void subir(int degats) {
+    if(_currentState.character != null) {
+      _currentState.character!.pv = max(_currentState.character!.pv - degats, 0);
+      this.createOrUpdateCharacter(_currentState.character!);
     }
   }
 }

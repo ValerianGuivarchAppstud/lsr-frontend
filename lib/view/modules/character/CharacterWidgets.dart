@@ -605,30 +605,11 @@ class CharacterWidgets {
         if (!roll.secret ||
             characterName == null ||
             roll.rollerName == characterName) {
-          rolls.addAll(getRollWidget(roll, characterSheetViewModel, mjViewModel,
-              resistingCharacters, false));
+          rolls.add(getRollWidget(context, roll, characterSheetViewModel, mjViewModel,
+              resistingCharacters, null));
           for (Roll resistRoll in roll.resistRollList) {
-            List<Widget> resistingRoll = [];
-            resistingRoll.add(
-              Container(
-                color: Colors.black45,
-                height: 80,
-                width: 2,
-              ),
-            );
-            resistingRoll.add(
-              Container(
-                color: Colors.transparent,
-                height: 80,
-                width: 20,
-              ),
-            );
-            resistingRoll.add(Column(
-                children: getRollWidget(resistRoll, characterSheetViewModel,
-                    mjViewModel, resistingCharacters, true)));
-            rolls.add(Row(
-              children: resistingRoll,
-            ));
+            rolls.add(getRollWidget(context, resistRoll, characterSheetViewModel,
+                mjViewModel, resistingCharacters, roll));
           }
         }
       }
@@ -742,12 +723,13 @@ class CharacterWidgets {
     characterSheetViewModel.updateUi(uiState);
   }
 
-  static List<Widget> getRollWidget(
+  static Container getRollWidget(
+      BuildContext context,
       Roll roll,
       CharacterSheetViewModel? characterSheetViewModel,
       MjViewModel? mjViewModel,
       List<String>? resistingCharacters,
-      bool resistingRoll) {
+      Roll? resistingRoll) {
     List<TextSpan> rollText = [];
     List<TextSpan> rollDices = [];
     rollText.add(TextSpan(
@@ -759,9 +741,13 @@ class CharacterWidgets {
         // Jonathan
         text: roll.rollerName,
         style: TextStyle(fontWeight: FontWeight.bold)));
+    resistingRoll !=null ?
     rollText.add(TextSpan(
-        // fait un
-        text: ' fait un '));
+      // fait un
+        text: ' résiste avec un '))
+    : rollText.add(TextSpan(
+    // fait un
+    text: ' fait un '));
     rollText.add(TextSpan(
         // jet de Chair
         text: roll.rollTypeText(),
@@ -830,14 +816,20 @@ class CharacterWidgets {
       case RollType.RELANCE:
         break;
     }
-    if (!resistingRoll) {
+    if (resistingRoll == null &&
+        (roll.rollType == RollType.ARCANE_ESPRIT ||
+            roll.rollType == RollType.ARCANE_ESSENCE ||
+            roll.rollType == RollType.CHAIR ||
+            roll.rollType == RollType.ESPRIT ||
+            roll.rollType == RollType.ESSENCE ||
+            roll.rollType == RollType.MAGIE_FORTE)) {
       rollText.add(TextSpan(text: ' ('));
       rollText.add(
         TextSpan(
             text: " R-Chair",
             style: TextStyle(color: Colors.blue),
             recognizer: TapGestureRecognizer()
-              ..onTap = () => sendResistingRoll(RollType.CHAIR, roll.id,
+              ..onTap = () => sendResistingRoll(context, RollType.CHAIR, roll.id,
                   characterSheetViewModel, mjViewModel, resistingCharacters)),
       );
       rollText.add(TextSpan(text: ' / '));
@@ -846,7 +838,7 @@ class CharacterWidgets {
             text: " R-Esprit",
             style: TextStyle(color: Colors.blue),
             recognizer: TapGestureRecognizer()
-              ..onTap = () => sendResistingRoll(RollType.ESPRIT, roll.id,
+              ..onTap = () => sendResistingRoll(context, RollType.ESPRIT, roll.id,
                   characterSheetViewModel, mjViewModel, resistingCharacters)),
       );
       rollText.add(TextSpan(text: ' / '));
@@ -855,9 +847,20 @@ class CharacterWidgets {
             text: " R-Essence",
             style: TextStyle(color: Colors.blue),
             recognizer: TapGestureRecognizer()
-              ..onTap = () => sendResistingRoll(RollType.ESSENCE, roll.id,
+              ..onTap = () => sendResistingRoll(context, RollType.ESSENCE, roll.id,
                   characterSheetViewModel, mjViewModel, resistingCharacters)),
       );
+      rollText.add(TextSpan(text: ')'));
+    }
+    if (resistingRoll != null){
+      rollText.add(TextSpan(text: ' ('));
+      rollText.add(
+        TextSpan(
+            text: " Subir : ${roll.getDegats(resistingRoll)}",
+            style: TextStyle(color: Colors.blue),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () => subir(roll.rollerName, characterSheetViewModel, mjViewModel, roll.getDegats(resistingRoll)),
+      ));
       rollText.add(TextSpan(text: ')'));
     }
     /*rollText.add(_buildCharacterSheetButton(
@@ -923,39 +926,45 @@ class CharacterWidgets {
       case RollType.RELANCE:
         break;
     }
-    return [
-    Container(
+    return Container(
         decoration: BoxDecoration(
             border: Border(
-      top: BorderSide(width: 1.0, color: Colors.grey),
-    )),
-        child: Row(
-        children: <Widget>[
-        Padding(
-        padding: EdgeInsets.all(10),
-        child:           CircleAvatar(
-            radius: 24,
-            backgroundColor: Colors.white,
-            foregroundImage:
-            NetworkImage(roll.picture ?? ''),
-            //"assets/images/portraits/${character.name}.png"),
-          )),
-        Flexible(
-        child:
-        Padding(
-        padding: EdgeInsets.fromLTRB(0,0,30,0),child:Column(
-            children: [
-              Wrap(children: [
-              Text.rich(TextSpan(
-                  text: roll.dateText() + ' - ', // 10:19:22 -
-                  children: rollText))]),
-
-                Text.rich(TextSpan(
-                  // 10:19:22 -
-                    children: rollDices))
-              ,
-    ])))
-    ]))];
+          top: BorderSide(width: 1.0, color: Colors.grey),
+        )),
+        child: Row(children: <Widget>[
+          if (resistingRoll != null)
+            Padding(
+                padding: EdgeInsets.fromLTRB(24, 5, 34, 0),
+                child: Container(
+                  color: Colors.black45,
+                  height: 80,
+                  width: 2,
+                )),
+          Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, 30, 0),
+              child: CircleAvatar(
+                radius: 24,
+                backgroundColor: Colors.white,
+                foregroundImage: NetworkImage(roll.picture ?? ''),
+                //"assets/images/portraits/${character.name}.png"),
+              )),
+          Flexible(
+              child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 30, 0),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                    Wrap(children: [
+                      Text.rich(TextSpan(
+                          text: roll.dateText() + ' - ', // 10:19:22 -
+                          children: rollText),)
+                    ]),
+                    Text.rich(TextSpan(
+                        // 10:19:22 -
+                        children: rollDices),
+                    textAlign: TextAlign.center,),
+                  ])))
+        ]));
   }
 
   static Future<void Function()> showEditStatAlertDialog(
@@ -1225,17 +1234,141 @@ class CharacterWidgets {
   }
 
   static sendResistingRoll(
-      RollType chair,
+      BuildContext context,
+      RollType rollType,
       String id,
       CharacterSheetViewModel? characterSheetViewModel,
       MjViewModel? mjViewModel,
       List<String>? resistingCharacters) {
     if (characterSheetViewModel != null) {
-      sendRoll(characterSheetViewModel, RollType.CHAIR, '', id);
+      sendRoll(characterSheetViewModel, rollType, '', id);
     } else if (mjViewModel != null && resistingCharacters != null) {
-      for (String c in resistingCharacters) {
-        sendRoll(mjViewModel.getCharacterViewModel(c), RollType.CHAIR, '', id);
-      }
+      showSelectResistDialog(context, mjViewModel, resistingCharacters, id, rollType);
+    }
+  }
+
+
+  static Future<void Function()> showSelectResistDialog(
+      BuildContext context,
+      MjViewModel mjViewModel,
+      List<String> characterNames,
+      String id,
+      RollType rollType) async {
+    Map<String, bool> characterList = {};
+
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    List<bool> characterNamesChecked = [];
+    for( var i = 0 ; i < characterNames.length; i++ ) {
+      characterList[characterNames[i]] = false;
+    }
+    return await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                title: Text('Résistance'),
+                actions: <Widget>[
+                  InkWell(
+                      child: Text('OK   '),
+                      onTap: () {
+                        for( var i = 0 ; i < characterNames.length; i++ ) {
+                          if(characterNamesChecked[i])
+                            sendRoll(mjViewModel.getCharacterViewModel(characterNames[i]), rollType, '', id);
+                        }
+                        Navigator.of(context).pop();
+                      }
+                  )
+                ],
+                content: Container(
+                  width: double.minPositive,
+                  height: (50 * characterNames.length).toDouble(),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: characterList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      String _key = characterList.keys.elementAt(index);
+                      return CheckboxListTile(
+                        value: characterList[_key],
+                        title: Text(_key),
+                        onChanged: (val) {
+                          setState(() {
+                            characterList[_key] = val ?? false;
+                          });
+                        },
+                      );
+                    },
+                  ),
+                ),
+              );
+            },
+          );
+        });
+    /*return await showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              title: Text("Résister"),
+              content: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListView.builder(
+                        itemCount: characterNames.length,
+                        itemBuilder: (_, index) {
+                          return ListView.builder(
+                            itemCount: characterNames.length,
+                            itemBuilder: (context, index) {
+                              return CheckboxListTile(
+                                title: Text(characterNames[index]),
+                                value: characterNamesChecked[index],
+                                onChanged: (val) {
+                                  setState(
+                                        () {
+                                          characterNamesChecked[index] = val ?? false;
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                          );/*CheckboxListTile(
+                            title: Text(characterNames[index]),
+                            value: characterNamesChecked[index],
+                            onChanged: (val) {
+                              setState(() {
+                                characterNamesChecked[index] = val ?? false;
+                              });
+                            },
+                          );*/
+                        },
+                      ),
+                    ],
+                  )),
+              actions: <Widget>[
+                InkWell(
+                  child: Text('OK   '),
+                  onTap: () {
+                    for( var i = 0 ; i < characterNames.length; i++ ) {
+                      if(characterNamesChecked[i])
+                      sendRoll(mjViewModel.getCharacterViewModel(characterNames[i]), RollType.CHAIR, '', id);
+                    }
+                      Navigator.of(context).pop();
+                    }
+            )
+              ],
+            );
+          });
+        });*/
+  }
+
+
+  static subir( String name, CharacterSheetViewModel? characterSheetViewModel, MjViewModel? mjViewModel, int degats) {
+    if(characterSheetViewModel != null) {
+      characterSheetViewModel.subir(degats);
+    } else if (mjViewModel != null) {
+      mjViewModel.subir(name, degats);
     }
   }
 }

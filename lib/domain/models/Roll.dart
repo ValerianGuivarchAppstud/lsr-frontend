@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -136,5 +137,9 @@ class Roll {
       default:
         return '[$value]';
     }
+  }
+
+  int getDegats(Roll resistingRoll) {
+    return max(((((resistingRoll.success ?? 0) - (this.success ?? 0) )/ 2).round()), 0);
   }
 }

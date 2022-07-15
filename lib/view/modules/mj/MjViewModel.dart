@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:lsr/domain/models/Character.dart';
@@ -72,5 +73,11 @@ class MjViewModel with ChangeNotifier {
 
   void removeCharacterList(String characterName) {
     _mjService.removeCharacterList(characterName);
+  }
+
+  void subir(String name, int degats) {
+    if(_currentState.getCharacterStateData(name).character != null) {
+      _charactersViewModel[name]!.subir(degats);
+    }
   }
 }

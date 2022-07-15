@@ -24,7 +24,7 @@ import 'data/api/heal/HealProvider.dart';
 import 'data/api/roll/RollProvider.dart';
 import 'domain/services/MjService.dart';
 
-const bool INITIAL_STATE_PJ = true;
+const bool INITIAL_STATE_PJ = false;
 const bool INITIAL_STATE_CAMERA = false;
 
 Future<void> mainCommon(String env) async {
