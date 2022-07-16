@@ -64,7 +64,7 @@ class _MjPageState extends State<MjPage> {
                           : WIDTH_SCREEN * RATIO_SCREEN;
                       var widthScreen = MediaQuery.of(context).size.width;
                       return _buildMj(state.data!.mjSheet!, state.data!.uiState,
-                          mjViewModel, camera ? (width - WIDTH_CAMERA) : width, widthScreen);
+                          mjViewModel, camera ? (width / 2) : width, widthScreen);
                     }
                   })));
         });

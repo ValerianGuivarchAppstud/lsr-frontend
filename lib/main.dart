@@ -6,8 +6,7 @@ import 'package:lsr/domain/services/SettingsService.dart';
 import 'package:lsr/domain/services/SheetService.dart';
 import 'package:lsr/utils/Injector.dart';
 import 'package:lsr/utils/api/NetworkingConfig.dart';
-import 'package:lsr/utils/view/Const.dart';
-import 'package:lsr/view/modules/call/call.dart';
+import 'package:lsr/view/modules/call/CallPage.dart';
 import 'package:lsr/view/modules/character/CharacterSheetScreen.dart';
 import 'package:lsr/view/modules/character/CharacterSheetViewModel.dart';
 import 'package:lsr/view/modules/heal/HealSheetScreen.dart';
@@ -153,7 +152,7 @@ class _MainStatefulWidgetState extends State<MainStatefulWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
         SizedBox(
-        width: camera ? (widthScreen - WIDTH_CAMERA) : widthScreen,
+        width:  pj ? (camera ? widthScreen / 2 : widthScreen) : (camera ? 2 * widthScreen / 3 : widthScreen),
             child: Scaffold(
             body: Center(
               child: getBody(_selectedIndex, pj),
@@ -199,8 +198,8 @@ class _MainStatefulWidgetState extends State<MainStatefulWidget> {
             ),
           )),
         if(camera) SizedBox(
-            width: WIDTH_CAMERA,//* 0.9 / 3,
-            child: CallPage(key: Key("call"))
+            width: pj ? widthScreen / 2 : widthScreen / 3,//* 0.9 / 3,
+            child: CallPage(SettingsViewModel(_settingsService), key: Key("call"))
         )]),
             IconButton(//TODO photo des perso à côté des lancers
             icon: Icon(Icons.camera_alt),

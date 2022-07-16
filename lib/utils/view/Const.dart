@@ -1,7 +1,7 @@
 
 
 
-const double WIDTH_CAMERA = 400.0;
+// const double WIDTH_CAMERA = 400.0;
 
 const double WIDTH_SCREEN = 550.0;
 

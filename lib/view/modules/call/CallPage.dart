@@ -7,25 +7,31 @@ import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:flutter/material.dart';
 
+import '../settings/SettingsViewModel.dart';
+
 const appId = "3eac4da1625d4bde816a6686c73e7b03";
-const token = "0063eac4da1625d4bde816a6686c73e7b03IABxM797A2hNUIU9R3zjXwjDZsV2IdPL3O4NVJxZ6JQf22eH5lEAAAAAEAAh21UYBOPSYgEAAQAE49Ji";
+// const token = "0063eac4da1625d4bde816a6686c73e7b03IABgL9zfCzqEzFSK/MW/CxQNrqYd4b8DsVgk4UfAjfNOz2eH5lEAAAAAEACPl0pWwDXUYgEAAQDANdRi";
 const channel = "L7R-visio";
 
 
 class CallPage extends StatefulWidget {
 
-  CallPage({required Key key}) : super(key: key);
+  SettingsViewModel settingsViewModel;
+
+  CallPage(this.settingsViewModel, {required Key key}) : super(key: key);
 
   @override
-  _CallPageState createState() => _CallPageState();
+  _CallPageState createState() => _CallPageState(settingsViewModel);
 }
 
 class _CallPageState extends State<CallPage> {
 
+  SettingsViewModel settingsViewModel;
   final _users = <int>[];
   final _infoStrings = <String>[];
   bool muted = false;
   late RtcEngine _engine;
+  _CallPageState(this.settingsViewModel);
 
 
   @override
@@ -50,6 +56,7 @@ class _CallPageState extends State<CallPage> {
   Future<void> _initAgoraRtcEngine() async {
     _engine = await RtcEngine.create(appId);
     await _engine.enableVideo();
+    await _engine.disableAudio();
     await _engine.setChannelProfile(ChannelProfile.LiveBroadcasting);
     await _engine.setClientRole(ClientRole.Broadcaster);
   }
@@ -65,7 +72,6 @@ class _CallPageState extends State<CallPage> {
       return;
     }
 
-
     /// Add agora event handlers
     void _addAgoraEventHandlers() {
       _engine.setEventHandler(RtcEngineEventHandler(error: (code) {
@@ -73,42 +79,16 @@ class _CallPageState extends State<CallPage> {
           final info = 'onError: $code';
           _infoStrings.add(info);
         });
-      }, joinChannelSuccess: (channel, uid, elapsed) {
-        setState(() {
-          final info = 'onJoinChannel: $channel, uid: $uid';
-          _infoStrings.add(info);
-        });
-      }, leaveChannel: (stats) {
-        setState(() {
-          _infoStrings.add('onLeaveChannel');
-          _users.clear();
-        });
-      }, userJoined: (uid, elapsed) {
-        setState(() {
-          final info = 'userJoined: $uid';
-          _infoStrings.add(info);
-          _users.add(uid);
-        });
-      }, userOffline: (uid, elapsed) {
-        setState(() {
-          final info = 'userOffline: $uid';
-          _infoStrings.add(info);
-          _users.remove(uid);
-        });
-      }, firstRemoteVideoFrame: (uid, width, height, elapsed) {
-        setState(() {
-          final info = 'firstRemoteVideo: $uid ${width}x $height';
-          _infoStrings.add(info);
-        });
       }));
     }
-
+    String token =  "0063eac4da1625d4bde816a6686c73e7b03IABgL9zfCzqEzFSK/MW/CxQNrqYd4b8DsVgk4UfAjfNOz2eH5lEAAAAAEACPl0pWwDXUYgEAAQDANdRi";
     await _initAgoraRtcEngine();
     _addAgoraEventHandlers();
    // OLD await _engine.enableWebSdkInteroperability(true);
-    await window.navigator.getUserMedia(audio: true, video: true);
+    await window.navigator.getUserMedia( video: true);
     VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
     configuration.dimensions = VideoDimensions(width: 1920, height: 1080);
+    configuration.orientationMode = VideoOutputOrientationMode.FixedLandscape;
     await _engine.setVideoEncoderConfiguration(configuration);
     await _engine.joinChannel(token, channel, null, 0);
 
@@ -157,9 +137,7 @@ class _CallPageState extends State<CallPage> {
       body: Center(
         child: Stack(
           children: <Widget>[
-            _viewRows(),
-            _panel(),
-            _toolbar(),
+            _viewRows()
           ],
         ),
       ),
@@ -170,13 +148,19 @@ class _CallPageState extends State<CallPage> {
   List<Widget> _getRenderViews() {
     final List<StatefulWidget> list = [];
     list.add(RtcLocalView.SurfaceView());
-    _users.forEach((int uid) => list.add(RtcRemoteView.SurfaceView(uid: uid, channelId: channel,)));
+    _users.forEach((int uid) => list.add(RtcRemoteView.SurfaceView(uid: uid, channelId: channel)));
     return list;
   }
 
   /// Video view wrapper
   Widget _videoView(view) {
-    return Expanded(child: Container(child: view));
+    return Container(
+    width: 400,
+      height: 200,
+      child: Center(
+        child: view,
+      ),
+    );
   }
 
   /// Video view row wrapper
@@ -227,54 +211,14 @@ class _CallPageState extends State<CallPage> {
     return Container();
   }
 
-  void _onToggleMute() {
-    setState(() {
-      muted = !muted;
-    });
-    _engine.muteLocalAudioStream(muted);
-  }
-
-
-  void _onCallEnd(BuildContext context) {
-    Navigator.pop(context);
-  }
-
-  void _onSwitchCamera() {
-    _engine.switchCamera();
-  }
-
   /// Toolbar layout
-  Widget _toolbar() {
+ /* Widget _toolbar() {
     return Container(
       alignment: Alignment.bottomCenter,
       padding: const EdgeInsets.symmetric(vertical: 48),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          RawMaterialButton(
-            onPressed: _onToggleMute,
-            child: Icon(
-              muted ? Icons.mic_off : Icons.mic,
-              color: muted ? Colors.white : Colors.blueAccent,
-              size: 20.0,
-            ),
-            shape: CircleBorder(),
-            elevation: 2.0,
-            fillColor: muted ? Colors.blueAccent : Colors.white,
-            padding: const EdgeInsets.all(12.0),
-          ),
-          RawMaterialButton(
-            onPressed: () => _onCallEnd(context),
-            child: Icon(
-              Icons.call_end,
-              color: Colors.white,
-              size: 35.0,
-            ),
-            shape: CircleBorder(),
-            elevation: 2.0,
-            fillColor: Colors.redAccent,
-            padding: const EdgeInsets.all(15.0),
-          ),
           RawMaterialButton(
             onPressed: _onSwitchCamera,
             child: Icon(
@@ -290,10 +234,10 @@ class _CallPageState extends State<CallPage> {
         ],
       ),
     );
-  }
+  }*/
 
   /// Info panel to show logs
-  Widget _panel() {
+  /*Widget _panel() {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 48),
       alignment: Alignment.bottomCenter,
@@ -340,7 +284,7 @@ class _CallPageState extends State<CallPage> {
         ),
       ),
     );
-  }
+  }*/
 
 
 // Create UI with local view and remote view
