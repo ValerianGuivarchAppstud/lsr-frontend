@@ -25,7 +25,7 @@ abstract class ConfigReader {
   }
 
   static String getBaseUrl() {
-    return config?.baseURL ?? "https://l7r.fr/be/api/v1/";
+    return config?.baseURL ?? "https://l7r.fr/api/v1/";
   }
 
   static bool isStub() {
