@@ -9,6 +9,7 @@ import 'package:lsr/utils/api/NetworkingConfig.dart';
 import 'package:lsr/view/modules/call/CallPage.dart';
 import 'package:lsr/view/modules/character/CharacterSheetScreen.dart';
 import 'package:lsr/view/modules/character/CharacterSheetViewModel.dart';
+import 'package:lsr/view/modules/character/CharacterWidgets.dart';
 import 'package:lsr/view/modules/heal/HealSheetScreen.dart';
 import 'package:lsr/view/modules/heal/HealSheetViewModel.dart';
 import 'package:lsr/view/modules/mj/MjScreen.dart';
@@ -63,6 +64,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    CharacterWidgets.getColorList();
     return Injector(
       sheetService: _characterService,
       characterSheetViewModel: CharacterSheetViewModel.playerConstructor(

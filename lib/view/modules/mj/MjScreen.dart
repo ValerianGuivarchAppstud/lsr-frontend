@@ -45,9 +45,7 @@ class _MjPageState extends State<MjPage> {
               height: height,
               width: width,
               color: Colors.white,
-              child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: LayoutBuilder(builder: (context, constraints) {
+              child:  LayoutBuilder(builder: (context, constraints) {
                     if (state.data == null || (state.data!.showLoading)) {
                       return LoadingWidget(
                           key: Key(
@@ -66,7 +64,7 @@ class _MjPageState extends State<MjPage> {
                       return _buildMj(state.data!.mjSheet!, state.data!.uiState,
                           mjViewModel, camera ? (width / 2) : width, widthScreen);
                     }
-                  })));
+                  }));
         });
   }
 
@@ -79,7 +77,9 @@ class _MjPageState extends State<MjPage> {
           children: [
         SizedBox(
             width: widthScreen * 2 / 3,
-            child: Column(children: [
+            child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child:Column(children: [
               Row(children: [
                 Text(
                   'PJ ',
@@ -259,13 +259,15 @@ class _MjPageState extends State<MjPage> {
                             null,
                             mjViewModel));
                   }).toList())),
-            ])),
+            ]))),
         SizedBox(
             width: widthScreen * 0.9 / 3,
-            child: Column(
+            child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child:Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [CharacterWidgets.buildRollList(mjSheet.rollList, null, null, mjViewModel, mjViewModel.getState().mjSheet?.characters.map((e) => e.name).toList())]))
+                children: [CharacterWidgets.buildRollList(mjSheet.rollList, null, null, mjViewModel, mjViewModel.getState().mjSheet?.characters.map((e) => e.name).toList())])))
       ]);
 }

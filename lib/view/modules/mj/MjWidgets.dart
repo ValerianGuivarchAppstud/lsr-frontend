@@ -7,6 +7,7 @@ import 'package:lsr/domain/models/Classe.dart';
 
 import '../../../domain/models/Bloodline.dart';
 import '../../../domain/models/Genre.dart';
+import '../character/CharacterWidgets.dart';
 
 class MjWidgets {
   static Future<void Function()> buildCreateCharacterAlertDialog(
@@ -45,6 +46,8 @@ class MjWidgets {
     Bloodline? bloodline = initialCharacter?.bloodline ?? null;
     Genre? genre = initialCharacter?.genre ?? null;
     Category? category = initialCharacter?.category ?? null;
+    Color? buttonColor = initialCharacter?.buttonColorOrDefault();
+    Color? textColor = initialCharacter?.textColorOrDefault();
     String? player = initialCharacter?.playerName ?? null;
     return await showDialog(
         context: context,
@@ -252,7 +255,7 @@ class MjWidgets {
                           children: [
                             Padding(
                               padding:
-                                  const EdgeInsets.fromLTRB(0.0, 0.0, 5.0, 0.0),
+                              const EdgeInsets.fromLTRB(0.0, 0.0, 5.0, 0.0),
                               child: DropdownButton<Genre>(
                                 hint: Text('Genre'),
                                 value: genre,
@@ -263,7 +266,7 @@ class MjWidgets {
                                   });
                                 },
                                 style:
-                                    const TextStyle(color: Colors.deepPurple),
+                                const TextStyle(color: Colors.deepPurple),
                                 underline: Container(
                                   height: 2,
                                   color: Colors.deepPurpleAccent,
@@ -271,16 +274,16 @@ class MjWidgets {
                                 items: Genre.values
                                     .map<DropdownMenuItem<Genre>>(
                                         (Genre value) {
-                                  return DropdownMenuItem<Genre>(
-                                    value: value,
-                                    child: Text(value.name),
-                                  );
-                                }).toList(),
+                                      return DropdownMenuItem<Genre>(
+                                        value: value,
+                                        child: Text(value.name),
+                                      );
+                                    }).toList(),
                               ),
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                              const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                               child: DropdownButton<Category>(
                                 hint: Text('Categorie'),
                                 value: category,
@@ -292,7 +295,7 @@ class MjWidgets {
                                   });
                                 },
                                 style:
-                                    const TextStyle(color: Colors.deepPurple),
+                                const TextStyle(color: Colors.deepPurple),
                                 underline: Container(
                                   height: 2,
                                   color: Colors.deepPurpleAccent,
@@ -300,16 +303,16 @@ class MjWidgets {
                                 items: Category.values
                                     .map<DropdownMenuItem<Category>>(
                                         (Category value) {
-                                  return DropdownMenuItem<Category>(
-                                    value: value,
-                                    child: Text(value.name),
-                                  );
-                                }).toList(),
+                                      return DropdownMenuItem<Category>(
+                                        value: value,
+                                        child: Text(value.name),
+                                      );
+                                    }).toList(),
                               ),
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                              const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                               child: DropdownButton<String>(
                                 hint: Text('Joueuse'),
                                 value: player,
@@ -321,7 +324,7 @@ class MjWidgets {
                                   });
                                 },
                                 style:
-                                    const TextStyle(color: Colors.deepPurple),
+                                const TextStyle(color: Colors.deepPurple),
                                 underline: Container(
                                   height: 2,
                                   color: Colors.deepPurpleAccent,
@@ -329,11 +332,81 @@ class MjWidgets {
                                 items: playersName
                                     .map<DropdownMenuItem<String>>(
                                         (String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                              ),
+                            ),
+                          ]),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding:
+                              const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                              child: DropdownButton<Color>(
+                                hint: Text('Couleur Bouton'),
+                                value: buttonColor,
+                                icon: const Icon(Icons.arrow_downward),
+                                elevation: 16,
+                                onChanged: (Color? newValue) {
+                                  setState(() {
+                                    buttonColor = Color(newValue?.value ?? 0);
+                                  });
+                                },
+                                style:
+                                const TextStyle(color: Colors.deepPurple),
+                                underline: Container(
+                                  height: 2,
+                                  color: Colors.deepPurpleAccent,
+                                ),
+                                items: CharacterWidgets.getColorList()
+                                    .map<DropdownMenuItem<Color>>(
+                                        (Color value) {
+                                      return DropdownMenuItem<Color>(
+                                        value: value,
+                                        child: Text(value.toString(),
+                                          style: TextStyle(
+                                              backgroundColor: value,
+                                              color: value
+                                          ),),
+                                      );
+                                    }).toList(),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                              const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                              child: DropdownButton<Color>(
+                                hint: Text('Couleur Text'),
+                                value: textColor,
+                                icon: const Icon(Icons.arrow_downward),
+                                elevation: 16,
+                                onChanged: (Color? newValue) {
+                                  setState(() {
+                                    textColor = Color(newValue?.value ?? 0);
+                                  });
+                                },
+                                style:
+                                const TextStyle(color: Colors.deepPurple),
+                                underline: Container(
+                                  height: 2,
+                                  color: Colors.deepPurpleAccent,
+                                ),
+                                items: CharacterWidgets.getColorList()
+                                    .map<DropdownMenuItem<Color>>(
+                                        (Color value) {
+                                      return DropdownMenuItem<Color>(
+                                        value: value,
+                                        child: Text(value.toString(),
+                                          style: TextStyle(
+                                              backgroundColor: value,
+                                              color: value
+                                          ),),
+                                      );
+                                    }).toList(),
                               ),
                             ),
                           ]),
@@ -405,7 +478,9 @@ class MjWidgets {
                               genre ?? initialCharacter?.genre ?? Genre.AUTRE,
                           relance: initialCharacter?.relance ?? 0,
                           playerName:
-                              player ?? initialCharacter?.playerName ?? null));
+                              player ?? initialCharacter?.playerName ?? null,
+                          buttonColor: buttonColor?.value.toString() ?? initialCharacter?.buttonColor ?? null,
+                          textColor: textColor?.value.toString() ?? initialCharacter?.textColor ?? null));
                       Navigator.of(context).pop();
                     }
                   },

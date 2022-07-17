@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:lsr/domain/models/Bloodline.dart';
 import 'package:lsr/domain/models/Category.dart';
@@ -35,6 +38,8 @@ class Character {
   late String picture;
   late String background;
   late String? playerName;
+  late String? buttonColor;
+  late String? textColor;
   Character({
       required this.name,
       required this.classe,
@@ -61,7 +66,9 @@ class Character {
     required this.relance,
     required this.picture,
     required this.background,
-    required this.playerName
+    required this.playerName,
+    required this.buttonColor,
+    required this.textColor
   });
 
 
@@ -148,5 +155,21 @@ class Character {
   @override
   String toString() {
     return 'Character{name: $name}';
+  }
+
+  Color buttonColorOrDefault() {
+    if (buttonColor != null && buttonColor != '') {
+      return Color(int.parse(buttonColor!));
+    } else {
+      return Colors.blue;
+    }
+  }
+
+  Color textColorOrDefault() {
+    if (textColor != null && textColor != '') {
+      return Color(int.parse(textColor!));
+    } else {
+      return Colors.white;
+    }
   }
 }

@@ -14,6 +14,30 @@ import 'CharacterSheetState.dart';
 import 'CharacterSheetViewModel.dart';
 
 class CharacterWidgets {
+
+  static List<Color> colors = [];
+
+  static getColorList() {
+    if(colors.length == 0){
+      colors.add(Colors.white);
+      for(MaterialColor materialColor in Colors.primaries) {
+        colors.add(materialColor.shade100);
+        colors.add(materialColor.shade200);
+        colors.add(materialColor.shade300);
+        colors.add(materialColor.shade400);
+        colors.add(materialColor.shade500);
+        colors.add(materialColor.shade600);
+        colors.add(materialColor.shade700);
+        colors.add(materialColor.shade800);
+        colors.add(materialColor.shade900);
+      }
+//      colors.sort((c1, c2) => c1.value - c2.value);
+    } else {
+      return colors;
+    }
+  }
+
+
   static void sendRoll(
       CharacterSheetViewModel characterSheetViewModel, RollType rollType,
       [String empirique = '', String? resistRoll = null]) {
@@ -196,7 +220,8 @@ class CharacterWidgets {
                   (sizeRatio * WIDTH_SCREEN) / 4.3,
                   sizeRatioFont * 26,
                   50,
-                  Colors.blue,
+                  character.buttonColorOrDefault(),
+                  character.textColorOrDefault(),
                   playerDisplay,
                   () => sendRoll(characterSheetViewModel, RollType.CHAIR, ''),
                   () => showEditStatAlertDialog(
@@ -208,7 +233,7 @@ class CharacterWidgets {
                     iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
-                    color: Colors.blue,
+                    color: character.buttonColorOrDefault(),//character.buttonColorOrDefault(),
                     icon: Icon(Icons.remove_circle),
                     onPressed: () {
                       changeCharacterValue(
@@ -223,7 +248,8 @@ class CharacterWidgets {
                       (sizeRatio * WIDTH_SCREEN) / 5,
                       sizeRatioFont * 26,
                       50,
-                      Colors.blue,
+                      character.buttonColorOrDefault(),
+                  character.textColorOrDefault(),
                       playerDisplay,
                       () => {},
                       () => showEditStatAlertDialog(context,
@@ -232,7 +258,7 @@ class CharacterWidgets {
                     iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
-                    color: Colors.blue,
+                    color: character.buttonColorOrDefault(),
                     icon: Icon(Icons.add_circle),
                     onPressed: () {
                       changeCharacterValue(
@@ -248,7 +274,7 @@ class CharacterWidgets {
                     iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
-                    color: Colors.blue,
+                    color: character.buttonColorOrDefault(),
                     icon: Icon(Icons.remove_circle),
                     onPressed: () {
                       changeUiValue(characterSheetViewModel,
@@ -261,7 +287,8 @@ class CharacterWidgets {
                       (sizeRatio * WIDTH_SCREEN) / 5,
                       sizeRatioFont * 26,
                       50,
-                      Colors.blue,
+                      character.buttonColorOrDefault(),
+                  character.textColorOrDefault(),
                       playerDisplay,
                       () => {},
                       () => {}),
@@ -269,7 +296,7 @@ class CharacterWidgets {
                     iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
-                    color: Colors.blue,
+                    color: character.buttonColorOrDefault(),
                     icon: Icon(Icons.add_circle),
                     onPressed: () {
                       changeUiValue(characterSheetViewModel,
@@ -289,7 +316,8 @@ class CharacterWidgets {
                   (sizeRatio * WIDTH_SCREEN) / 4.3,
                   sizeRatioFont * 26,
                   50,
-                  Colors.blue,
+                  character.buttonColorOrDefault(),
+                  character.textColorOrDefault(),
                   playerDisplay,
                   () => sendRoll(characterSheetViewModel, RollType.ESPRIT, ''),
                   () => showEditStatAlertDialog(
@@ -301,7 +329,7 @@ class CharacterWidgets {
                     iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
-                    color: Colors.blue,
+                    color: character.buttonColorOrDefault(),
                     icon: Icon(Icons.remove_circle),
                     onPressed: () {
                       changeCharacterValue(
@@ -318,7 +346,10 @@ class CharacterWidgets {
                       50,
                       characterSheetState.uiState.focus
                           ? Colors.blueGrey
-                          : Colors.blue,
+                          : character.buttonColorOrDefault(),
+                      characterSheetState.uiState.focus
+                          ? Colors.white
+                          : character.textColorOrDefault(),
                       playerDisplay, () {
                     changeUiSelect(characterSheetViewModel,
                         characterSheetState.uiState, 'PF');
@@ -329,7 +360,7 @@ class CharacterWidgets {
                     iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
-                    color: Colors.blue,
+                    color: character.buttonColorOrDefault(),
                     icon: Icon(Icons.add_circle),
                     onPressed: () {
                       changeCharacterValue(
@@ -345,7 +376,7 @@ class CharacterWidgets {
                     iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
-                    color: Colors.blue,
+                    color: character.buttonColorOrDefault(),
                     icon: Icon(Icons.remove_circle),
                     onPressed: () {
                       changeUiValue(characterSheetViewModel,
@@ -361,7 +392,8 @@ class CharacterWidgets {
                       (sizeRatio * WIDTH_SCREEN) / 5,
                       sizeRatioFont * 26,
                       50,
-                      Colors.blue,
+                      character.buttonColorOrDefault(),
+                  character.textColorOrDefault(),
                       playerDisplay,
                       () => {},
                       () => {}),
@@ -369,7 +401,7 @@ class CharacterWidgets {
                     iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
-                    color: Colors.blue,
+                    color: character.buttonColorOrDefault(),
                     icon: Icon(Icons.add_circle),
                     onPressed: () {
                       changeUiValue(characterSheetViewModel,
@@ -389,7 +421,8 @@ class CharacterWidgets {
                   (sizeRatio * WIDTH_SCREEN) / 4.3,
                   sizeRatioFont * 26,
                   50,
-                  Colors.blue,
+                  character.buttonColorOrDefault(),
+                  character.textColorOrDefault(),
                   playerDisplay,
                   () => sendRoll(characterSheetViewModel, RollType.ESSENCE, ''),
                   () => showEditStatAlertDialog(
@@ -401,7 +434,7 @@ class CharacterWidgets {
                     iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
-                    color: Colors.blue,
+                    color: character.buttonColorOrDefault(),
                     icon: Icon(Icons.remove_circle),
                     onPressed: () {
                       changeCharacterValue(
@@ -418,7 +451,10 @@ class CharacterWidgets {
                       50,
                       characterSheetState.uiState.power
                           ? Colors.blueGrey
-                          : Colors.blue,
+                          : character.buttonColorOrDefault(),
+                      characterSheetState.uiState.focus
+                          ? Colors.white
+                          : character.textColorOrDefault(),
                       playerDisplay, () {
                     changeUiSelect(characterSheetViewModel,
                         characterSheetState.uiState, 'PP');
@@ -429,7 +465,7 @@ class CharacterWidgets {
                     iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
-                    color: Colors.blue,
+                    color: character.buttonColorOrDefault(),
                     icon: Icon(Icons.add_circle),
                     onPressed: () {
                       changeCharacterValue(
@@ -445,7 +481,7 @@ class CharacterWidgets {
                     iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
-                    color: Colors.blue,
+                    color: character.buttonColorOrDefault(),
                     icon: Icon(Icons.remove_circle),
                     onPressed: () {
                       changeCharacterValue(
@@ -458,7 +494,8 @@ class CharacterWidgets {
                       (sizeRatio * WIDTH_SCREEN) / 5,
                       sizeRatioFont * 26,
                       50,
-                      Colors.blue,
+                      character.buttonColorOrDefault(),
+                  character.textColorOrDefault(),
                       playerDisplay,
                       () => {},
                       () => {}),
@@ -466,7 +503,7 @@ class CharacterWidgets {
                     iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
-                    color: Colors.blue,
+                    color: character.buttonColorOrDefault(),
                     icon: Icon(Icons.add_circle),
                     onPressed: () {
                       changeCharacterValue(
@@ -489,7 +526,8 @@ class CharacterWidgets {
                   (sizeRatio * WIDTH_SCREEN) / 5,
                   sizeRatioFont * 14,
                   34,
-                  Colors.blue,
+                  character.buttonColorOrDefault(),
+                  character.textColorOrDefault(),
                   playerDisplay,
                   () => showArcaneAlertDialog(context, characterSheetViewModel),
                   () => showEditStatAlertDialog(
@@ -500,7 +538,8 @@ class CharacterWidgets {
                   (sizeRatio * WIDTH_SCREEN) / 5,
                   sizeRatioFont * 14,
                   34,
-                  Colors.blue,
+                  character.buttonColorOrDefault(),
+                  character.textColorOrDefault(),
                   playerDisplay,
                   () => sendRoll(
                       characterSheetViewModel, RollType.MAGIE_FORTE, ''),
@@ -512,7 +551,8 @@ class CharacterWidgets {
                   (sizeRatio * WIDTH_SCREEN) / 5,
                   sizeRatioFont * 14,
                   34,
-                  Colors.blue,
+                  character.buttonColorOrDefault(),
+                  character.textColorOrDefault(),
                   playerDisplay,
                   () => sendRoll(
                       characterSheetViewModel, RollType.MAGIE_LEGERE, ''),
@@ -524,7 +564,8 @@ class CharacterWidgets {
                   (sizeRatio * WIDTH_SCREEN) / 5,
                   sizeRatioFont * 12,
                   34,
-                  Colors.blue,
+                  character.buttonColorOrDefault(),
+                  character.textColorOrDefault(),
                   playerDisplay,
                   () => sendRoll(
                       characterSheetViewModel, RollType.EMPIRIQUE, "1d6"),
@@ -543,7 +584,10 @@ class CharacterWidgets {
                   34,
                   characterSheetState.uiState.proficiency
                       ? Colors.blueGrey
-                      : Colors.blue,
+                      : character.buttonColorOrDefault(),
+                  characterSheetState.uiState.focus
+                      ? Colors.white
+                      : character.textColorOrDefault(),
                   playerDisplay, () {
                 changeUiSelect(characterSheetViewModel,
                     characterSheetState.uiState, 'Proficiency');
@@ -558,7 +602,10 @@ class CharacterWidgets {
                   34,
                   characterSheetState.uiState.help
                       ? Colors.blueGrey
-                      : Colors.blue,
+                      : character.buttonColorOrDefault(),
+                  characterSheetState.uiState.focus
+                      ? Colors.white
+                      : character.textColorOrDefault(),
                   playerDisplay, () {
                 if (characterSheetState.uiState.characterToHelp == null) {
                   showHelpingRollAlertDialog(context, characterSheetViewModel,
@@ -576,7 +623,10 @@ class CharacterWidgets {
                   34,
                   characterSheetState.uiState.secret
                       ? Colors.blueGrey
-                      : Colors.blue,
+                      : character.buttonColorOrDefault(),
+                  characterSheetState.uiState.focus
+                      ? Colors.white
+                      : character.textColorOrDefault(),
                   playerDisplay, () {
                 changeUiSelect(characterSheetViewModel,
                     characterSheetState.uiState, 'Secret');
@@ -587,7 +637,12 @@ class CharacterWidgets {
                   (sizeRatio * WIDTH_SCREEN) / 5,
                   sizeRatioFont * 12,
                   34,
-                  Colors.blue,
+                  characterSheetState.uiState.secret
+                      ? Colors.blueGrey
+                      : character.buttonColorOrDefault(),
+                  characterSheetState.uiState.focus
+                      ? Colors.white
+                      : character.textColorOrDefault(),
                   playerDisplay,
                   () => sendRoll(characterSheetViewModel, RollType.RELANCE, ''),
                   () => showEditStatAlertDialog(
@@ -635,7 +690,8 @@ class CharacterWidgets {
       double width,
       double fontSize,
       double height,
-      MaterialColor color,
+      Color color,
+      Color colorText,
       bool playerDisplay,
       void Function() onPressed,
       void Function() onLongPress) {
@@ -673,7 +729,7 @@ class CharacterWidgets {
                       if (title != '')
                         Text(
                           title,
-                          style: TextStyle(fontSize: fontSize / 2),
+                          style: TextStyle(fontSize: fontSize / 2, color: colorText),
                           textAlign: TextAlign.center,
                         ),
                       if (value != '')
@@ -682,6 +738,7 @@ class CharacterWidgets {
                           style: TextStyle(
                             fontSize: fontSize,
                             fontWeight: FontWeight.bold,
+                            color: colorText,
                           ),
                           textAlign: TextAlign.center,
                         ),

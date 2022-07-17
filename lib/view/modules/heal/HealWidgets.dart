@@ -37,6 +37,7 @@ class HealWidgets {
               sizeRatioFont * 26,
               50,
               Colors.blue,
+              Colors.white,
               true,
               () => healSheetViewModel.sendHealRoll(),
               () => showHealStatAlertDialog(
@@ -49,6 +50,7 @@ class HealWidgets {
                 sizeRatioFont * 26,
                 50,
                 healSheetState.uiState.focus ? Colors.blueGrey : Colors.blue,
+                Colors.white,
                 true, () {
               changeUiSelect(healSheetViewModel, healSheetState.uiState, 'PF');
             }, () => {}),
@@ -59,6 +61,7 @@ class HealWidgets {
                 sizeRatioFont * 26,
                 50,
                 healSheetState.uiState.power ? Colors.blueGrey : Colors.blue,
+                Colors.white,
                 true, () {
               changeUiSelect(healSheetViewModel, healSheetState.uiState, 'PP');
             }, () => {}),
