@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:lsr/view/MainState.dart';
 
 import '../../../domain/services/SettingsService.dart';
+import '../../MainViewModel.dart';
 import 'SettingsState.dart';
 
-class SettingsViewModel with ChangeNotifier {
+class SettingsViewModel extends SubViewModel with ChangeNotifier {
   final SettingsService _settingsService;
   late SettingsState _currentState;
 
@@ -39,5 +41,10 @@ class SettingsViewModel with ChangeNotifier {
     }).onError((error, stackTrace) {
         streamController.add(_currentState.copy(SettingsFailed(error.toString())));
       });
+  }
+
+  @override
+  changeMainState(MainLoaded state) {
+    streamController.add(_currentState.copy(SettingsMainLoaded(state.pj))); // change here to have SettingsLoaded and MainLoaded
   }
 }

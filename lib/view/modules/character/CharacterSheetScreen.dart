@@ -5,8 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../../domain/models/Settings.dart';
-import '../../../utils/Injector.dart';
 import '../../../utils/view/Const.dart';
 import '../../widgets/common/LoadingWidget.dart';
 import '../settings/SettingsWidgets.dart';
@@ -15,19 +13,21 @@ import 'CharacterSheetViewModel.dart';
 import 'CharacterWidgets.dart';
 
 class CharacterPage extends StatefulWidget {
+  CharacterSheetViewModel characterSheetViewModel;
   final String? characterName;
 
-  CharacterPage(Key key, [this.characterName = null]) : super(key: key);
+  CharacterPage(this.characterSheetViewModel, Key key, [this.characterName = null]) : super(key: key);
 
   @override
-  _CharacterPageState createState() => _CharacterPageState(characterName);
+  _CharacterPageState createState() => _CharacterPageState(this.characterSheetViewModel, characterName);
 }
 
 class _CharacterPageState extends State<CharacterPage> {
+  CharacterSheetViewModel characterSheetViewModel;
   late TextEditingController noteFieldController;
   final String? characterName;
 
-  _CharacterPageState(this.characterName);
+  _CharacterPageState(this.characterSheetViewModel, this.characterName);
 
   @override
   void initState() {
@@ -47,8 +47,6 @@ class _CharacterPageState extends State<CharacterPage> {
     var width = MediaQuery.of(context).size.width < WIDTH_SCREEN
         ? MediaQuery.of(context).size.width
         : WIDTH_SCREEN;
-    CharacterSheetViewModel characterSheetViewModel =
-        Injector.of(context).characterSheetViewModel;
     return StreamBuilder<CharacterSheetState>(
         stream: characterSheetViewModel.streamController.stream,
         initialData: characterSheetViewModel.getState(),
@@ -59,7 +57,7 @@ class _CharacterPageState extends State<CharacterPage> {
             Timer.periodic(
                 oneSec,
                 (Timer t) =>
-                  Injector.of(context).characterSheetViewModel.getCharacterSheet()
+                  characterSheetViewModel.getCharacterSheet()
                 );
           }
           return Container(

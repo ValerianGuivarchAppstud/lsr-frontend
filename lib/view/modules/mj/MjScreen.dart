@@ -6,32 +6,34 @@ import 'package:lsr/domain/models/MjSheet.dart';
 import 'package:lsr/view/modules/character/CharacterWidgets.dart';
 import 'package:lsr/view/modules/mj/MjWidgets.dart';
 
-import '../../../utils/Injector.dart';
 import '../../../utils/view/Const.dart';
 import '../../widgets/common/LoadingWidget.dart';
 import 'MjState.dart';
 import 'MjViewModel.dart';
 
 class MjPage extends StatefulWidget {
-  bool camera;
+  MjViewModel mjViewModel;
 
-  MjPage(this.camera, {required Key key}) : super(key: key);
+  MjPage(this.mjViewModel, {required Key key}) : super(key: key){
+    print("onst");
+  }
 
   @override
-  _MjPageState createState() => _MjPageState(this.camera);
+  _MjPageState createState() => _MjPageState(this.mjViewModel);
 }
 
 class _MjPageState extends State<MjPage> {
-  bool camera;
+  MjViewModel mjViewModel;
+  bool camera = false; // TODO fix
 
-  _MjPageState(this.camera);
+  _MjPageState(this.mjViewModel);
 
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    MjViewModel mjViewModel = Injector.of(context).mjViewModel;
-    Injector.of(context).mjViewModel.getMj();
+    print("POUUET");
+    mjViewModel.getMj();
     return StreamBuilder<MjState>(
         stream: mjViewModel.streamController.stream,
         initialData: mjViewModel.getState(),
@@ -39,7 +41,7 @@ class _MjPageState extends State<MjPage> {
           if (state.data?.showLoading ?? true) {
             const oneSec = Duration(seconds: 1);
             Timer.periodic(
-                oneSec, (Timer t) => Injector.of(context).mjViewModel.getMj());
+                oneSec, (Timer t) => mjViewModel.getMj());
           }
           return Container(
               height: height,

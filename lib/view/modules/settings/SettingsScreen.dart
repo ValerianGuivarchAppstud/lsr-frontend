@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:lsr/view/MainViewModel.dart';
 import 'package:lsr/view/modules/settings/SettingsWidgets.dart';
 
 import '../../../domain/models/Settings.dart';
-import '../../../main.dart';
-import '../../../utils/Injector.dart';
 import '../../../utils/view/Const.dart';
 import '../../widgets/common/LoadingWidget.dart';
 import 'SettingsState.dart';
 import 'SettingsViewModel.dart';
 
 class SettingsPage extends StatefulWidget {
-  bool pj;
-  bool camera;
+  final SettingsViewModel settingsViewModel;
+  final MainViewModel mainViewModel;
 
-  SettingsPage(this.pj, this.camera,
+  SettingsPage(
+      this.settingsViewModel,
+      this.mainViewModel,
       {required Key key, String SettingsName = ''})
       : super(key: key);
 
   @override
-  _SettingsPageState createState() => _SettingsPageState(this.pj, this.camera);
+  _SettingsPageState createState() => _SettingsPageState(this.settingsViewModel, this.mainViewModel);
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool pj;
-  bool camera;
+  SettingsViewModel settingsViewModel;
+  final MainViewModel mainViewModel;
 
-  _SettingsPageState(this.pj, this.camera);
+  _SettingsPageState(this.settingsViewModel, this.mainViewModel);
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +34,7 @@ class _SettingsPageState extends State<SettingsPage> {
     var width = MediaQuery.of(context).size.width < WIDTH_SCREEN
         ? MediaQuery.of(context).size.width
         : WIDTH_SCREEN;
-    SettingsViewModel settingsViewModel =
-        Injector.of(context).settingsViewModel;
-    Injector.of(context).settingsViewModel.getSettings();
+    settingsViewModel.getSettings();
     return StreamBuilder<SettingsState>(
         stream: settingsViewModel.streamController.stream,
         initialData: settingsViewModel.getState(),
@@ -61,24 +60,20 @@ class _SettingsPageState extends State<SettingsPage> {
                           );
                         } else {
                           return _buildSettings(state.data!.settings!,
-                              WIDTH_SCREEN, settingsViewModel);
+                              WIDTH_SCREEN, settingsViewModel, state.data!.pj);
                         }
                       }))));
         });
   }
 
   _buildSettings(Settings settings, double sizeWidth,
-          SettingsViewModel settingsViewModel) =>
+          SettingsViewModel settingsViewModel, bool pj) =>
       Column(mainAxisSize: MainAxisSize.min, children: [
         SettingsWidgets.buildCharacterSelection(settings, settingsViewModel, null, setState),
         ElevatedButton(
           child: pj ? const Text('Devenir MJ') : Text('Devenir joueuse'),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => MainStatefulWidget(!pj, camera)),
-            );
+            mainViewModel.switchRole();
           },
         )
       ]);

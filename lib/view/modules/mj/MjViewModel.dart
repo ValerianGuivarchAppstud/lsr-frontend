@@ -9,9 +9,11 @@ import 'package:lsr/view/modules/character/CharacterSheetViewModel.dart';
 import '../../../domain/services/MjService.dart';
 import '../../../domain/services/SettingsService.dart';
 import '../../../domain/services/SheetService.dart';
+import '../../MainState.dart';
+import '../../MainViewModel.dart';
 import 'MjState.dart';
 
-class MjViewModel with ChangeNotifier {
+class MjViewModel extends SubViewModel with ChangeNotifier {
   final MjService _mjService;
   final SheetService _sheetService;
   final SettingsService _settingsService;
@@ -99,5 +101,10 @@ class MjViewModel with ChangeNotifier {
     if (_currentState.getCharacterStateData(name).character != null) {
       _charactersViewModel[name]!.subir(degats);
     }
+  }
+
+  @override
+  changeMainState(MainLoaded state) {
+    // nothing to do
   }
 }

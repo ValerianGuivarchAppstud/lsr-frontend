@@ -4,11 +4,10 @@ class SettingsState {
   bool showLoading;
   Settings? settings;
   String? error;
+  bool pj;
 
-  SettingsState({
-    this.showLoading = true,
-    this.settings,
-    this.error});
+  SettingsState(
+      {this.showLoading = true, this.settings, this.error, this.pj = false});
 
   SettingsState copy(SettingsPartialState partialState) {
     switch (partialState.runtimeType) {
@@ -16,6 +15,9 @@ class SettingsState {
         showLoading = false;
         error = null;
         settings = (partialState as SettingsLoaded).settings;
+        break;
+      case SettingsMainLoaded:
+        pj = (partialState as SettingsMainLoaded).pj;
         break;
       case SettingsFailed:
         showLoading = false;
@@ -46,8 +48,7 @@ class SettingsState {
   }
 
   @override
-  int get hashCode =>
-      showLoading.hashCode ^ settings.hashCode ^ error.hashCode;
+  int get hashCode => showLoading.hashCode ^ settings.hashCode ^ error.hashCode;
 }
 
 abstract class SettingsPartialState {}
@@ -56,6 +57,12 @@ class SettingsLoaded extends SettingsPartialState {
   Settings settings;
 
   SettingsLoaded(this.settings);
+}
+
+class SettingsMainLoaded extends SettingsPartialState {
+  bool pj;
+
+  SettingsMainLoaded(this.pj);
 }
 
 class SettingsFailed extends SettingsPartialState {

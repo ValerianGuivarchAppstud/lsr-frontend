@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'dart:developer' as developer;
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../../utils/Injector.dart';
 import '../../../utils/view/Const.dart';
 import '../../widgets/common/LoadingWidget.dart';
 import '../character/CharacterWidgets.dart';
@@ -15,17 +12,20 @@ import 'HealWidgets.dart';
 
 class HealSheetPage extends StatefulWidget {
   final String? characterName;
+  final HealSheetViewModel healSheetViewModel;
 
-  HealSheetPage(Key key, [this.characterName = null]) : super(key: key);
+
+  HealSheetPage(Key key, this.healSheetViewModel, [this.characterName = null]) : super(key: key);
 
   @override
-  _HealSheetPageState createState() => _HealSheetPageState(characterName);
+  _HealSheetPageState createState() => _HealSheetPageState(healSheetViewModel, characterName);
 }
 
 class _HealSheetPageState extends State<HealSheetPage> {
   final String? characterName;
+  HealSheetViewModel healSheetViewModel;
 
-  _HealSheetPageState(this.characterName);
+  _HealSheetPageState(this.healSheetViewModel, this.characterName);
 
   @override
   void initState() {
@@ -43,8 +43,6 @@ class _HealSheetPageState extends State<HealSheetPage> {
     var width = MediaQuery.of(context).size.width < WIDTH_SCREEN
         ? MediaQuery.of(context).size.width
         : WIDTH_SCREEN;
-    HealSheetViewModel healSheetViewModel =
-        Injector.of(context).healSheetViewModel;
     return StreamBuilder<HealSheetState>(
         stream: healSheetViewModel.streamController.stream,
         initialData: healSheetViewModel.getState(),
@@ -55,7 +53,7 @@ class _HealSheetPageState extends State<HealSheetPage> {
             Timer.periodic(
                 oneSec,
                 (Timer t) =>
-                  Injector.of(context).healSheetViewModel.getHealSheet()
+                  healSheetViewModel.getHealSheet()
                 );
           }
           return Container(

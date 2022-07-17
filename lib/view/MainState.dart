@@ -1,153 +1,80 @@
-import 'package:lsr/domain/models/Roll.dart';
+class MainState {
+  bool pj;
+  bool camera;
+  int selectedIndex;
 
-import '../../../domain/models/Character.dart';
-import '../../../domain/models/Settings.dart';
-
-class CharacterSheetState {
   bool showLoading;
-  Character? character;
-  List<Roll>? rollList;
-  List<String>? pjAlliesNames;
   String? error;
-  late CharacterSheetUIState uiState;
-  DateTime? lastTimeNoteSaved;
-  String notes;
-  Settings? settings;
 
-  CharacterSheetState({
+
+  MainState({
     this.showLoading = true,
-    this.character,
     this.error,
-    this.rollList,
-    this.lastTimeNoteSaved,
-  this.notes = ''}) {
-    this.uiState = CharacterSheetUIState();
-  }
+    this.pj = false,
+    this.camera = false,
+  this.selectedIndex = 0});
 
-  CharacterSheetState copy(CharacterSheetPartialState partialState) {
+  MainState copy(MainPartialState partialState) {
     switch (partialState.runtimeType) {
-      case CharacterSheetLoaded:
+      case MainLoaded:
         showLoading = false;
         error = null;
-          character = (partialState as CharacterSheetLoaded).character;
-          rollList = (partialState).rollList;
-          pjAlliesNames = (partialState).pjAlliesNames;
+        print(pj);
+        print(selectedIndex);
+        print((partialState as MainLoaded).selectedIndex);
+        print((partialState as MainLoaded).pj);
+        pj = (partialState as MainLoaded).pj;
+        print("lol3");
+        print(pj);
+          camera = (partialState).camera;
+          selectedIndex = (partialState).selectedIndex;
         break;
-      case CharacterLoaded:
+      case MainFailed:
         showLoading = false;
-        error = null;
-        character = (partialState as CharacterLoaded).character;
+        error = 'Unable to load app';
         break;
-      case SettingsLoaded:
-        showLoading = false;
-        error = null;
-        settings = (partialState as SettingsLoaded).settings;
-        break;
-      case RollListLoaded:
-        showLoading = false;
-        error = null;
-          rollList = (partialState as RollListLoaded).rollList;
-        break;
-      case CharacterSheetFailed:
-        showLoading = false;
-        error = 'Unable to load character';
-        break;
-      case CharacterSheetLoading:
+      case MainLoading:
         showLoading = true;
         error = null;
-        break;
-      case CharacterSheetUIUpdated:
-        uiState = (partialState as CharacterSheetUIUpdated).state;
-        break;
-      default:
         break;
     }
     return this;
   }
 
-
   @override
-  String toString() {
-    return 'CharacterSheetState{showLoading: $showLoading, character: $character, uiState: $uiState, lastTimeNoteSaved: $lastTimeNoteSaved}';
-  }
-
-  @override
-  bool operator ==(other) {
-    return identical(this, other) ||
-        other is CharacterSheetState &&
-            showLoading == other.showLoading &&
-            character == other.character &&
-            error == other.error &&
-            rollList == other.rollList;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MainState &&
+          runtimeType == other.runtimeType &&
+          pj == other.pj &&
+          camera == other.camera &&
+          selectedIndex == other.selectedIndex &&
+          showLoading == other.showLoading &&
+          error == other.error;
 
   @override
   int get hashCode =>
-      showLoading.hashCode ^ character.hashCode ^ error.hashCode;
-
-
-
+      pj.hashCode ^
+      camera.hashCode ^
+      selectedIndex.hashCode ^
+      showLoading.hashCode ^
+      error.hashCode;
 }
 
+abstract class MainPartialState {}
 
-class CharacterSheetUIState {
-  bool secret;
-  bool power;
-  bool proficiency;
-  bool help;
-  bool focus;
-  int benediction;
-  int malediction;
-  String? characterToHelp;
+class MainLoaded extends MainPartialState {
+  bool pj;
+  bool camera;
+  int selectedIndex;
 
-  CharacterSheetUIState({this.secret = false,
-    this.power = false,
-    this.proficiency = false,
-    this.focus = false,
-    this.help = false,
-    this.benediction = 0,
-    this.malediction = 0,
-    this.characterToHelp});
+  MainLoaded(this.pj, this.camera, this.selectedIndex);
 }
 
-abstract class CharacterSheetPartialState {}
-
-class CharacterSheetLoaded extends CharacterSheetPartialState {
-  Character character;
-  List<Roll> rollList;
-  List<String> pjAlliesNames;
-
-  CharacterSheetLoaded(this.character, this.rollList, this.pjAlliesNames);
-}
-
-class CharacterLoaded extends CharacterSheetPartialState {
-  Character character;
-
-  CharacterLoaded(this.character);
-}
-
-class SettingsLoaded extends CharacterSheetPartialState {
-  Settings settings;
-
-  SettingsLoaded(this.settings);
-}
-
-class RollListLoaded extends CharacterSheetPartialState {
-  List<Roll> rollList;
-
-  RollListLoaded(this.rollList);
-}
-
-class CharacterSheetFailed extends CharacterSheetPartialState {
+class MainFailed extends MainPartialState {
   String error;
 
-  CharacterSheetFailed(this.error);
+  MainFailed(this.error);
 }
 
-class CharacterSheetUIUpdated extends CharacterSheetPartialState {
-  CharacterSheetUIState state;
-
-  CharacterSheetUIUpdated(this.state);
-}
-
-class CharacterSheetLoading extends CharacterSheetPartialState {}
+class MainLoading extends MainPartialState {}

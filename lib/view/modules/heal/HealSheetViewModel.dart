@@ -3,13 +3,14 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:lsr/domain/models/Character.dart';
 import 'package:lsr/domain/models/RollType.dart';
-import 'package:lsr/domain/services/MjService.dart';
+import 'package:lsr/view/MainState.dart';
+import '../../MainViewModel.dart';
 import 'package:lsr/domain/services/SettingsService.dart';
 
 import '../../../domain/services/SheetService.dart';
 import 'HealSheetState.dart';
 
-class HealSheetViewModel with ChangeNotifier {
+class HealSheetViewModel extends SubViewModel with ChangeNotifier {
   final SheetService _sheetService;
   late final SettingsService? _configService;
   late final String? _characterName;
@@ -85,5 +86,10 @@ class HealSheetViewModel with ChangeNotifier {
             _currentState.copy(HealSheetFailed(error.toString())));
       });
     }
+  }
+
+  @override
+  changeMainState(MainLoaded state) {
+    // nothing to do
   }
 }

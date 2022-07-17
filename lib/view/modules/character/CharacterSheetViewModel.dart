@@ -6,10 +6,12 @@ import 'package:lsr/domain/models/Character.dart';
 import 'package:lsr/domain/models/RollType.dart';
 import 'package:lsr/domain/services/SettingsService.dart';
 import 'package:lsr/view/modules/character/CharacterSheetState.dart';
+import '../../MainState.dart';
+import '../../MainViewModel.dart';
 
 import '../../../domain/services/SheetService.dart';
 
-class CharacterSheetViewModel with ChangeNotifier {
+class CharacterSheetViewModel extends SubViewModel with ChangeNotifier {
   final SheetService _sheetService;
   late final SettingsService _configService;
   late final String? _characterName;
@@ -117,5 +119,10 @@ class CharacterSheetViewModel with ChangeNotifier {
       _currentState.character!.pv = max(_currentState.character!.pv - degats, 0);
       this.createOrUpdateCharacter(_currentState.character!);
     }
+  }
+
+  @override
+  changeMainState(MainLoaded state) {
+    // nothing to do
   }
 }

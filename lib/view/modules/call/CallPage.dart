@@ -7,7 +7,6 @@ import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:flutter/material.dart';
 
-import '../settings/SettingsViewModel.dart';
 
 const appId = "3eac4da1625d4bde816a6686c73e7b03";
 // const token = "0063eac4da1625d4bde816a6686c73e7b03IABgL9zfCzqEzFSK/MW/CxQNrqYd4b8DsVgk4UfAjfNOz2eH5lEAAAAAEACPl0pWwDXUYgEAAQDANdRi";
@@ -16,22 +15,19 @@ const channel = "L7R-visio";
 
 class CallPage extends StatefulWidget {
 
-  SettingsViewModel settingsViewModel;
-
-  CallPage(this.settingsViewModel, {required Key key}) : super(key: key);
+  CallPage({required Key key}) : super(key: key);
 
   @override
-  _CallPageState createState() => _CallPageState(settingsViewModel);
+  _CallPageState createState() => _CallPageState();
 }
 
 class _CallPageState extends State<CallPage> {
 
-  SettingsViewModel settingsViewModel;
   final _users = <int>[];
   final _infoStrings = <String>[];
   bool muted = false;
   late RtcEngine _engine;
-  _CallPageState(this.settingsViewModel);
+  _CallPageState();
 
 
   @override
