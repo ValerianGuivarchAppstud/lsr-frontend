@@ -1,7 +1,8 @@
+import 'package:lsr/main.dart';
+
 class MainState {
-  bool pj;
-  bool camera;
-  int selectedIndex;
+
+  late MainUIState uiState;
 
   bool showLoading;
   String? error;
@@ -9,25 +10,15 @@ class MainState {
 
   MainState({
     this.showLoading = true,
-    this.error,
-    this.pj = false,
-    this.camera = false,
-  this.selectedIndex = 0});
+    this.error}) {
+    this.uiState = MainUIState(MyApp.INITIAL_STATE_PJ, MyApp.INITIAL_STATE_CAMERA, 0);
+  }
 
   MainState copy(MainPartialState partialState) {
     switch (partialState.runtimeType) {
       case MainLoaded:
         showLoading = false;
         error = null;
-        print(pj);
-        print(selectedIndex);
-        print((partialState as MainLoaded).selectedIndex);
-        print((partialState as MainLoaded).pj);
-        pj = (partialState as MainLoaded).pj;
-        print("lol3");
-        print(pj);
-          camera = (partialState).camera;
-          selectedIndex = (partialState).selectedIndex;
         break;
       case MainFailed:
         showLoading = false;
@@ -36,6 +27,9 @@ class MainState {
       case MainLoading:
         showLoading = true;
         error = null;
+        break;
+      case MainUIUpdated:
+        uiState = (partialState as MainUIUpdated).state;
         break;
     }
     return this;
@@ -46,17 +40,11 @@ class MainState {
       identical(this, other) ||
       other is MainState &&
           runtimeType == other.runtimeType &&
-          pj == other.pj &&
-          camera == other.camera &&
-          selectedIndex == other.selectedIndex &&
           showLoading == other.showLoading &&
           error == other.error;
 
   @override
   int get hashCode =>
-      pj.hashCode ^
-      camera.hashCode ^
-      selectedIndex.hashCode ^
       showLoading.hashCode ^
       error.hashCode;
 }
@@ -64,11 +52,14 @@ class MainState {
 abstract class MainPartialState {}
 
 class MainLoaded extends MainPartialState {
-  bool pj;
-  bool camera;
-  int selectedIndex;
 
-  MainLoaded(this.pj, this.camera, this.selectedIndex);
+  MainLoaded();
+}
+
+class MainUIUpdated extends MainPartialState {
+  MainUIState state;
+
+  MainUIUpdated(this.state);
 }
 
 class MainFailed extends MainPartialState {
@@ -78,3 +69,15 @@ class MainFailed extends MainPartialState {
 }
 
 class MainLoading extends MainPartialState {}
+
+
+class MainUIState {
+  bool pj;
+  bool camera;
+  int selectedIndex;
+
+  MainUIState(this.pj,
+    this.camera,
+    this.selectedIndex );
+}
+

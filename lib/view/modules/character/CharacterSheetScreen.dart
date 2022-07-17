@@ -16,10 +16,13 @@ class CharacterPage extends StatefulWidget {
   CharacterSheetViewModel characterSheetViewModel;
   final String? characterName;
 
-  CharacterPage(this.characterSheetViewModel, Key key, [this.characterName = null]) : super(key: key);
+  CharacterPage(this.characterSheetViewModel, Key key,
+      [this.characterName = null])
+      : super(key: key);
 
   @override
-  _CharacterPageState createState() => _CharacterPageState(this.characterSheetViewModel, characterName);
+  _CharacterPageState createState() =>
+      _CharacterPageState(this.characterSheetViewModel, characterName);
 }
 
 class _CharacterPageState extends State<CharacterPage> {
@@ -54,48 +57,65 @@ class _CharacterPageState extends State<CharacterPage> {
           if (state.data?.showLoading ?? true) {
             const oneSec = Duration(seconds: 1);
             developer.log("Timer : " + (characterName ?? "personne"));
-            Timer.periodic(
-                oneSec,
-                (Timer t) =>
-                  characterSheetViewModel.getCharacterSheet()
-                );
+            Timer.periodic(oneSec,
+                (Timer t) => characterSheetViewModel.getCharacterSheet());
           }
           return Container(
-                  height: height,
-                  width: width,
-                  color: Colors.white30,
-                  child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: LayoutBuilder(builder: (context, constraints) {
-                        if (state.data == null || (state.data!.showLoading)) {
-                          return LoadingWidget(
-                              key: Key(
-                            "LoadingWidget",
-                          ));
-                        } else if (state.data?.error != null) {
-                          return Center(
-                            child: Text(state.data!.error.toString()),
-                          );
-                        } else if (state.data?.character == null && state.data?.settings != null) {
-                          return Center(
-                            child: SettingsWidgets.buildCharacterSelection(state.data!.settings!, null, characterSheetViewModel, setState)
-                          );
-                        } else {
-                          if(state.data!.lastTimeNoteSaved == null && state.data!.character?.notes != null) {
-                            if(state.data!.notes != state.data!.character?.notes) {
-                              state.data!.notes= state.data!.character!.notes;
-                              noteFieldController.text =
-                                  state.data!.character?.notes ?? '';
-                            }
-                          }
-                          return CharacterWidgets.buildCharacter(context, true, state.data!.character!, 1,1,
-                              characterSheetViewModel, state.data!, noteFieldController,  state.data!.pjAlliesNames,
-                            CharacterWidgets.buildRollList(state.data!.rollList, characterName, characterSheetViewModel, null, null), null);
+              height: height,
+              width: width,
+              color: Colors.white30,
+              child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: LayoutBuilder(builder: (context, constraints) {
+                    if (state.data == null || (state.data!.showLoading)) {
+                      return LoadingWidget(
+                          key: Key(
+                        "LoadingWidget",
+                      ));
+                    } else if (state.data?.error != null) {
+                      return Center(
+                        child: Text(state.data!.error.toString()),
+                      );
+                    } else if (state.data?.character == null &&
+                        state.data?.settings != null) {
+                      return Center(
+                          child: SettingsWidgets.buildCharacterSelection(
+                              state.data!.settings!,
+                              null,
+                              characterSheetViewModel,
+                              setState));
+                    } else {
+                      if (state.data!.lastTimeNoteSaved == null &&
+                          state.data!.character?.notes != null) {
+                        if (state.data!.notes != state.data!.character?.notes) {
+                          state.data!.notes = state.data!.character!.notes;
+                          noteFieldController.text =
+                              state.data!.character?.notes ?? '';
                         }
-                      })));
+                      }
+                      return CharacterWidgets.buildCharacter(
+                          context,
+                          true,
+                          state.data!.character!,
+                          width,
+                          1,
+                          1,
+                          characterSheetViewModel,
+                          state.data!,
+                          noteFieldController,
+                          state.data!.pjAlliesNames,
+                          CharacterWidgets.buildRollList(
+                              state.data!.rollList,
+                              characterName,
+                              characterSheetViewModel,
+                              null,
+                              null),
+                          null);
+                    }
+                  })));
         });
   }
-  /*Widget RollWidget2(Roll roll) {
+/*Widget RollWidget2(Roll roll) {
     List<TextSpan> rollText = [];
     rollText.add(TextSpan(
         // (secret)

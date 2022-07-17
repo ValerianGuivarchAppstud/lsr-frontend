@@ -22,6 +22,10 @@ class SettingsViewModel extends SubViewModel with ChangeNotifier {
     return _currentState;
   }
 
+  updateUi(SettingsUIState state) {
+    streamController.add(_currentState.copy(SettingsUIUpdated(state)));
+  }
+
   Future<void> selectCharacterName(String? characterName) async {
     await this._settingsService.setCharacterName(characterName ?? '');
   }
@@ -43,8 +47,19 @@ class SettingsViewModel extends SubViewModel with ChangeNotifier {
       });
   }
 
+
   @override
-  changeMainState(MainLoaded state) {
-    streamController.add(_currentState.copy(SettingsMainLoaded(state.pj))); // change here to have SettingsLoaded and MainLoaded
+  changeMainState(MainUIUpdated state) {
+    print("changeMainState settings !!!!!");
+    print(_currentState);
+    print(_currentState.uiState);
+    print(_currentState.uiState.pj);
+    print(state);
+    print(state.state);
+    print(state.state.pj);
+    _currentState.uiState.pj = state.state.pj;
+    print("changeMainState settings 2");
+    updateUi(_currentState.uiState);
+    print("changeMainState settings 3");
   }
 }

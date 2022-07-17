@@ -70,6 +70,7 @@ class MjViewModel extends SubViewModel with ChangeNotifier {
   }
 
   updateUi(MjUIState state) {
+    print("WESH");
     streamController.add(_currentState.copy(MjUIUpdated(state)));
   }
 
@@ -104,7 +105,11 @@ class MjViewModel extends SubViewModel with ChangeNotifier {
   }
 
   @override
-  changeMainState(MainLoaded state) {
-    // nothing to do
+  changeMainState(MainUIUpdated state) {
+    print("changeMainState mj");
+
+    _currentState.uiState.camera = state.state.camera;
+    print("WESH");
+    updateUi(_currentState.uiState);
   }
 }

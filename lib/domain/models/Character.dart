@@ -172,4 +172,8 @@ class Character {
       return Colors.white;
     }
   }
+
+  bool isAlly() {
+    return category == Category.PJ || category == Category.PNJ_ALLY;
+  }
 }

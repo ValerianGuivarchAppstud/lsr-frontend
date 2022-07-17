@@ -31,9 +31,9 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width < WIDTH_SCREEN
+    var width = MediaQuery.of(context).size.width; /* < WIDTH_SCREEN
         ? MediaQuery.of(context).size.width
-        : WIDTH_SCREEN;
+        : WIDTH_SCREEN;*/
     settingsViewModel.getSettings();
     return StreamBuilder<SettingsState>(
         stream: settingsViewModel.streamController.stream,
@@ -60,7 +60,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           );
                         } else {
                           return _buildSettings(state.data!.settings!,
-                              WIDTH_SCREEN, settingsViewModel, state.data!.pj);
+                              width, settingsViewModel, state.data!.uiState.pj);
                         }
                       }))));
         });

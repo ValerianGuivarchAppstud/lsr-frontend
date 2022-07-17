@@ -18,4 +18,12 @@ class SettingsProvider implements ISettingsProvider {
 
     return settings;
   }
+
+  @override
+  Future<String> getVisioToken() async{
+    Response response = await _networkingConfig.dio.get('token');
+    String visioToken = response.data;
+
+    return visioToken;
+  }
 }

@@ -83,7 +83,7 @@ class Roll {
       case RollType.ARCANE_ESSENCE:
         return 'Jet d\'Arcane d\'Essence';
       case RollType.SAUVEGARDE_VS_MORT:
-        return ;
+        return 'Jet de Sauvegarde contre la Mort';
       case RollType.RELANCE:
         return ;
     }

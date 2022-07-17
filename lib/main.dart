@@ -8,6 +8,7 @@ import 'package:lsr/utils/api/NetworkingConfig.dart';
 import 'package:lsr/view/MainState.dart';
 import 'package:lsr/view/MainViewModel.dart';
 import 'package:lsr/view/modules/call/CallPage.dart';
+import 'package:lsr/view/modules/call/CallViewModel.dart';
 import 'package:lsr/view/modules/character/CharacterSheetScreen.dart';
 import 'package:lsr/view/modules/character/CharacterSheetViewModel.dart';
 import 'package:lsr/view/modules/character/CharacterWidgets.dart';
@@ -52,13 +53,20 @@ void main() {
   SettingsViewModel settingsViewModel = SettingsViewModel(_settingsService);
   HealSheetViewModel healSheetViewModel = HealSheetViewModel(_characterService, _settingsService);
   MjViewModel mjViewModel = MjViewModel(_mjService, _characterService, _settingsService);
+  CallViewModel callViewModel = CallViewModel(_settingsService);
+
+  mainViewModel.addSubViewModel(characterSheetViewModel);
+  mainViewModel.addSubViewModel(settingsViewModel);
+  mainViewModel.addSubViewModel(healSheetViewModel);
+  mainViewModel.addSubViewModel(mjViewModel);
 
   Widget characterPage = CharacterPage(characterSheetViewModel, Key('CharacterPage'), null);
   Widget healPage = HealSheetPage(Key("HealPage"), healSheetViewModel, null);
   Widget settingsPage = SettingsPage(settingsViewModel, mainViewModel, key: Key('SettingsPage'));
   MjPage mjPage = MjPage(mjViewModel, key: Key('MjPage'));
+  CallPage callPage = CallPage(callViewModel, key: Key('CallPage'));
 
-  runApp(MyApp(mainViewModel, characterPage, healPage, settingsPage, mjPage, key: Key("MyApp")));
+  runApp(MyApp(mainViewModel, characterPage, healPage, settingsPage, mjPage, callPage, key: Key("MyApp")));
 }
 
 
@@ -69,16 +77,17 @@ class MyApp extends StatefulWidget {
   final Widget healPage;
   final Widget settingsPage;
   final MjPage mjPage;
+  final CallPage callPage;
 
   static final bool INITIAL_STATE_PJ = true;
   static final bool INITIAL_STATE_CAMERA = false;
 
-  MyApp(this.mainViewModel, this.characterPage, this.healPage, this.settingsPage, this.mjPage, {required Key key})
+  MyApp(this.mainViewModel, this.characterPage, this.healPage, this.settingsPage, this.mjPage, this.callPage, {required Key key})
       : super(key: key);
 
 
   @override
-  _MainState createState() => _MainState(this.mainViewModel, this.characterPage, this.healPage, this.settingsPage, this.mjPage);
+  _MainState createState() => _MainState(this.mainViewModel, this.characterPage, this.healPage, this.settingsPage, this.mjPage, this.callPage);
 
 }
 
@@ -89,8 +98,9 @@ class _MainState extends State<MyApp> {
   final Widget healPage;
   final Widget settingsPage;
   final MjPage mjPage;
+  final CallPage callPage;
 
-  _MainState(this.mainViewModel, this.characterPage, this.healPage, this.settingsPage, this.mjPage);
+  _MainState(this.mainViewModel, this.characterPage, this.healPage, this.settingsPage, this.mjPage, this.callPage);
 
   @override
   void initState() {
@@ -147,7 +157,7 @@ class _MainState extends State<MyApp> {
                           ));
                     } else {
                       return buildBodyApp(
-                          state.data!, widthScreen, getBody, mainViewModel);
+                          state.data!, widthScreen, getBody, mainViewModel, callPage);
                     }
                   });
             },
@@ -158,7 +168,8 @@ class _MainState extends State<MyApp> {
 
 
   static buildBodyApp(MainState data, double widthScreen,
-      Function(int selectedIndex, bool pj) getBody, MainViewModel mainViewModel) {
+      Function(int selectedIndex, bool pj) getBody, MainViewModel mainViewModel,
+      CallPage callPage) {
 
     return Scaffold(
         body: Stack(
@@ -169,16 +180,16 @@ class _MainState extends State<MyApp> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                      width: data.pj ? (data.camera
+                      width: data.uiState.pj ? (data.uiState.camera
                           ? widthScreen / 2
-                          : widthScreen) : (data.camera
+                          : widthScreen) : (data.uiState.camera
                           ? 2 * widthScreen / 3
                           : widthScreen),
                       child: Scaffold(
                         body: Center(
-                          child: getBody(data.selectedIndex, data.pj),
+                          child: getBody(data.uiState.selectedIndex, data.uiState.pj),
                         ),
-                        bottomNavigationBar: data.pj
+                        bottomNavigationBar: data.uiState.pj
                             ? BottomNavigationBar(
                           unselectedItemColor: Colors.tealAccent,
                           selectedItemColor: Colors.blue,
@@ -200,7 +211,7 @@ class _MainState extends State<MyApp> {
                               label: 'Paramètres',
                             ),
                           ],
-                          currentIndex: data.selectedIndex,
+                          currentIndex: data.uiState.selectedIndex,
                           onTap: (index) {
                             mainViewModel.changeTab(index);
                           },) : BottomNavigationBar(
@@ -220,20 +231,21 @@ class _MainState extends State<MyApp> {
                               label: 'Paramètres',
                             ),
                           ],
-                          currentIndex: data.selectedIndex,
+                          currentIndex: data.uiState.selectedIndex,
                           onTap: (index) {
                             mainViewModel.changeTab(index);
                           },
                         ),
                       )),
-                  if( data.camera) SizedBox(
-                      width: data.pj ? widthScreen / 2 : widthScreen / 3,
+                  if( data.uiState.camera) SizedBox(
+                      width: data.uiState.pj ? widthScreen / 2 : widthScreen / 3,
                       //* 0.9 / 3,
-                      child: CallPage(key: Key("call"))
+                      child: callPage
                   )
                 ]),
               IconButton(
                 icon: Icon(Icons.camera_alt),
+                color: data.uiState.camera ? Colors.white : Colors.black,
                 onPressed: () =>
                 {
                   mainViewModel.switchCamera()
@@ -255,7 +267,6 @@ class _MainState extends State<MyApp> {
 }
 
 class _MainStatefulWidgetState extends State<MainStatefulWidget> {
-  // TODO check, pkoi il est deux fois ?
 
   final bool pj;
   bool camera;

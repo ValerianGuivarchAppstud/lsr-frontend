@@ -8,7 +8,6 @@ import 'package:lsr/view/modules/mj/MjViewModel.dart';
 
 import '../../../domain/models/Character.dart';
 import '../../../domain/models/Roll.dart';
-import '../../../utils/view/Const.dart';
 import '../mj/MjWidgets.dart';
 import 'CharacterSheetState.dart';
 import 'CharacterSheetViewModel.dart';
@@ -48,6 +47,7 @@ class CharacterWidgets {
           BuildContext context,
           bool playerDisplay,
           Character character,
+          double width,
           double sizeRatio,
           double sizeRatioFont,
           CharacterSheetViewModel characterSheetViewModel,
@@ -57,7 +57,7 @@ class CharacterWidgets {
           LayoutBuilder? rollList,
       MjViewModel? mjViewModel) =>
       Column(
-        mainAxisSize: MainAxisSize.max,
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -72,7 +72,7 @@ class CharacterWidgets {
                       //"assets/images/background/${describeEnum(character.bloodline != Bloodline.AUCUN ? character.bloodline : character.classe).toLowerCase()}.jpg",
                       fit: BoxFit.fill,
                       height: 120,
-                      width: (sizeRatio * WIDTH_SCREEN),
+                      width: (sizeRatio * width),
                     )),
                 Padding(
                     padding: EdgeInsets.all(10),
@@ -161,6 +161,14 @@ class CharacterWidgets {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                      child: CircleAvatar(
+                        radius: 12,
+                        backgroundColor: Colors.white,
+                        foregroundImage: NetworkImage(character.picture ?? ''),
+                        //"assets/images/portraits/${character.name}.png"),
+                      )),
               Text(
                 character.name,
                 style: TextStyle(
@@ -217,7 +225,7 @@ class CharacterWidgets {
               buildCharacterSheetButton(
                   playerDisplay ? "Chair" : "Ch",
                   character.chair.toString(),
-                  (sizeRatio * WIDTH_SCREEN) / 4.3,
+                  (sizeRatio * width) / 4.3,
                   sizeRatioFont * 26,
                   50,
                   character.buttonColorOrDefault(),
@@ -230,7 +238,7 @@ class CharacterWidgets {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
-                    iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
+                    iconSize: (sizeRatio * width) / 12,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
                     color: character.buttonColorOrDefault(),//character.buttonColorOrDefault(),
@@ -245,17 +253,25 @@ class CharacterWidgets {
                       character.pv.toString() +
                           ' / ' +
                           character.pvMax.toString(),
-                      (sizeRatio * WIDTH_SCREEN) / 5,
+                      (sizeRatio * width) / 5,
                       sizeRatioFont * 26,
                       50,
-                      character.buttonColorOrDefault(),
-                  character.textColorOrDefault(),
+                      character.pv <= 0
+                          ? Colors.blueGrey
+                          : character.buttonColorOrDefault(),
+                      character.pv <= 0
+                          ? Colors.white
+                          : character.textColorOrDefault(),
                       playerDisplay,
-                      () => {},
+                      () => {
+                        if(character.pv <= 0) {
+                          sendRoll(characterSheetViewModel, RollType.SAUVEGARDE_VS_MORT)
+                        }
+                      },
                       () => showEditStatAlertDialog(context,
                           characterSheetViewModel, character, "PV_MAX")),
                   IconButton(
-                    iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
+                    iconSize: (sizeRatio * width) / 12,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
                     color: character.buttonColorOrDefault(),
@@ -271,7 +287,7 @@ class CharacterWidgets {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
-                    iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
+                    iconSize: (sizeRatio * width) / 12,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
                     color: character.buttonColorOrDefault(),
@@ -284,7 +300,7 @@ class CharacterWidgets {
                   buildCharacterSheetButton(
                       "Bonus",
                       characterSheetState.uiState.benediction.toString(),
-                      (sizeRatio * WIDTH_SCREEN) / 5,
+                      (sizeRatio * width) / 5,
                       sizeRatioFont * 26,
                       50,
                       character.buttonColorOrDefault(),
@@ -293,7 +309,7 @@ class CharacterWidgets {
                       () => {},
                       () => {}),
                   IconButton(
-                    iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
+                    iconSize: (sizeRatio * width) / 12,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
                     color: character.buttonColorOrDefault(),
@@ -313,7 +329,7 @@ class CharacterWidgets {
               buildCharacterSheetButton(
                   playerDisplay ? "Esprit" : "Esp",
                   character.esprit.toString(),
-                  (sizeRatio * WIDTH_SCREEN) / 4.3,
+                  (sizeRatio * width) / 4.3,
                   sizeRatioFont * 26,
                   50,
                   character.buttonColorOrDefault(),
@@ -326,7 +342,7 @@ class CharacterWidgets {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
-                    iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
+                    iconSize: (sizeRatio * width) / 12,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
                     color: character.buttonColorOrDefault(),
@@ -341,7 +357,7 @@ class CharacterWidgets {
                       character.pf.toString() +
                           ' / ' +
                           character.pfMax.toString(),
-                      (sizeRatio * WIDTH_SCREEN) / 5,
+                      (sizeRatio * width) / 5,
                       sizeRatioFont * 26,
                       50,
                       characterSheetState.uiState.focus
@@ -357,7 +373,7 @@ class CharacterWidgets {
                       () => showEditStatAlertDialog(context,
                           characterSheetViewModel, character, "PF_MAX")),
                   IconButton(
-                    iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
+                    iconSize: (sizeRatio * width) / 12,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
                     color: character.buttonColorOrDefault(),
@@ -373,7 +389,7 @@ class CharacterWidgets {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
-                    iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
+                    iconSize: (sizeRatio * width) / 12,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
                     color: character.buttonColorOrDefault(),
@@ -389,7 +405,7 @@ class CharacterWidgets {
                           (character.getInjury() > 0
                               ? (' (' + character.getInjury().toString() + ')')
                               : ('')),
-                      (sizeRatio * WIDTH_SCREEN) / 5,
+                      (sizeRatio * width) / 5,
                       sizeRatioFont * 26,
                       50,
                       character.buttonColorOrDefault(),
@@ -398,7 +414,7 @@ class CharacterWidgets {
                       () => {},
                       () => {}),
                   IconButton(
-                    iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
+                    iconSize: (sizeRatio * width) / 12,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
                     color: character.buttonColorOrDefault(),
@@ -418,7 +434,7 @@ class CharacterWidgets {
               buildCharacterSheetButton(
                   playerDisplay ? "Essence" : "Ess",
                   character.essence.toString(),
-                  (sizeRatio * WIDTH_SCREEN) / 4.3,
+                  (sizeRatio * width) / 4.3,
                   sizeRatioFont * 26,
                   50,
                   character.buttonColorOrDefault(),
@@ -431,7 +447,7 @@ class CharacterWidgets {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
-                    iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
+                    iconSize: (sizeRatio * width) / 12,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
                     color: character.buttonColorOrDefault(),
@@ -446,7 +462,7 @@ class CharacterWidgets {
                       character.pp.toString() +
                           ' / ' +
                           character.ppMax.toString(),
-                      (sizeRatio * WIDTH_SCREEN) / 5,
+                      (sizeRatio * width) / 5,
                       sizeRatioFont * 26,
                       50,
                       characterSheetState.uiState.power
@@ -462,7 +478,7 @@ class CharacterWidgets {
                       () => showEditStatAlertDialog(context,
                           characterSheetViewModel, character, "PP_MAX")),
                   IconButton(
-                    iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
+                    iconSize: (sizeRatio * width) / 12,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
                     color: character.buttonColorOrDefault(),
@@ -478,7 +494,7 @@ class CharacterWidgets {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
-                    iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
+                    iconSize: (sizeRatio * width) / 12,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
                     color: character.buttonColorOrDefault(),
@@ -491,7 +507,7 @@ class CharacterWidgets {
                   buildCharacterSheetButton(
                       "Dettes",
                       character.dettes.toString(),
-                      (sizeRatio * WIDTH_SCREEN) / 5,
+                      (sizeRatio * width) / 5,
                       sizeRatioFont * 26,
                       50,
                       character.buttonColorOrDefault(),
@@ -500,7 +516,7 @@ class CharacterWidgets {
                       () => {},
                       () => {}),
                   IconButton(
-                    iconSize: (sizeRatioFont * WIDTH_SCREEN) / 18,
+                    iconSize: (sizeRatio * width) / 12,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
                     color: character.buttonColorOrDefault(),
@@ -523,7 +539,7 @@ class CharacterWidgets {
                       character.arcanes.toString() +
                       (playerDisplay ? ' / ' +
                       character.arcanesMax.toString() : ''),
-                  (sizeRatio * WIDTH_SCREEN) / 5,
+                  (sizeRatio * width) / 5,
                   sizeRatioFont * 14,
                   34,
                   character.buttonColorOrDefault(),
@@ -535,7 +551,7 @@ class CharacterWidgets {
               buildCharacterSheetButton(
                   '',
                   "Magie",
-                  (sizeRatio * WIDTH_SCREEN) / 5,
+                  (sizeRatio * width) / 5,
                   sizeRatioFont * 14,
                   34,
                   character.buttonColorOrDefault(),
@@ -548,7 +564,7 @@ class CharacterWidgets {
               buildCharacterSheetButton(
                   '',
                   "Cantrip",
-                  (sizeRatio * WIDTH_SCREEN) / 5,
+                  (sizeRatio * width) / 5,
                   sizeRatioFont * 14,
                   34,
                   character.buttonColorOrDefault(),
@@ -561,7 +577,7 @@ class CharacterWidgets {
               buildCharacterSheetButton(
                   '',
                   playerDisplay ? "Empirique" : "Emp",
-                  (sizeRatio * WIDTH_SCREEN) / 5,
+                  (sizeRatio * width) / 5,
                   sizeRatioFont * 12,
                   34,
                   character.buttonColorOrDefault(),
@@ -579,7 +595,7 @@ class CharacterWidgets {
               buildCharacterSheetButton(
                   '',
                   playerDisplay ? "Proficiency" : "Pr",
-                  (sizeRatio * WIDTH_SCREEN) / 5,
+                  (sizeRatio * width) / 5,
                   sizeRatioFont * 14,
                   34,
                   characterSheetState.uiState.proficiency
@@ -597,7 +613,7 @@ class CharacterWidgets {
                   (characterSheetState.uiState.characterToHelp == null)
                       ? "Aider"
                       : "Aider ${characterSheetState.uiState.characterToHelp}",
-                  (sizeRatio * WIDTH_SCREEN) / 5,
+                  (sizeRatio * width) / 5,
                   sizeRatioFont * 14,
                   34,
                   characterSheetState.uiState.help
@@ -618,7 +634,7 @@ class CharacterWidgets {
               buildCharacterSheetButton(
                   '',
                   "Secret",
-                  (sizeRatio * WIDTH_SCREEN) / 5,
+                  (sizeRatio * width) / 5,
                   sizeRatioFont * 14,
                   34,
                   characterSheetState.uiState.secret
@@ -634,7 +650,7 @@ class CharacterWidgets {
               buildCharacterSheetButton(
                   '',
                   "Relance : " + character.relance.toString(),
-                  (sizeRatio * WIDTH_SCREEN) / 5,
+                  (sizeRatio * width) / 5,
                   sizeRatioFont * 12,
                   34,
                   characterSheetState.uiState.secret
@@ -855,18 +871,25 @@ class CharacterWidgets {
       case RollType.ESSENCE:
       case RollType.MAGIE_LEGERE:
       case RollType.MAGIE_FORTE:
-      case RollType.SOIN:
       case RollType.ARCANE_ESPRIT:
       case RollType.ARCANE_ESSENCE:
         rollText.add(TextSpan(
           text: ' et obtient ${roll.success} succès',
         ));
         break;
+      case RollType.SOIN:
+        rollText.add(TextSpan(
+          text: ' et peut donner ${roll.success} PV',
+        ));
+        break;
       case RollType.SAUVEGARDE_VS_MORT:
         if (roll.result[0] >= 10)
           rollText.add(TextSpan(
-            text: ' et TODO', // TODO
+            text: ' et réussit.',
           ));
+        else rollText.add(TextSpan(
+          text: ' et échoue.',
+        ));
         break;
       case RollType.SOIN:
         if (roll.result[0] >= 10)

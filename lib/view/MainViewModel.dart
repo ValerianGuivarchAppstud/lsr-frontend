@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 
-import '../main.dart';
 import 'MainState.dart';
 
 abstract class SubViewModel {
-  changeMainState(MainLoaded state);
+  changeMainState(MainUIUpdated state);
 }
 
 class MainViewModel with ChangeNotifier {
+  List<SubViewModel> subViewModels = [];
   late MainState _currentState;
 
   final streamController =
@@ -23,26 +23,41 @@ class MainViewModel with ChangeNotifier {
     return _currentState;
   }
 
+  addSubViewModel(SubViewModel subViewModel) {
+    subViewModels.add(subViewModel);
+    print("pouet");
+    print(subViewModels.length);
+  }
+
   Future<void> getMain([bool reload = false]) async {
     if(reload) {
+
       streamController.add(_currentState.copy(MainLoading()));
     }
-        streamController.add(_currentState.copy(MainLoaded(MyApp.INITIAL_STATE_PJ, MyApp.INITIAL_STATE_CAMERA, 0)));
+  }
+
+  updateUi(MainUIState state) {
+    streamController.add(_currentState.copy(MainUIUpdated(state)));
+
+    print(subViewModels.length);
+    for(SubViewModel subViewModel in subViewModels) {
+      subViewModel.changeMainState(MainUIUpdated(state));
+    }
   }
 
   switchRole() {
-    streamController.add(_currentState.copy(MainLoaded(!_currentState.pj, _currentState.camera, 0)));
+    _currentState.uiState.selectedIndex = 0;
+    _currentState.uiState.pj = !_currentState.uiState.pj;
+    updateUi( _currentState.uiState);
   }
 
   switchCamera() {
-    streamController.add(_currentState.copy(MainLoaded(_currentState.pj, !_currentState.camera, _currentState.selectedIndex)));
+    _currentState.uiState.camera = !_currentState.uiState.camera;
+    updateUi( _currentState.uiState);
   }
 
   changeTab(int index) {
-    print("lol2");
-    print(_currentState.pj);
-    print(_currentState.selectedIndex);
-    print(index);
-    streamController.add(_currentState.copy(MainLoaded(_currentState.pj, _currentState.camera, index)));
+    _currentState.uiState.selectedIndex = index;
+    updateUi( _currentState.uiState);
   }
 }

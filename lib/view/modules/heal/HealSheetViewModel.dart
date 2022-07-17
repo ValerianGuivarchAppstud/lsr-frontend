@@ -52,7 +52,7 @@ class HealSheetViewModel extends SubViewModel with ChangeNotifier {
   }
 
   Future<void> healCharacter(Character allie) async {
-    if(this._currentState.uiState.heal > 0) {
+    if(this._currentState.uiState.heal > 0 && allie.pv < allie.pvMax) {
       allie.pv = allie.pv + 1;
       _sheetService.createOrUpdateCharacter(allie).then((value) {
         this._currentState.uiState.heal = this._currentState.uiState.heal - 1;
@@ -89,7 +89,9 @@ class HealSheetViewModel extends SubViewModel with ChangeNotifier {
   }
 
   @override
-  changeMainState(MainLoaded state) {
+  changeMainState(MainUIUpdated state) {
+    print("changeMainState heal");
+
     // nothing to do
   }
 }

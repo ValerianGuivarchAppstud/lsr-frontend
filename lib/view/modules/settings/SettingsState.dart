@@ -4,10 +4,12 @@ class SettingsState {
   bool showLoading;
   Settings? settings;
   String? error;
-  bool pj;
+  late SettingsUIState uiState;
 
   SettingsState(
-      {this.showLoading = true, this.settings, this.error, this.pj = false});
+      {this.showLoading = true, this.settings, this.error}) {
+    this.uiState = SettingsUIState(false);
+  }
 
   SettingsState copy(SettingsPartialState partialState) {
     switch (partialState.runtimeType) {
@@ -17,7 +19,9 @@ class SettingsState {
         settings = (partialState as SettingsLoaded).settings;
         break;
       case SettingsMainLoaded:
-        pj = (partialState as SettingsMainLoaded).pj;
+        break;
+      case SettingsUIUpdated:
+        uiState = (partialState as SettingsUIUpdated).state;
         break;
       case SettingsFailed:
         showLoading = false;
@@ -33,10 +37,6 @@ class SettingsState {
     return this;
   }
 
-  @override
-  String toString() {
-    return 'CharacterState {showLoading: $showLoading, settings: $settings, error: $error}';
-  }
 
   @override
   bool operator ==(other) {
@@ -72,3 +72,17 @@ class SettingsFailed extends SettingsPartialState {
 }
 
 class SettingsLoading extends SettingsPartialState {}
+
+
+
+class SettingsUIUpdated extends SettingsPartialState {
+  SettingsUIState state;
+
+  SettingsUIUpdated(this.state);
+}
+
+class SettingsUIState {
+  bool pj;
+
+  SettingsUIState(this.pj);
+}

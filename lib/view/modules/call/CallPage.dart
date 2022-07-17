@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer' as developer;
 import 'dart:html';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
@@ -7,28 +6,30 @@ import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:flutter/material.dart';
 
+import 'CallState.dart';
+import 'CallViewModel.dart';
 
 const appId = "3eac4da1625d4bde816a6686c73e7b03";
 // const token = "0063eac4da1625d4bde816a6686c73e7b03IABgL9zfCzqEzFSK/MW/CxQNrqYd4b8DsVgk4UfAjfNOz2eH5lEAAAAAEACPl0pWwDXUYgEAAQDANdRi";
 const channel = "L7R-visio";
 
-
 class CallPage extends StatefulWidget {
+  CallViewModel callViewModel;
 
-  CallPage({required Key key}) : super(key: key);
+  CallPage(this.callViewModel, {required Key key}) : super(key: key);
 
   @override
-  _CallPageState createState() => _CallPageState();
+  _CallPageState createState() => _CallPageState(this.callViewModel);
 }
 
 class _CallPageState extends State<CallPage> {
+  CallViewModel callViewModel;
 
   final _users = <int>[];
   final _infoStrings = <String>[];
-  bool muted = false;
   late RtcEngine _engine;
-  _CallPageState();
 
+  _CallPageState(this.callViewModel);
 
   @override
   void dispose() {
@@ -43,10 +44,8 @@ class _CallPageState extends State<CallPage> {
   @override
   void initState() {
     super.initState();
-    // initialize agora sdk
     initAgora();
   }
-
 
   /// Create agora sdk instance and initialize
   Future<void> _initAgoraRtcEngine() async {
@@ -77,81 +76,93 @@ class _CallPageState extends State<CallPage> {
         });
       }));
     }
-    String token =  "0063eac4da1625d4bde816a6686c73e7b03IABgL9zfCzqEzFSK/MW/CxQNrqYd4b8DsVgk4UfAjfNOz2eH5lEAAAAAEACPl0pWwDXUYgEAAQDANdRi";
     await _initAgoraRtcEngine();
     _addAgoraEventHandlers();
-   // OLD await _engine.enableWebSdkInteroperability(true);
-    await window.navigator.getUserMedia( video: true);
+    await window.navigator.getUserMedia(video: true);
     VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
     configuration.dimensions = VideoDimensions(width: 1920, height: 1080);
     configuration.orientationMode = VideoOutputOrientationMode.FixedLandscape;
     await _engine.setVideoEncoderConfiguration(configuration);
-    await _engine.joinChannel(token, channel, null, 0);
-
-
-    // retrieve permissions
-    /*_await window.navigator.getUserMedia(audio: true, video: true);
-
-    //create the engine
-    engine = await RtcEngine.create(appId);
-    await _engine.enableVideo();
-    _engine.setEventHandler(
-      RtcEngineEventHandler(
-        joinChannelSuccess: (String channel, int uid, int elapsed) {
-          print("local user $uid joined");
-          setState(() {
-            _localUserJoined = true;
-          });
-        },
-        userJoined: (int uid, int elapsed) {
-          print("remote user $uid joined");
-          setState(() {
-            _remoteUid = uid;
-          });
-        },
-        userOffline: (int uid, UserOfflineReason reason) {
-          print("remote user $uid left channel");
-          setState(() {
-            _remoteUid = null;
-          });
-        },
-      ),
-    );*/
-
-    //await _engine.joinChannel(token, channel, null, 0);
   }
 
+  /*   @override
+    Widget build(BuildContext context) {
+      var height = MediaQuery.of(context).size.height;
+      var width = MediaQuery.of(context).size.width < WIDTH_SCREEN
+          ? MediaQuery.of(context).size.width
+          : WIDTH_SCREEN;
+      return StreamBuilder<CallState>(
+          stream: callViewModel.streamController.stream,
+          initialData: callViewModel.getState(),
+          builder: (context, state) {
 
+            callViewModel.getCall();
 
+            return Container(
+                height: height,
+                width: width,
+                color: Colors.white30,
+                child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: LayoutBuilder(builder: (context, constraints) {
+                      if (state.data == null || (state.data!.showLoading)) {
+                        return LoadingWidget(
+                            key: Key(
+                              "LoadingWidget",
+                            ));
+                      } else if (state.data?.error != null) {
+                        return Center(
+                          child: Text(state.data!.error.toString()),
+                        );
+                      } else {
+                        // initialize agora sdk
+                        return  Center(
+                            child: Stack(
+                            children: <Widget>[
+                            _viewRows()
+                      ]));
+                      }
+                    })));
+          });
+    }
+
+*/
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Agora Flutter QuickStart'),
-      ),
-      backgroundColor: Colors.black,
-      body: Center(
-        child: Stack(
-          children: <Widget>[
-            _viewRows()
-          ],
-        ),
-      ),
-    );
+    callViewModel.getCall();
+    return StreamBuilder<CallState>(
+        stream: callViewModel.streamController.stream,
+        initialData: callViewModel.getState(),
+        builder: (context, state) {
+          if (state.data != null)  {
+//            String token = await callViewModel.getState().token ?? token2;
+
+            _engine.joinChannel(state.data!.token, channel, null, 0);
+          }
+          return Scaffold(
+            backgroundColor: Colors.black,
+            body: Center(
+              child: Stack(
+                children: <Widget>[_viewRows()],
+              ),
+            ),
+          );
+        });
   }
 
   /// Helper function to get list of native views
   List<Widget> _getRenderViews() {
     final List<StatefulWidget> list = [];
     list.add(RtcLocalView.SurfaceView());
-    _users.forEach((int uid) => list.add(RtcRemoteView.SurfaceView(uid: uid, channelId: channel)));
+    _users.forEach((int uid) =>
+        list.add(RtcRemoteView.SurfaceView(uid: uid, channelId: channel)));
     return list;
   }
 
   /// Video view wrapper
   Widget _videoView(view) {
     return Container(
-    width: 400,
+      width: 400,
       height: 200,
       child: Center(
         child: view,
@@ -176,39 +187,39 @@ class _CallPageState extends State<CallPage> {
       case 1:
         return Container(
             child: Column(
-              children: <Widget>[_videoView(views[0])],
-            ));
+          children: <Widget>[_videoView(views[0])],
+        ));
       case 2:
         return Container(
             child: Column(
-              children: <Widget>[
-                _expandedVideoRow([views[0]]),
-                _expandedVideoRow([views[1]])
-              ],
-            ));
+          children: <Widget>[
+            _expandedVideoRow([views[0]]),
+            _expandedVideoRow([views[1]])
+          ],
+        ));
       case 3:
         return Container(
             child: Column(
-              children: <Widget>[
-                _expandedVideoRow(views.sublist(0, 2)),
-                _expandedVideoRow(views.sublist(2, 3))
-              ],
-            ));
+          children: <Widget>[
+            _expandedVideoRow(views.sublist(0, 2)),
+            _expandedVideoRow(views.sublist(2, 3))
+          ],
+        ));
       case 4:
         return Container(
             child: Column(
-              children: <Widget>[
-                _expandedVideoRow(views.sublist(0, 2)),
-                _expandedVideoRow(views.sublist(2, 4))
-              ],
-            ));
+          children: <Widget>[
+            _expandedVideoRow(views.sublist(0, 2)),
+            _expandedVideoRow(views.sublist(2, 4))
+          ],
+        ));
       default:
     }
     return Container();
   }
 
   /// Toolbar layout
- /* Widget _toolbar() {
+/* Widget _toolbar() {
     return Container(
       alignment: Alignment.bottomCenter,
       padding: const EdgeInsets.symmetric(vertical: 48),
@@ -233,7 +244,7 @@ class _CallPageState extends State<CallPage> {
   }*/
 
   /// Info panel to show logs
-  /*Widget _panel() {
+/*Widget _panel() {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 48),
       alignment: Alignment.bottomCenter,
@@ -282,9 +293,8 @@ class _CallPageState extends State<CallPage> {
     );
   }*/
 
-
 // Create UI with local view and remote view
-  /*@override
+/*@override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

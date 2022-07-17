@@ -73,8 +73,10 @@ class _HealSheetPageState extends State<HealSheetPage> {
                             child: Text(state.error?.toString() ?? 'nop'),
                           );
                         } else {
-                          return HealWidgets.buildHeal(context, state.data!.character!, 1,1,
-                              healSheetViewModel, state.data!,  state.data!.pjAllies,
+                          return HealWidgets.buildHeal(context, state.data!.character!, width,
+                              1,
+                              1,
+                              healSheetViewModel, state.data!,  state.data!.pjAllies?.where((element) => element.isAlly()).toList(),
                             CharacterWidgets.buildRollList(state.data!.rollList, characterName, null, null, null));
                         }
                       })));

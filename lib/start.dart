@@ -60,7 +60,6 @@ class MainStatefulWidget extends StatefulWidget {
 }
 
 class _MainStatefulWidgetState extends State<MainStatefulWidget> {
-  // TODO check, pkoi il est deux fois ?
   final _characterService = SheetService(
       characterProvider: CharacterProvider(NetworkingConfig()), rollProvider: RollProvider(NetworkingConfig()));
 

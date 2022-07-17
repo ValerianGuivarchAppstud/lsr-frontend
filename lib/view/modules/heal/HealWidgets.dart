@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lsr/view/modules/character/CharacterWidgets.dart';
 
 import '../../../domain/models/Character.dart';
-import '../../../utils/view/Const.dart';
 import 'HealSheetState.dart';
 import 'HealSheetViewModel.dart';
 
@@ -14,6 +11,7 @@ class HealWidgets {
   static buildHeal(
           BuildContext context,
           Character character,
+      double width,
           double sizeRatio,
           double sizeRatioFont,
           HealSheetViewModel healSheetViewModel,
@@ -33,8 +31,8 @@ class HealWidgets {
               healSheetState.uiState.heal.toString() +
                   ' / ' +
                   healSheetState.uiState.healMax.toString(),
-              (sizeRatio * WIDTH_SCREEN) / 5,
-              sizeRatioFont * 26,
+              (sizeRatio * width) / 4.3,
+              sizeRatioFont * 24,
               50,
               Colors.blue,
               Colors.white,
@@ -46,8 +44,8 @@ class HealWidgets {
             CharacterWidgets.buildCharacterSheetButton(
                 "PF",
                 character.pf.toString() + ' / ' + character.pfMax.toString(),
-                (sizeRatio * WIDTH_SCREEN) / 5,
-                sizeRatioFont * 26,
+                (sizeRatio * width) / 4.3,
+                sizeRatioFont * 24,
                 50,
                 healSheetState.uiState.focus ? Colors.blueGrey : Colors.blue,
                 Colors.white,
@@ -57,8 +55,8 @@ class HealWidgets {
             CharacterWidgets.buildCharacterSheetButton(
                 "PP",
                 character.pp.toString() + ' / ' + character.ppMax.toString(),
-                (sizeRatio * WIDTH_SCREEN) / 5,
-                sizeRatioFont * 26,
+                (sizeRatio * width) / 4.3,
+                sizeRatioFont * 24,
                 50,
                 healSheetState.uiState.power ? Colors.blueGrey : Colors.blue,
                 Colors.white,
@@ -66,12 +64,12 @@ class HealWidgets {
               changeUiSelect(healSheetViewModel, healSheetState.uiState, 'PP');
             }, () => {}),
           ]),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [],
-          ),
+  Align(
+  alignment: Alignment.topCenter,
+  child: Wrap(
+    children: HealWidgets.buildHealCharacterList(pjAllies ?? [], healSheetViewModel),
+  )),
           if (rollList != null) rollList
-//            if(rollList != null) buildRollList(rollList, character.name, resistRoll, [character.name])
         ],
       );
 
@@ -137,5 +135,43 @@ class HealWidgets {
       uiState.power = !uiState.power;
     }
     healSheetViewModel.updateUi(uiState);
+  }
+
+  static List<Widget> buildHealCharacterList(List<Character> pjAllies, HealSheetViewModel healSheetViewModel) {
+    List<Widget> list = [];
+
+    for (Character character in pjAllies) {
+      list.add(Container(
+        child:  Padding(
+          padding: EdgeInsets.all(4),
+          child : Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CharacterWidgets.buildCharacterSheetButton(
+                character.name,
+                character.pv.toString() +
+                    ' / ' +
+                    character.pvMax.toString(),
+                100,//(sizeRatio * width) / 5,
+                18,//sizeRatioFont * 26,
+                40,
+                character.pv <= 0
+                    ? Colors.blueGrey
+                    : character.buttonColorOrDefault(),
+                character.pv <= 0
+                    ? Colors.white
+                    : character.textColorOrDefault(),
+                true,
+                    () => { healSheetViewModel.healCharacter(character)},
+                    () =>{ },
+            ),
+          ],
+        ),
+      )
+      ));
+    }
+
+    return list;
   }
 }

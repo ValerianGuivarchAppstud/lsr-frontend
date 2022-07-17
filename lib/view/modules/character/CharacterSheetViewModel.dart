@@ -122,7 +122,8 @@ class CharacterSheetViewModel extends SubViewModel with ChangeNotifier {
   }
 
   @override
-  changeMainState(MainLoaded state) {
-    // nothing to do
+  changeMainState(MainUIUpdated state) {
+    print("changeMainState character");
+    // nothing to di
   }
 }

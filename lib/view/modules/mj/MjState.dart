@@ -15,7 +15,7 @@ class MjState {
     this.mjSheet,
     this.error}) {
     this.charactersState = {};
-    this.uiState = MjUIState();
+    this.uiState = MjUIState(false);
   }
 
   MjState copy(MjPartialState partialState) {
@@ -24,6 +24,8 @@ class MjState {
         showLoading = false;
         error = null;
         mjSheet = (partialState as MjLoaded).mjSheet;
+        break;
+      case MjMainLoaded:
         break;
       case MjFailed:
         showLoading = false;
@@ -34,9 +36,9 @@ class MjState {
         error = null;
         break;
       case MjUIUpdated:
+        print("WESH");
         uiState = (partialState as MjUIUpdated).state;
-        break;
-      default:
+        print(uiState.camera);
         break;
     }
     return this;
@@ -85,6 +87,15 @@ class MjFailed extends MjPartialState {
 class MjLoading extends MjPartialState {}
 
 
+
+
+class MjMainLoaded extends MjPartialState {
+  bool camera;
+
+  MjMainLoaded(this.camera);
+}
+
+
 class MjUIUpdated extends MjPartialState {
   MjUIState state;
 
@@ -92,7 +103,7 @@ class MjUIUpdated extends MjPartialState {
 }
 
 class MjUIState {
- // List<String>? characters;
+  bool camera;
 
-  MjUIState(); //{this.characters = null});
+  MjUIState(this.camera);
 }

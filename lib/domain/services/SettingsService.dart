@@ -15,6 +15,8 @@ class SettingsService {
   Future<String?> getPlayerName() => storageProvider.getPlayerName();
   Future<String?> setPlayerName(String playerName) => storageProvider.setPlayerName(playerName);
 
+
+
   Future<Settings> getSettings() async {
     String? currentPlayer = await this.getPlayerName();
     String? currentCharacter = await this.getCharacterName();
@@ -33,5 +35,9 @@ class SettingsService {
     }
     return settings;
   }
+
+  Future<String> getVisioToken() async {
+    return this.settingsProvider.getVisioToken();
+}
 
 }

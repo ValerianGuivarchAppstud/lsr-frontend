@@ -24,7 +24,6 @@ class MjPage extends StatefulWidget {
 
 class _MjPageState extends State<MjPage> {
   MjViewModel mjViewModel;
-  bool camera = false; // TODO fix
 
   _MjPageState(this.mjViewModel);
 
@@ -32,7 +31,6 @@ class _MjPageState extends State<MjPage> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    print("POUUET");
     mjViewModel.getMj();
     return StreamBuilder<MjState>(
         stream: mjViewModel.streamController.stream,
@@ -58,27 +56,27 @@ class _MjPageState extends State<MjPage> {
                         child: Text(state.error?.toString() ?? "erreur"),
                       );
                     } else {
-                      var width = MediaQuery.of(context).size.width <
+                      var width = MediaQuery.of(context).size.width ; /* <
                               WIDTH_SCREEN * RATIO_SCREEN
                           ? MediaQuery.of(context).size.width
-                          : WIDTH_SCREEN * RATIO_SCREEN;
-                      var widthScreen = MediaQuery.of(context).size.width;
+                          : WIDTH_SCREEN * RATIO_SCREEN;*/
+
                       return _buildMj(state.data!.mjSheet!, state.data!.uiState,
-                          mjViewModel, camera ? (width / 2) : width, widthScreen);
+                          mjViewModel, width, state.data!.uiState.camera);
                     }
                   }));
         });
   }
 
   _buildMj(MjSheet mjSheet, MjUIState uiState, MjViewModel mjViewModel,
-          double width, double widthScreen) =>
+          double width, bool camera) =>
       Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
         SizedBox(
-            width: widthScreen * 2 / 3,
+            width: camera ? width * 3 / 9 : width * 6 / 9,
             child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child:Column(children: [
@@ -127,11 +125,12 @@ class _MjPageState extends State<MjPage> {
                     return Container(
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.black)),
-                        width: width,
+                        width: width * RATIO_BUTTON,
                         child: CharacterWidgets.buildCharacter(
                             context,
                             false,
                             character,
+                            width,
                             RATIO_BUTTON,
                             RATIO_FONT,
                             mjViewModel.getCharacterViewModel(character.name),
@@ -247,11 +246,12 @@ class _MjPageState extends State<MjPage> {
                     return Container(
                         decoration: BoxDecoration(
                             border: Border.all(color: Colors.black)),
-                        width: width,
+                        width: width * RATIO_BUTTON,
                         child: CharacterWidgets.buildCharacter(
                             context,
                             false,
                             character,
+                            width,
                             RATIO_BUTTON,
                             RATIO_FONT,
                             mjViewModel.getCharacterViewModel(character.name),
@@ -263,7 +263,7 @@ class _MjPageState extends State<MjPage> {
                   }).toList())),
             ]))),
         SizedBox(
-            width: widthScreen * 0.9 / 3,
+            width: camera ? width * 3 / 9 : width * 3 / 9,
             child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child:Column(
