@@ -166,7 +166,7 @@ class CharacterWidgets {
                       child: CircleAvatar(
                         radius: 12,
                         backgroundColor: Colors.white,
-                        foregroundImage: NetworkImage(character.picture ?? ''),
+                        foregroundImage: NetworkImage(character.picture),
                         //"assets/images/portraits/${character.name}.png"),
                       )),
               Text(
@@ -965,16 +965,16 @@ class CharacterWidgets {
         for (var value in roll.result) {
           if (value < 5) {
             rollDices.add(TextSpan(
-                text: Roll.diceValueToIcon(value),
-                style: TextStyle(fontSize: 36)));
+                text: value.toString() + '',
+                style: TextStyle(color: Colors.black87, fontSize: 26, fontFamily: 'DiceFont')));
           } else if (value == 5) {
             rollDices.add(TextSpan(
-                text: Roll.diceValueToIcon(value),
-                style: TextStyle(color: Colors.orange, fontSize: 36)));
+                text: value.toString() + '',
+                style: TextStyle(color: Colors.orange, fontSize: 26, fontFamily: 'DiceFont')));
           } else if (value == 6) {
             rollDices.add(TextSpan(
-                text: Roll.diceValueToIcon(value),
-                style: TextStyle(color: Colors.red, fontSize: 36)));
+                text: value.toString() + '',
+                style: TextStyle(color: Colors.redAccent, fontSize: 26, fontFamily: 'DiceFont')));
           }
         }
         break;

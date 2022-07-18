@@ -22,6 +22,7 @@ import 'package:flutter/widgets.dart';
 class CustomIcons {
   CustomIcons._();
 
+  static const IconData roll = IconData(0xe800, fontFamily: 'DiceFont');
   static const IconData character = IconData(0xe800, fontFamily: 'FontIconCharacter');
   static const IconData dice = IconData(0xe812, fontFamily: 'FontIconDice');
   static const IconData spell = IconData(0xf0d0, fontFamily: 'FontIconSpell');

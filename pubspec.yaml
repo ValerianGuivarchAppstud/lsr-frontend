@@ -88,6 +88,9 @@ flutter:
     - family: FontIconDice
       fonts:
         - asset: fonts/FontIconDice.ttf
+    - family: DiceFont
+      fonts:
+        - asset: fonts/DiceFont.ttf
     - family: FontIconCharacter
       fonts:
         - asset: fonts/FontIconCharacter.ttf

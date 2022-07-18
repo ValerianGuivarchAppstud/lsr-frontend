@@ -120,25 +120,6 @@ class Roll {
     return formatted; // something like 2013-04-20
   }
 
-  static diceValueToIcon(int value) {
-    switch(value) {
-      case 1:
-        return '⚀';
-      case 2:
-        return '⚁';
-      case 3:
-        return '⚂';
-      case 4:
-        return '⚃';
-      case 5:
-        return '⚄';
-      case 6:
-        return "⚅";
-      default:
-        return '[$value]';
-    }
-  }
-
   int getDegats(Roll resistingRoll) {
     return max(((((resistingRoll.success ?? 0) - (this.success ?? 0) )/ 2).round()), 0);
   }
