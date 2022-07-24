@@ -3,11 +3,12 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:lsr/domain/models/Character.dart';
 import 'package:lsr/domain/models/RollType.dart';
-import 'package:lsr/view/MainState.dart';
-import '../../MainViewModel.dart';
 import 'package:lsr/domain/services/SettingsService.dart';
+import 'package:lsr/view/MainState.dart';
 
 import '../../../domain/services/SheetService.dart';
+import '../../../utils/MessagedException.dart';
+import '../../MainViewModel.dart';
 import 'HealSheetState.dart';
 
 class HealSheetViewModel extends SubViewModel with ChangeNotifier {
@@ -52,15 +53,16 @@ class HealSheetViewModel extends SubViewModel with ChangeNotifier {
   }
 
   Future<void> healCharacter(Character allie) async {
-    if(this._currentState.uiState.heal > 0 && allie.pv < allie.pvMax) {
+    try {if(this._currentState.uiState.heal > 0 && allie.pv < allie.pvMax) {
       allie.pv = allie.pv + 1;
-      _sheetService.createOrUpdateCharacter(allie).then((value) {
-        this._currentState.uiState.heal = this._currentState.uiState.heal - 1;
+      Character character = await _sheetService.createOrUpdateCharacter(allie);
+      this._currentState.uiState.heal = this._currentState.uiState.heal - 1;
         updateUi(_currentState.uiState);
-      }).onError((error, stackTrace) {
-        streamController.add(
-            _currentState.copy(HealSheetFailed(error.toString())));
-      });
+    }} catch (e) {
+      if(e is MessagedException) {
+        print(e.message);
+        _currentState.uiState.errorMessage = e.message;
+      }
     }
   }
 
@@ -90,8 +92,6 @@ class HealSheetViewModel extends SubViewModel with ChangeNotifier {
 
   @override
   changeMainState(MainUIUpdated state) {
-    print("changeMainState heal");
-
     // nothing to do
   }
 }

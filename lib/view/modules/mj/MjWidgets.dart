@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:lsr/domain/models/Apotheose.dart';
 import 'package:lsr/domain/models/Category.dart';
 import 'package:lsr/domain/models/Character.dart';
 import 'package:lsr/domain/models/Classe.dart';
@@ -39,7 +40,9 @@ class MjWidgets {
     final TextEditingController _secunda =
         TextEditingController(text: initialCharacter?.secunda ?? '');
     final TextEditingController _picture =
-        TextEditingController(text: initialCharacter?.picture ?? '');
+    TextEditingController(text: initialCharacter?.picture ?? '');
+    final TextEditingController _pictureApotheose =
+    TextEditingController(text: initialCharacter?.pictureApotheose ?? '');
     final TextEditingController _background =
         TextEditingController(text: initialCharacter?.background ?? '');
     Classe? classe = initialCharacter?.classe ?? null;
@@ -410,12 +413,20 @@ class MjWidgets {
                               ),
                             ),
                           ]),
-                      SizedBox(
-                          width: 300.0,
+                          Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [SizedBox(
+                          width: 150.0,
                           child: TextFormField(
                             controller: _picture,
                             decoration: InputDecoration(hintText: "Picture"),
                           )),
+                      SizedBox(
+                          width: 150.0,
+                          child: TextFormField(
+                            controller: _pictureApotheose,
+                            decoration: InputDecoration(hintText: "Picture Apothéose"),
+                          ))]),
                       SizedBox(
                           width: 300.0,
                           child: TextFormField(
@@ -437,6 +448,10 @@ class MjWidgets {
                           bloodline: bloodline ??
                               initialCharacter?.bloodline ??
                               Bloodline.AUCUN,
+                          apotheose: initialCharacter?.apotheose ??
+                              Apotheose.NONE,
+                          apotheoseImprovement: initialCharacter?.apotheoseImprovement,
+                          apotheoseImprovementList: initialCharacter?.apotheoseImprovementList ?? [],
                           chair: int.parse(_chair.value.text),
                           esprit: int.parse(_esprit.value.text),
                           essence: int.parse(_essence.value.text),
@@ -469,6 +484,7 @@ class MjWidgets {
                           dettes:
                               initialCharacter?.dettes ?? Random().nextInt(11),
                           picture: _picture.value.text,
+                          pictureApotheose: _pictureApotheose.value.text,
                           background: _background.value.text,
                           notes: initialCharacter?.notes ?? '',
                           category: category ??

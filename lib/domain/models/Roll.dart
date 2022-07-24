@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:lsr/domain/models/Apotheose.dart';
 
 import 'RollType.dart';
 
@@ -26,6 +27,9 @@ class Roll {
   int? success;
   String? characterToHelp;
   String? picture;
+  String? empirique;
+  String? data;
+  Apotheose? apotheose;
   List<Roll> resistRollList;
 
   Roll(
@@ -41,6 +45,9 @@ class Roll {
       this.malediction,
       this.result,
       this.picture,
+      this.data,
+      this.empirique,
+      this.apotheose,
       this.success,
       this.resistRollList);
 
@@ -86,6 +93,8 @@ class Roll {
         return 'Jet de Sauvegarde contre la Mort';
       case RollType.RELANCE:
         return ;
+      case RollType.APOTHEOSE:
+        return 'Jet de Contrôle de l\'Apotheose';
     }
   }
 

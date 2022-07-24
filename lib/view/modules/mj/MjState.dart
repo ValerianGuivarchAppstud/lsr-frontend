@@ -104,6 +104,7 @@ class MjUIUpdated extends MjPartialState {
 
 class MjUIState {
   bool camera;
+  String? errorMessage;
 
   MjUIState(this.camera);
 }

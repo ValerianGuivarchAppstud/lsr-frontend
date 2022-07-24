@@ -3,7 +3,6 @@ import 'package:lsr/view/MainViewModel.dart';
 import 'package:lsr/view/modules/settings/SettingsWidgets.dart';
 
 import '../../../domain/models/Settings.dart';
-import '../../../utils/view/Const.dart';
 import '../../widgets/common/LoadingWidget.dart';
 import 'SettingsState.dart';
 import 'SettingsViewModel.dart';
@@ -70,11 +69,14 @@ class _SettingsPageState extends State<SettingsPage> {
           SettingsViewModel settingsViewModel, bool pj) =>
       Column(mainAxisSize: MainAxisSize.min, children: [
         SettingsWidgets.buildCharacterSelection(settings, settingsViewModel, null, setState),
-        ElevatedButton(
+        Padding(
+          padding :EdgeInsets.fromLTRB(0, 100, 0, 0),
+            child: ElevatedButton(
           child: pj ? const Text('Devenir MJ') : Text('Devenir joueuse'),
           onPressed: () {
             mainViewModel.switchRole();
           },
+        )
         )
       ]);
 }

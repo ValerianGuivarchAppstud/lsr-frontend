@@ -45,7 +45,8 @@ class MjViewModel extends SubViewModel with ChangeNotifier {
               value.characters.firstWhere((element) =>
                   element.name == _characterViewModel.getCharacterName()),
               [],
-              []));
+              [],
+          value.playersName));
         }
         streamController.add(_currentState.copy(MjLoaded(value)));
       }
@@ -70,7 +71,6 @@ class MjViewModel extends SubViewModel with ChangeNotifier {
   }
 
   updateUi(MjUIState state) {
-    print("WESH");
     streamController.add(_currentState.copy(MjUIUpdated(state)));
   }
 
@@ -95,6 +95,7 @@ class MjViewModel extends SubViewModel with ChangeNotifier {
   }
 
   void removeCharacterList(String characterName) {
+    _charactersViewModel.remove(characterName);
     _mjService.removeCharacterList(characterName);
   }
 
@@ -111,5 +112,9 @@ class MjViewModel extends SubViewModel with ChangeNotifier {
     _currentState.uiState.camera = state.state.camera;
     print("WESH");
     updateUi(_currentState.uiState);
+  }
+
+  deleteRolls() {
+    _mjService.deleteRolls();
   }
 }

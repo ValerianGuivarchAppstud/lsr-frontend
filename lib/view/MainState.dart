@@ -1,4 +1,5 @@
-import 'package:lsr/main.dart';
+
+import '../utils/view/Const.dart';
 
 class MainState {
 
@@ -11,7 +12,7 @@ class MainState {
   MainState({
     this.showLoading = true,
     this.error}) {
-    this.uiState = MainUIState(MyApp.INITIAL_STATE_PJ, MyApp.INITIAL_STATE_CAMERA, 0);
+    this.uiState = MainUIState(INITIAL_STATE_PJ, INITIAL_STATE_CAMERA, 0);
   }
 
   MainState copy(MainPartialState partialState) {

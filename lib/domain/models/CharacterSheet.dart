@@ -10,10 +10,12 @@ class CharacterSheet {
   Character character;
   List<Roll> rollList;
   late List<String> pjAlliesNames;
+  late List<String> playersName;
   CharacterSheet({
       required this.character,
       required this.rollList,
-    required this.pjAlliesNames
+    required this.pjAlliesNames,
+    required this.playersName
   });
 
 

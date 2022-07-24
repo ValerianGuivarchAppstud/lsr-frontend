@@ -3,6 +3,7 @@ enum RollType {
   ESPRIT,
   ESSENCE,
   EMPIRIQUE,
+  APOTHEOSE,
   MAGIE_LEGERE,
   MAGIE_FORTE,
   SOIN,

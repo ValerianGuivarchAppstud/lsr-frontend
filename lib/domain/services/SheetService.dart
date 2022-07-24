@@ -4,6 +4,7 @@ import 'package:lsr/domain/models/HealSheet.dart';
 import 'package:lsr/domain/models/RollType.dart';
 import 'package:lsr/domain/providers/ICharacterProvider.dart';
 
+import '../../utils/MessagedException.dart';
 import '../models/Roll.dart';
 import '../providers/IHealProvider.dart';
 import '../providers/IRollProvider.dart';
@@ -34,8 +35,9 @@ class SheetService {
           required int malediction,
           required String? characterToHelp,
           required String? resistRoll,
-            String empirique = ''}) =>
-      rollProvider.send(
+            String empirique = ''}) async {
+    try {
+      Roll roll = await rollProvider.send(
           rollerName: rollerName,
           rollType: rollType,
           secret: secret,
@@ -47,5 +49,11 @@ class SheetService {
           characterToHelp: characterToHelp,
           resistRoll: resistRoll,
           empirique: empirique);
+      return roll;
+    }  on MessagedException catch (e) {
+      print(e.message);
+      throw new MessagedException(e.message);
+    }
+  }
 
 }

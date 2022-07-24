@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:lsr/domain/models/Apotheose.dart';
 import 'package:lsr/domain/models/Bloodline.dart';
 import 'package:lsr/domain/models/Category.dart';
 
@@ -15,6 +16,7 @@ class Character {
   String name;
   late Classe classe;
   late Bloodline bloodline;
+  late Apotheose apotheose;
   int chair;
   int esprit;
   int essence;
@@ -36,14 +38,18 @@ class Character {
   late Genre genre;
   late int relance;
   late String picture;
+  late String pictureApotheose;
   late String background;
   late String? playerName;
   late String? buttonColor;
   late String? textColor;
+  late String? apotheoseImprovement;
+  late List<String> apotheoseImprovementList;
   Character({
       required this.name,
       required this.classe,
       required this.bloodline,
+      required this.apotheose,
       required this.chair,
       required this.esprit,
       required this.essence,
@@ -65,10 +71,13 @@ class Character {
     required this.genre,
     required this.relance,
     required this.picture,
+    required this.pictureApotheose,
     required this.background,
     required this.playerName,
     required this.buttonColor,
-    required this.textColor
+    required this.textColor,
+    required this.apotheoseImprovement,
+    required this.apotheoseImprovementList
   });
 
 
@@ -161,7 +170,7 @@ class Character {
     if (buttonColor != null && buttonColor != '') {
       return Color(int.parse(buttonColor!));
     } else {
-      return Colors.blue;
+      return Colors.blue.shade500;
     }
   }
 

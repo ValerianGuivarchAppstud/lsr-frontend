@@ -25,8 +25,6 @@ class MainViewModel with ChangeNotifier {
 
   addSubViewModel(SubViewModel subViewModel) {
     subViewModels.add(subViewModel);
-    print("pouet");
-    print(subViewModels.length);
   }
 
   Future<void> getMain([bool reload = false]) async {

@@ -8,6 +8,7 @@ class CharacterSheetState {
   Character? character;
   List<Roll>? rollList;
   List<String>? pjAlliesNames;
+  List<String>? playersName;
   String? error;
   late CharacterSheetUIState uiState;
   DateTime? lastTimeNoteSaved;
@@ -20,7 +21,8 @@ class CharacterSheetState {
     this.error,
     this.rollList,
     this.lastTimeNoteSaved,
-  this.notes = ''}) {
+  this.notes = '',
+  this.playersName}) {
     this.uiState = CharacterSheetUIState();
   }
 
@@ -32,6 +34,7 @@ class CharacterSheetState {
           character = (partialState as CharacterSheetLoaded).character;
           rollList = (partialState).rollList;
           pjAlliesNames = (partialState).pjAlliesNames;
+        playersName = (partialState).playersName;
         break;
       case CharacterLoaded:
         showLoading = false;
@@ -99,6 +102,7 @@ class CharacterSheetUIState {
   int benediction;
   int malediction;
   String? characterToHelp;
+  String? errorMessage;
 
   CharacterSheetUIState({this.secret = false,
     this.power = false,
@@ -116,8 +120,9 @@ class CharacterSheetLoaded extends CharacterSheetPartialState {
   Character character;
   List<Roll> rollList;
   List<String> pjAlliesNames;
+  List<String> playersName;
 
-  CharacterSheetLoaded(this.character, this.rollList, this.pjAlliesNames);
+  CharacterSheetLoaded(this.character, this.rollList, this.pjAlliesNames, this.playersName);
 }
 
 class CharacterLoaded extends CharacterSheetPartialState {

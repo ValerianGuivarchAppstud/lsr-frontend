@@ -41,6 +41,7 @@ const _$RollTypeEnumMap = {
   RollType.ESPRIT: 'ESPRIT',
   RollType.ESSENCE: 'ESSENCE',
   RollType.EMPIRIQUE: 'EMPIRIQUE',
+  RollType.APOTHEOSE: 'APOTHEOSE',
   RollType.MAGIE_LEGERE: 'MAGIE_LEGERE',
   RollType.MAGIE_FORTE: 'MAGIE_FORTE',
   RollType.SOIN: 'SOIN',

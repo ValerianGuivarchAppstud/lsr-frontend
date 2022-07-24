@@ -76,6 +76,7 @@ class HealSheetUIState {
   int malediction;
   int heal;
   int healMax;
+  String? errorMessage;
 
   HealSheetUIState({
     this.power = false,

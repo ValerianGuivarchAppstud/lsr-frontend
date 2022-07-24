@@ -29,4 +29,8 @@ class MjService {
   Future<List<Character>> addCharacterWithTemplate(String templateName, String customName, int level, int number) async {
     return await this.mjProvider.addCharacterWithTemplate(templateName, customName, level, number);
   }
+
+  void deleteRolls() {
+    return this.mjProvider.deleteRolls();
+  }
 }

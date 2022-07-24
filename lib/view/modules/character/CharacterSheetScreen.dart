@@ -54,6 +54,17 @@ class _CharacterPageState extends State<CharacterPage> {
         stream: characterSheetViewModel.streamController.stream,
         initialData: characterSheetViewModel.getState(),
         builder: (context, state) {
+          if (state.data?.uiState.errorMessage != null) {
+            print(state.data!.uiState.errorMessage!);
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              SnackBar snackBar = SnackBar(
+                content: Text(state.data!.uiState.errorMessage!),
+              );
+              characterSheetViewModel.getState().uiState.errorMessage = null;
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            });
+          }
+
           if (state.data?.showLoading ?? true) {
             const oneSec = Duration(seconds: 1);
             developer.log("Timer : " + (characterName ?? "personne"));

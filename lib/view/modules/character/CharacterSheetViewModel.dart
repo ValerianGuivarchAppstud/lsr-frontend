@@ -1,15 +1,19 @@
 import 'dart:async';
+import 'dart:core';
+import 'dart:core';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:lsr/domain/models/Character.dart';
+import 'package:lsr/domain/models/Roll.dart';
 import 'package:lsr/domain/models/RollType.dart';
 import 'package:lsr/domain/services/SettingsService.dart';
 import 'package:lsr/view/modules/character/CharacterSheetState.dart';
-import '../../MainState.dart';
-import '../../MainViewModel.dart';
 
 import '../../../domain/services/SheetService.dart';
+import '../../../utils/MessagedException.dart';
+import '../../MainState.dart';
+import '../../MainViewModel.dart';
 
 class CharacterSheetViewModel extends SubViewModel with ChangeNotifier {
   final SheetService _sheetService;
@@ -56,7 +60,7 @@ class CharacterSheetViewModel extends SubViewModel with ChangeNotifier {
     } else {
       _sheetService.get(characterName).then((value) {
         streamController.add(_currentState.copy(CharacterSheetLoaded(
-            value.character, value.rollList, value.pjAlliesNames)));
+            value.character, value.rollList, value.pjAlliesNames, value.playersName)));
       }).onError((error, stackTrace) {
         streamController.add(
             _currentState.copy(CharacterSheetFailed(error.toString())));
@@ -84,24 +88,31 @@ class CharacterSheetViewModel extends SubViewModel with ChangeNotifier {
     });
   }
 
-  Future<void> sendRoll(RollType rollType, [String empirique = '', String? resistRoll = null]) async {
+  Future<Roll?> sendRoll(RollType rollType, [String empirique = '', String? resistRoll = null]) async {
     if(_currentState.character != null) {
-      _sheetService.sendRoll(
-          rollType: rollType,
-          rollerName: _currentState.character!.name,
-          secret: _currentState.uiState.secret,
-          focus: _currentState.uiState.focus,
-          power: _currentState.uiState.power,
-          proficiency: _currentState.uiState.proficiency,
-          benediction: _currentState.uiState.benediction,
-          malediction: _currentState.uiState.malediction,
-          characterToHelp: _currentState.uiState.characterToHelp,
-          resistRoll: resistRoll,
-          empirique: empirique);
-      if(_currentState.uiState.characterToHelp != null) {
-        _currentState.uiState.characterToHelp = null;
+      try {
+        Roll roll = await _sheetService.sendRoll(
+            rollType: rollType,
+            rollerName: _currentState.character!.name,
+            secret: _currentState.uiState.secret,
+            focus: _currentState.uiState.focus,
+            power: _currentState.uiState.power,
+            proficiency: _currentState.uiState.proficiency,
+            benediction: _currentState.uiState.benediction,
+            malediction: _currentState.uiState.malediction,
+            characterToHelp: _currentState.uiState.characterToHelp,
+            resistRoll: resistRoll,
+            empirique: empirique);
+        if (_currentState.uiState.characterToHelp != null) {
+          _currentState.uiState.characterToHelp = null;
+        }
+        return roll;
+      } on MessagedException catch (e) {
+          print(e.message);
+          _currentState.uiState.errorMessage = e.message;
       }
     }
+    return null;
   }
 
   void saveNotesIfEnoughTime(DateTime timeUpdate) {
@@ -124,6 +135,6 @@ class CharacterSheetViewModel extends SubViewModel with ChangeNotifier {
   @override
   changeMainState(MainUIUpdated state) {
     print("changeMainState character");
-    // nothing to di
+    // nothing to do
   }
 }

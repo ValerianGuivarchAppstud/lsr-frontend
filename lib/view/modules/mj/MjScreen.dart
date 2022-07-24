@@ -46,7 +46,18 @@ class _MjPageState extends State<MjPage> {
               width: width,
               color: Colors.white,
               child:  LayoutBuilder(builder: (context, constraints) {
-                    if (state.data == null || (state.data!.showLoading)) {
+                if (state.data?.uiState.errorMessage != null) {
+                  print(state.data!.uiState.errorMessage!);
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    SnackBar snackBar = SnackBar(
+                      content: Text(state.data!.uiState.errorMessage!),
+                    );
+                    mjViewModel.getState().uiState.errorMessage = null;
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  });
+                }
+
+                if (state.data == null || (state.data!.showLoading)) {
                       return LoadingWidget(
                           key: Key(
                         "LoadingWidget",
@@ -114,6 +125,9 @@ class _MjPageState extends State<MjPage> {
                     );
                   }).toList(),
                 ),
+                TextButton(onPressed: () => {
+                  mjViewModel.deleteRolls()
+                }, child: Text("Supprimer les lancers"))
               ]),
               Align(
                   alignment: Alignment.topLeft,
@@ -270,6 +284,6 @@ class _MjPageState extends State<MjPage> {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [CharacterWidgets.buildRollList(mjSheet.rollList, null, null, mjViewModel, mjViewModel.getState().mjSheet?.characters.map((e) => e.name).toList())])))
+                children: [CharacterWidgets.buildRollList(mjSheet.rollList, null, null, mjViewModel, mjViewModel.getState().mjSheet?.characters.where((c) => c.category != Category.PJ).map((e) => e.name).toList())])))
       ]);
 }

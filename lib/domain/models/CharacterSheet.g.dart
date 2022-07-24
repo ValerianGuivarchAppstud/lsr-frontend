@@ -15,6 +15,9 @@ CharacterSheet _$CharacterSheetFromJson(Map<String, dynamic> json) =>
       pjAlliesNames: (json['pjAlliesNames'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
+      playersName: (json['playersName'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
     );
 
 Map<String, dynamic> _$CharacterSheetToJson(CharacterSheet instance) =>
@@ -22,4 +25,5 @@ Map<String, dynamic> _$CharacterSheetToJson(CharacterSheet instance) =>
       'character': instance.character,
       'rollList': instance.rollList,
       'pjAlliesNames': instance.pjAlliesNames,
+      'playersName': instance.playersName,
     };

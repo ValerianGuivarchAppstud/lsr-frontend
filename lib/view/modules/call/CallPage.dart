@@ -10,7 +10,6 @@ import 'CallState.dart';
 import 'CallViewModel.dart';
 
 const appId = "3eac4da1625d4bde816a6686c73e7b03";
-// const token = "0063eac4da1625d4bde816a6686c73e7b03IABgL9zfCzqEzFSK/MW/CxQNrqYd4b8DsVgk4UfAjfNOz2eH5lEAAAAAEACPl0pWwDXUYgEAAQDANdRi";
 const channel = "L7R-visio";
 
 class CallPage extends StatefulWidget {
@@ -43,6 +42,7 @@ class _CallPageState extends State<CallPage> {
 
   @override
   void initState() {
+    _users.clear();
     super.initState();
     initAgora();
   }
@@ -68,10 +68,66 @@ class _CallPageState extends State<CallPage> {
     }
 
     /// Add agora event handlers
+    void _addAgoraEventHandler2s() {
+      _engine.setEventHandler(RtcEngineEventHandler(error: (code) {
+        print("POUET");
+        print("error");
+        setState(() {
+          final info = 'onError: $code';
+          _infoStrings.add(info);
+        });
+      }, userJoined: (uid, elapsed) {
+        print("POUET");
+        print("userJoined");
+        setState(() {
+          final info = 'userJoined: $uid';
+          print("uui ${uid}");
+          _infoStrings.add(info);
+          _users.add(uid);
+        });
+      }, userOffline: (uid, elapsed) {
+        print("POUET");
+        print("userOffline");
+        setState(() {
+          final info = 'userOffline: $uid';
+          _infoStrings.add(info);
+          _users.remove(uid);
+        });
+      }));
+    }
+
+
     void _addAgoraEventHandlers() {
       _engine.setEventHandler(RtcEngineEventHandler(error: (code) {
         setState(() {
           final info = 'onError: $code';
+          _infoStrings.add(info);
+        });
+      }, joinChannelSuccess: (channel, uid, elapsed) {
+        setState(() {
+          final info = 'onJoinChannel: $channel, uid: $uid';
+          _infoStrings.add(info);
+        });
+      }, leaveChannel: (stats) {
+        setState(() {
+          _infoStrings.add('onLeaveChannel');
+          _users.clear();
+        });
+      }, userJoined: (uid, elapsed) {
+        setState(() {
+          final info = 'userJoined: $uid';
+          _infoStrings.add(info);
+          _users.add(uid);
+        });
+      }, userOffline: (uid, elapsed) {
+        setState(() {
+          final info = 'userOffline: $uid';
+          _infoStrings.add(info);
+          _users.remove(uid);
+        });
+      }, firstRemoteVideoFrame: (uid, width, height, elapsed) {
+        setState(() {
+          final info = 'firstRemoteVideo: $uid ${width}x $height';
           _infoStrings.add(info);
         });
       }));
@@ -137,7 +193,10 @@ class _CallPageState extends State<CallPage> {
           if (state.data != null)  {
 //            String token = await callViewModel.getState().token ?? token2;
 
+          if(state.data!.showLoading) {
+            print("JOINi");
             _engine.joinChannel(state.data!.token, channel, null, 0);
+          }
           }
           return Scaffold(
             backgroundColor: Colors.black,
@@ -162,8 +221,8 @@ class _CallPageState extends State<CallPage> {
   /// Video view wrapper
   Widget _videoView(view) {
     return Container(
-      width: 400,
-      height: 200,
+      width: 300,
+      height: 150,
       child: Center(
         child: view,
       ),
@@ -183,6 +242,8 @@ class _CallPageState extends State<CallPage> {
   /// Video layout wrapper
   Widget _viewRows() {
     final views = _getRenderViews();
+    print("HAAAH");
+    print(views.length);
     switch (views.length) {
       case 1:
         return Container(
@@ -193,8 +254,8 @@ class _CallPageState extends State<CallPage> {
         return Container(
             child: Column(
           children: <Widget>[
-            _expandedVideoRow([views[0]]),
-            _expandedVideoRow([views[1]])
+            _videoView(views[0]),
+            _videoView(views[0])
           ],
         ));
       case 3:
@@ -208,12 +269,28 @@ class _CallPageState extends State<CallPage> {
       case 4:
         return Container(
             child: Column(
-          children: <Widget>[
-            _expandedVideoRow(views.sublist(0, 2)),
-            _expandedVideoRow(views.sublist(2, 4))
-          ],
-        ));
-      default:
+              children: <Widget>[
+                _expandedVideoRow(views.sublist(0, 2)),
+                _expandedVideoRow(views.sublist(2, 4))
+              ],
+            ));
+      case 5:
+    return Container(
+    child: Column(
+    children: <Widget>[
+    _expandedVideoRow(views.sublist(0, 3)),
+    _expandedVideoRow(views.sublist(3, 5))
+    ],
+    ));
+    case 6:
+    return Container(
+    child: Column(
+    children: <Widget>[
+    _expandedVideoRow(views.sublist(0, 3)),
+    _expandedVideoRow(views.sublist(3, 6))
+    ],
+    ));
+    default:
     }
     return Container();
   }

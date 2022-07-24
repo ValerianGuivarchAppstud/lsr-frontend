@@ -79,8 +79,6 @@ class MyApp extends StatefulWidget {
   final MjPage mjPage;
   final CallPage callPage;
 
-  static final bool INITIAL_STATE_PJ = true;
-  static final bool INITIAL_STATE_CAMERA = false;
 
   MyApp(this.mainViewModel, this.characterPage, this.healPage, this.settingsPage, this.mjPage, this.callPage, {required Key key})
       : super(key: key);
@@ -113,10 +111,8 @@ class _MainState extends State<MyApp> {
         return characterPage;
       } else if (selectedIndex == 1) {
         return healPage;
-      } else if (selectedIndex == 3) {
+      } else if (selectedIndex == 2) {
         return settingsPage;
-      } else {
-        return Text("todo");
       }
     } else {
       if (selectedIndex == 0) {
@@ -203,10 +199,6 @@ class _MainState extends State<MyApp> {
                               label: 'Soin',
                             ),
                             BottomNavigationBarItem(
-                              icon: Icon(CustomIcons.fight),
-                              label: 'Combat',
-                            ),
-                            BottomNavigationBarItem(
                               icon: Icon(Icons.settings),
                               label: 'Paramètres',
                             ),
@@ -255,61 +247,3 @@ class _MainState extends State<MyApp> {
     );
   }
 }
-
-/*class MainStatefulWidget extends StatefulWidget {
-  bool pj;
-  bool camera;
-
-  MainStatefulWidget(this.pj, this.camera, {Key? key}) : super(key: key);
-
-  @override
-  State<MainStatefulWidget> createState() => _MainStatefulWidgetState(this.pj, this.camera);
-}
-
-class _MainStatefulWidgetState extends State<MainStatefulWidget> {
-
-  final bool pj;
-  bool camera;
-  final _characterService = SheetService(
-      characterProvider: CharacterProvider(NetworkingConfig()),
-      rollProvider: RollProvider(NetworkingConfig()),
-      healProvider: HealProvider(NetworkingConfig()),
-  );
-  final _settingsService = SettingsService(
-      settingsProvider: SettingsProvider(NetworkingConfig()),
-      storageProvider: StorageProvider());
-  final _mjService = MjService(
-      mjProvider: MjProvider(NetworkingConfig()),
-      characterProvider: CharacterProvider(NetworkingConfig()));
-
-  int _selectedIndex = 0;
-  Widget characterPage = CharacterPage(Key('CharacterPage'), null);
-  Widget healPage = HealSheetPage(Key("HealPage"), null);
-  late Widget settingsPage;
-  late MjPage mjPage;
-
-  _MainStatefulWidgetState(this.pj, this.camera) {
-    settingsPage = SettingsPage(pj, camera, key: Key('SettingsPage'));
-    mjPage = MjPage(camera, key: Key('MjPage'));
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var widthScreen = MediaQuery.of(context).size.width;
-    return Injector(
-        sheetService: _characterService,
-        characterSheetViewModel: CharacterSheetViewModel.playerConstructor(
-            _characterService, _settingsService),
-        mjViewModel: MjViewModel(_mjService, _characterService, _settingsService),
-        healSheetViewModel: HealSheetViewModel(_characterService, _settingsService),
-        settingsViewModel: SettingsViewModel(_settingsService),
-        key: Key("main"),
-        child:
-  }
-*/

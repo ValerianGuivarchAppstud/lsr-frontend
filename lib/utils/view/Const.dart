@@ -1,7 +1,7 @@
 
+const bool INITIAL_STATE_PJ = true;
 
-
-// const double WIDTH_CAMERA = 400.0;
+const bool INITIAL_STATE_CAMERA = false;
 
 const double WIDTH_SCREEN = 550.0;
 

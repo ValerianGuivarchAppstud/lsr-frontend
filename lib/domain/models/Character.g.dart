@@ -10,6 +10,7 @@ Character _$CharacterFromJson(Map<String, dynamic> json) => Character(
       name: json['name'] as String,
       classe: $enumDecode(_$ClasseEnumMap, json['classe']),
       bloodline: $enumDecode(_$BloodlineEnumMap, json['bloodline']),
+      apotheose: $enumDecode(_$ApotheoseEnumMap, json['apotheose']),
       chair: json['chair'] as int,
       esprit: json['esprit'] as int,
       essence: json['essence'] as int,
@@ -31,16 +32,23 @@ Character _$CharacterFromJson(Map<String, dynamic> json) => Character(
       genre: $enumDecode(_$GenreEnumMap, json['genre']),
       relance: json['relance'] as int,
       picture: json['picture'] as String,
+      pictureApotheose: json['pictureApotheose'] as String,
       background: json['background'] as String,
       playerName: json['playerName'] as String?,
       buttonColor: json['buttonColor'] as String?,
       textColor: json['textColor'] as String?,
+      apotheoseImprovement: json['apotheoseImprovement'] as String?,
+      apotheoseImprovementList:
+          (json['apotheoseImprovementList'] as List<dynamic>)
+              .map((e) => e as String)
+              .toList(),
     );
 
 Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'name': instance.name,
       'classe': _$ClasseEnumMap[instance.classe]!,
       'bloodline': _$BloodlineEnumMap[instance.bloodline]!,
+      'apotheose': _$ApotheoseEnumMap[instance.apotheose]!,
       'chair': instance.chair,
       'esprit': instance.esprit,
       'essence': instance.essence,
@@ -62,10 +70,13 @@ Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'genre': _$GenreEnumMap[instance.genre]!,
       'relance': instance.relance,
       'picture': instance.picture,
+      'pictureApotheose': instance.pictureApotheose,
       'background': instance.background,
       'playerName': instance.playerName,
       'buttonColor': instance.buttonColor,
       'textColor': instance.textColor,
+      'apotheoseImprovement': instance.apotheoseImprovement,
+      'apotheoseImprovementList': instance.apotheoseImprovementList,
     };
 
 const _$ClasseEnumMap = {
@@ -97,6 +108,16 @@ const _$BloodlineEnumMap = {
   Bloodline.ILLITHIDE: 'ILLITHIDE',
   Bloodline.ARBRE: 'ARBRE',
   Bloodline.AUCUN: 'AUCUN',
+};
+
+const _$ApotheoseEnumMap = {
+  Apotheose.NONE: 'NONE',
+  Apotheose.NORMALE: 'NORMALE',
+  Apotheose.IMPROVED: 'IMPROVED',
+  Apotheose.ARCANIQUE: 'ARCANIQUE',
+  Apotheose.FORME_VENGERESSE: 'FORME_VENGERESSE',
+  Apotheose.SURCHARGE: 'SURCHARGE',
+  Apotheose.FINALE: 'FINALE',
 };
 
 const _$CategoryEnumMap = {

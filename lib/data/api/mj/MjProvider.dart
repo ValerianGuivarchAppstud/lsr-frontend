@@ -44,4 +44,9 @@ class MjProvider implements IMjProvider {
     return templateNewCharacters.templateNewCharacters;
   }
 
+  @override
+  deleteRolls() {
+    _networkingConfig.dio.delete('rolls');
+  }
+
 }

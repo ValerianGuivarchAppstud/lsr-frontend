@@ -19,6 +19,9 @@ Roll _$RollFromJson(Map<String, dynamic> json) => Roll(
       json['malediction'] as int,
       (json['result'] as List<dynamic>).map((e) => e as int).toList(),
       json['picture'] as String?,
+      json['data'] as String?,
+      json['empirique'] as String?,
+      $enumDecodeNullable(_$ApotheoseEnumMap, json['apotheose']),
       json['success'] as int?,
       (json['resistRollList'] as List<dynamic>)
           .map((e) => Roll.fromJson(e as Map<String, dynamic>))
@@ -40,6 +43,9 @@ Map<String, dynamic> _$RollToJson(Roll instance) => <String, dynamic>{
       'success': instance.success,
       'characterToHelp': instance.characterToHelp,
       'picture': instance.picture,
+      'empirique': instance.empirique,
+      'data': instance.data,
+      'apotheose': _$ApotheoseEnumMap[instance.apotheose],
       'resistRollList': instance.resistRollList,
     };
 
@@ -48,6 +54,7 @@ const _$RollTypeEnumMap = {
   RollType.ESPRIT: 'ESPRIT',
   RollType.ESSENCE: 'ESSENCE',
   RollType.EMPIRIQUE: 'EMPIRIQUE',
+  RollType.APOTHEOSE: 'APOTHEOSE',
   RollType.MAGIE_LEGERE: 'MAGIE_LEGERE',
   RollType.MAGIE_FORTE: 'MAGIE_FORTE',
   RollType.SOIN: 'SOIN',
@@ -56,4 +63,14 @@ const _$RollTypeEnumMap = {
   RollType.ARCANE_ESSENCE: 'ARCANE_ESSENCE',
   RollType.SAUVEGARDE_VS_MORT: 'SAUVEGARDE_VS_MORT',
   RollType.RELANCE: 'RELANCE',
+};
+
+const _$ApotheoseEnumMap = {
+  Apotheose.NONE: 'NONE',
+  Apotheose.NORMALE: 'NORMALE',
+  Apotheose.IMPROVED: 'IMPROVED',
+  Apotheose.ARCANIQUE: 'ARCANIQUE',
+  Apotheose.FORME_VENGERESSE: 'FORME_VENGERESSE',
+  Apotheose.SURCHARGE: 'SURCHARGE',
+  Apotheose.FINALE: 'FINALE',
 };

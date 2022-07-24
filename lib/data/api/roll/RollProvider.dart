@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'dart:developer' as developer;
 
 import 'package:dio/dio.dart';
 import 'package:lsr/domain/models/Roll.dart';
 import 'package:lsr/domain/providers/IRollProvider.dart';
 
 import '../../../domain/models/RollType.dart';
+import '../../../utils/MessagedException.dart';
 import '../../../utils/api/NetworkingConfig.dart';
 import 'entities/SendRollRequest.dart';
 
@@ -40,7 +40,12 @@ class RollProvider implements IRollProvider {
         empiriqueRoll: empirique,
         resistRoll: resistRoll);
 
+    try {
     Response response = await _networkingConfig.dio.post('roll', data: sendRollRequest.toJson());
     return Roll.fromJson(response.data);
+    } on DioError catch (e) {
+      print(e.response?.data['message']);
+      throw new MessagedException(e.response?.data['message']);
+  }
   }
 }

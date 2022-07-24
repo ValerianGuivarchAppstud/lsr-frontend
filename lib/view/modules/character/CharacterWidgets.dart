@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:developer' as developer;
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:lsr/domain/models/Apotheose.dart';
 import 'package:lsr/domain/models/RollType.dart';
 import 'package:lsr/view/modules/mj/MjViewModel.dart';
 
@@ -13,13 +13,12 @@ import 'CharacterSheetState.dart';
 import 'CharacterSheetViewModel.dart';
 
 class CharacterWidgets {
-
   static List<Color> colors = [];
 
   static getColorList() {
-    if(colors.length == 0){
+    if (colors.length == 0) {
       colors.add(Colors.white);
-      for(MaterialColor materialColor in Colors.primaries) {
+      for (MaterialColor materialColor in Colors.primaries) {
         colors.add(materialColor.shade100);
         colors.add(materialColor.shade200);
         colors.add(materialColor.shade300);
@@ -35,7 +34,6 @@ class CharacterWidgets {
       return colors;
     }
   }
-
 
   static void sendRoll(
       CharacterSheetViewModel characterSheetViewModel, RollType rollType,
@@ -55,7 +53,7 @@ class CharacterWidgets {
           TextEditingController? noteFieldController,
           List<String>? pjAlliesNames,
           LayoutBuilder? rollList,
-      MjViewModel? mjViewModel) =>
+          MjViewModel? mjViewModel) =>
       Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -65,29 +63,24 @@ class CharacterWidgets {
             Stack(
               alignment: Alignment.topLeft,
               children: [
-                Padding(
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: Image.network(
-                      character.background,
-                      //"assets/images/background/${describeEnum(character.bloodline != Bloodline.AUCUN ? character.bloodline : character.classe).toLowerCase()}.jpg",
-                      fit: BoxFit.fill,
-                      height: 120,
-                      width: (sizeRatio * width),
-                    )),
+                if (character.background != "")
+                  Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Image.network(
+                        character.background,
+                        //"assets/images/background/${describeEnum(character.bloodline != Bloodline.AUCUN ? character.bloodline : character.classe).toLowerCase()}.jpg",
+                        fit: BoxFit.fill,
+                        height: 120,
+                        width: (sizeRatio * width),
+                      )),
                 Padding(
                     padding: EdgeInsets.all(10),
                     child: GestureDetector(
                         onLongPress: () => {
-                              developer.log(
-                                  characterSheetState.character?.playerName ??
-                                      ''),
                               MjWidgets.buildCreateCharacterAlertDialog(
                                   characterSheetState.character,
                                   context,
-                                  [
-                                    characterSheetState.character?.playerName ??
-                                        ''
-                                  ],
+                                  characterSheetState.playersName ?? [],
                                   characterSheetViewModel
                                       .createOrUpdateCharacter)
                             },
@@ -102,7 +95,12 @@ class CharacterWidgets {
                               radius: 60,
                               backgroundColor: Colors.white,
                               foregroundImage:
-                                  NetworkImage(character.picture),
+                                  character.apotheose == Apotheose.NONE
+                                      ? NetworkImage(character.picture)
+                                      : NetworkImage(
+                                          character.pictureApotheose != ""
+                                              ? character.pictureApotheose
+                                              : character.picture),
                               //"assets/images/portraits/${character.name}.png"),
                             )
                           ],
@@ -154,39 +152,52 @@ class CharacterWidgets {
                                   ),
                                 ],
                               )
-                            ]))))
+                            ])))),
               ],
             )
           else
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              GestureDetector(
+                  onLongPress: () => {
+                        MjWidgets.buildCreateCharacterAlertDialog(
+                            characterSheetState.character,
+                            context,
+                            characterSheetState.playersName ?? [],
+                            characterSheetViewModel.createOrUpdateCharacter)
+                      },
+                  child: Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
                       child: CircleAvatar(
                         radius: 12,
                         backgroundColor: Colors.white,
-                        foregroundImage: NetworkImage(character.picture),
+                        foregroundImage: character.apotheose == Apotheose.NONE
+                            ? NetworkImage(character.picture)
+                            : NetworkImage(
+                            character.pictureApotheose != ""
+                                ? character.pictureApotheose
+                                : character.picture),
                         //"assets/images/portraits/${character.name}.png"),
-                      )),
+                      ))),
               Text(
                 character.name,
                 style: TextStyle(
-                  color: Colors.black,
+                  color: character.dettes >= 5 ? Colors.red : Colors.black,
                   fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: character.dettes >= 5
+                      ? FontWeight.bold
+                      : FontWeight.normal,
                 ),
                 textAlign: TextAlign.start,
               ),
-                  IconButton(
-                      color: Colors.transparent,
-                      onPressed: () {
-                        mjViewModel?.removeCharacterList(character.name);
-                      },
-                      icon: const Icon(
-                        Icons.close,
-                        color: Colors.red,
-                      )),
+              IconButton(
+                  color: Colors.transparent,
+                  onPressed: () {
+                    mjViewModel?.removeCharacterList(character.name);
+                  },
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.red,
+                  )),
             ]),
           if (noteFieldController != null)
             Padding(
@@ -219,6 +230,21 @@ class CharacterWidgets {
                                 : Colors.blue))),
               ),
             ),
+          if(character.apotheose == Apotheose.NORMALE) Padding(
+              padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
+              child: Text('Apothéose', style: TextStyle(color: Colors.red, fontSize: playerDisplay ? 18 : 12, fontWeight: FontWeight.bold))),
+          if(character.apotheose == Apotheose.ARCANIQUE) Padding(
+              padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
+              child: Text('Apothéose Arcanique', style: TextStyle(color: Colors.red, fontSize: playerDisplay ? 18 : 12, fontWeight: FontWeight.bold))),
+          if(character.apotheose == Apotheose.FINALE) Padding(
+              padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
+              child: Text('Apothéose Finale', style: TextStyle(color: Colors.red, fontSize: playerDisplay ? 18 : 12, fontWeight: FontWeight.bold))),
+          if(character.apotheose == Apotheose.FORME_VENGERESSE) Padding(
+              padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
+              child: Text('forme Vengeresse', style: TextStyle(color: Colors.red, fontSize: playerDisplay ? 18 : 12, fontWeight: FontWeight.bold))),
+          if(character.apotheose == Apotheose.IMPROVED) Padding(
+              padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
+              child: Text('Apothéose Amélioré : ${character.apotheoseImprovement}', style: TextStyle(color: Colors.red, fontSize: playerDisplay ? 18 : 12, fontWeight: FontWeight.bold))),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -241,7 +267,8 @@ class CharacterWidgets {
                     iconSize: (sizeRatio * width) / 12,
                     padding: EdgeInsets.zero,
                     constraints: BoxConstraints(),
-                    color: character.buttonColorOrDefault(),//character.buttonColorOrDefault(),
+                    color: character.buttonColorOrDefault(),
+                    //character.buttonColorOrDefault(),
                     icon: Icon(Icons.remove_circle),
                     onPressed: () {
                       changeCharacterValue(
@@ -264,10 +291,12 @@ class CharacterWidgets {
                           : character.textColorOrDefault(),
                       playerDisplay,
                       () => {
-                        if(character.pv <= 0) {
-                          sendRoll(characterSheetViewModel, RollType.SAUVEGARDE_VS_MORT)
-                        }
-                      },
+                            if (character.pv <= 0)
+                              {
+                                sendRoll(characterSheetViewModel,
+                                    RollType.SAUVEGARDE_VS_MORT)
+                              }
+                          },
                       () => showEditStatAlertDialog(context,
                           characterSheetViewModel, character, "PV_MAX")),
                   IconButton(
@@ -299,12 +328,20 @@ class CharacterWidgets {
                   ),
                   buildCharacterSheetButton(
                       "Bonus",
-                      characterSheetState.uiState.benediction.toString(),
+                      character.apotheose == Apotheose.NONE
+                          ? characterSheetState.uiState.benediction.toString()
+                          : character.apotheose == Apotheose.FINALE
+                              ? characterSheetState.uiState.benediction
+                                      .toString() +
+                                  '+5'
+                              : characterSheetState.uiState.benediction
+                                      .toString() +
+                                  '+3',
                       (sizeRatio * width) / 5,
                       sizeRatioFont * 26,
                       50,
                       character.buttonColorOrDefault(),
-                  character.textColorOrDefault(),
+                      character.textColorOrDefault(),
                       playerDisplay,
                       () => {},
                       () => {}),
@@ -409,7 +446,7 @@ class CharacterWidgets {
                       sizeRatioFont * 26,
                       50,
                       character.buttonColorOrDefault(),
-                  character.textColorOrDefault(),
+                      character.textColorOrDefault(),
                       playerDisplay,
                       () => {},
                       () => {}),
@@ -468,7 +505,7 @@ class CharacterWidgets {
                       characterSheetState.uiState.power
                           ? Colors.blueGrey
                           : character.buttonColorOrDefault(),
-                      characterSheetState.uiState.focus
+                      characterSheetState.uiState.power
                           ? Colors.white
                           : character.textColorOrDefault(),
                       playerDisplay, () {
@@ -511,7 +548,7 @@ class CharacterWidgets {
                       sizeRatioFont * 26,
                       50,
                       character.buttonColorOrDefault(),
-                  character.textColorOrDefault(),
+                      character.textColorOrDefault(),
                       playerDisplay,
                       () => {},
                       () => {}),
@@ -537,9 +574,10 @@ class CharacterWidgets {
                   '',
                   (playerDisplay ? "Arcane : " : "Arc ") +
                       character.arcanes.toString() +
-                      (playerDisplay ? ' / ' +
-                      character.arcanesMax.toString() : ''),
-                  (sizeRatio * width) / 5,
+                      (playerDisplay
+                          ? ' / ' + character.arcanesMax.toString()
+                          : ''),
+                  (sizeRatio * width) / 6.5,
                   sizeRatioFont * 14,
                   34,
                   character.buttonColorOrDefault(),
@@ -550,8 +588,8 @@ class CharacterWidgets {
                       context, characterSheetViewModel, character, "Arcane")),
               buildCharacterSheetButton(
                   '',
-                  "Magie",
-                  (sizeRatio * width) / 5,
+                  playerDisplay ? "Magie" : "Mag",
+                  (sizeRatio * width) / 6.5,
                   sizeRatioFont * 14,
                   34,
                   character.buttonColorOrDefault(),
@@ -563,8 +601,8 @@ class CharacterWidgets {
                       characterSheetViewModel, character, "MagieForte")),
               buildCharacterSheetButton(
                   '',
-                  "Cantrip",
-                  (sizeRatio * width) / 5,
+                  playerDisplay ? "Cantrip" : "Cant",
+                  (sizeRatio * width) / 6.5,
                   sizeRatioFont * 14,
                   34,
                   character.buttonColorOrDefault(),
@@ -577,7 +615,7 @@ class CharacterWidgets {
               buildCharacterSheetButton(
                   '',
                   playerDisplay ? "Empirique" : "Emp",
-                  (sizeRatio * width) / 5,
+                  (sizeRatio * width) / 6.5,
                   sizeRatioFont * 12,
                   34,
                   character.buttonColorOrDefault(),
@@ -587,6 +625,30 @@ class CharacterWidgets {
                       characterSheetViewModel, RollType.EMPIRIQUE, "1d6"),
                   () => showEmpiriqueRollAlertDialog(
                       context, characterSheetViewModel, character)),
+              buildCharacterSheetButton(
+                  '',
+                  playerDisplay ? "Apothéose" : "Apo",
+                  (sizeRatio * width) / 6.5,
+                  sizeRatioFont * 12,
+                  34,
+                  character.buttonColorOrDefault(),
+                  character.textColorOrDefault(),
+                  playerDisplay,
+                  () => {
+                        if (character.niveau < 10 &&
+                            character.apotheose == Apotheose.NONE)
+                          {
+                            character.apotheose = Apotheose.NORMALE,
+                            characterSheetViewModel
+                                .createOrUpdateCharacter(character)
+                          }
+                        else
+                          {
+                            showApotheoseAlertDialog(
+                                context, characterSheetViewModel, character)
+                          }
+                      },
+                  () => {}),
             ],
           ),
           Row(
@@ -595,13 +657,13 @@ class CharacterWidgets {
               buildCharacterSheetButton(
                   '',
                   playerDisplay ? "Proficiency" : "Pr",
-                  (sizeRatio * width) / 5,
+                  (sizeRatio * width) / 6.5,
                   sizeRatioFont * 14,
                   34,
                   characterSheetState.uiState.proficiency
                       ? Colors.blueGrey
                       : character.buttonColorOrDefault(),
-                  characterSheetState.uiState.focus
+                  characterSheetState.uiState.proficiency
                       ? Colors.white
                       : character.textColorOrDefault(),
                   playerDisplay, () {
@@ -613,13 +675,13 @@ class CharacterWidgets {
                   (characterSheetState.uiState.characterToHelp == null)
                       ? "Aider"
                       : "Aider ${characterSheetState.uiState.characterToHelp}",
-                  (sizeRatio * width) / 5,
+                  (sizeRatio * width) / 6.5,
                   sizeRatioFont * 14,
                   34,
                   characterSheetState.uiState.help
                       ? Colors.blueGrey
                       : character.buttonColorOrDefault(),
-                  characterSheetState.uiState.focus
+                  characterSheetState.uiState.help
                       ? Colors.white
                       : character.textColorOrDefault(),
                   playerDisplay, () {
@@ -634,13 +696,13 @@ class CharacterWidgets {
               buildCharacterSheetButton(
                   '',
                   "Secret",
-                  (sizeRatio * width) / 5,
+                  (sizeRatio * width) / 6.5,
                   sizeRatioFont * 14,
                   34,
                   characterSheetState.uiState.secret
                       ? Colors.blueGrey
                       : character.buttonColorOrDefault(),
-                  characterSheetState.uiState.focus
+                  characterSheetState.uiState.secret
                       ? Colors.white
                       : character.textColorOrDefault(),
                   playerDisplay, () {
@@ -650,19 +712,28 @@ class CharacterWidgets {
               buildCharacterSheetButton(
                   '',
                   "Relance : " + character.relance.toString(),
-                  (sizeRatio * width) / 5,
+                  (sizeRatio * width) / 6.5,
                   sizeRatioFont * 12,
                   34,
-                  characterSheetState.uiState.secret
-                      ? Colors.blueGrey
-                      : character.buttonColorOrDefault(),
-                  characterSheetState.uiState.focus
-                      ? Colors.white
-                      : character.textColorOrDefault(),
+                  character.buttonColorOrDefault(),
+                  character.textColorOrDefault(),
                   playerDisplay,
                   () => sendRoll(characterSheetViewModel, RollType.RELANCE, ''),
                   () => showEditStatAlertDialog(
                       context, characterSheetViewModel, character, "Relance")),
+              buildCharacterSheetButton(
+                '',
+                "Repos",
+                (sizeRatio * width) / 6.5,
+                sizeRatioFont * 12,
+                34,
+                character.buttonColorOrDefault(),
+                character.textColorOrDefault(),
+                playerDisplay,
+                () => showRestAlertDialog(
+                    context, characterSheetViewModel, character),
+                () => {},
+              )
             ],
           ),
           Row(
@@ -686,11 +757,16 @@ class CharacterWidgets {
         if (!roll.secret ||
             characterName == null ||
             roll.rollerName == characterName) {
-          rolls.add(getRollWidget(context, roll, characterSheetViewModel, mjViewModel,
-              resistingCharacters, null));
+          rolls.add(getRollWidget(context, roll, characterSheetViewModel,
+              mjViewModel, resistingCharacters, null));
           for (Roll resistRoll in roll.resistRollList) {
-            rolls.add(getRollWidget(context, resistRoll, characterSheetViewModel,
-                mjViewModel, resistingCharacters, roll));
+            rolls.add(getRollWidget(
+                context,
+                resistRoll,
+                characterSheetViewModel,
+                mjViewModel,
+                resistingCharacters,
+                roll));
           }
         }
       }
@@ -745,7 +821,8 @@ class CharacterWidgets {
                       if (title != '')
                         Text(
                           title,
-                          style: TextStyle(fontSize: fontSize / 2, color: colorText),
+                          style: TextStyle(
+                              fontSize: fontSize / 2, color: colorText),
                           textAlign: TextAlign.center,
                         ),
                       if (value != '')
@@ -824,13 +901,13 @@ class CharacterWidgets {
         // Jonathan
         text: roll.rollerName,
         style: TextStyle(fontWeight: FontWeight.bold)));
-    resistingRoll !=null ?
-    rollText.add(TextSpan(
-      // fait un
-        text: ' résiste avec un '))
-    : rollText.add(TextSpan(
-    // fait un
-    text: ' fait un '));
+    resistingRoll != null
+        ? rollText.add(TextSpan(
+            // fait un
+            text: ' résiste avec un '))
+        : rollText.add(TextSpan(
+            // fait un
+            text: ' fait un '));
     rollText.add(TextSpan(
         // jet de Chair
         text: roll.rollTypeText(),
@@ -858,6 +935,48 @@ class CharacterWidgets {
         text: ' (' + textBonus + ')',
       ));
     }
+
+    if (roll.rollType == RollType.CHAIR ||
+        roll.rollType == RollType.ESPRIT ||
+        roll.rollType == RollType.ESSENCE ||
+        roll.rollType == RollType.SOIN ||
+        roll.rollType == RollType.MAGIE_FORTE ||
+        roll.rollType == RollType.MAGIE_LEGERE)
+      switch (roll.apotheose) {
+        case null:
+        case Apotheose.NONE:
+          break;
+        case Apotheose.NORMALE:
+          rollText.add(TextSpan(
+            text: ' en Apothéose',
+          ));
+          break;
+        case Apotheose.IMPROVED:
+          rollText.add(TextSpan(
+            text: ' en Apothéose Améliorée',
+          ));
+          break;
+        case Apotheose.FINALE:
+          rollText.add(TextSpan(
+            text: ' en Apothéose Finale',
+          ));
+          break;
+        case Apotheose.ARCANIQUE:
+          rollText.add(TextSpan(
+            text: ' en Apothéose Arcanique',
+          ));
+          break;
+        case Apotheose.FORME_VENGERESSE:
+          rollText.add(TextSpan(
+            text: ' en Forme Vengeresse',
+          ));
+          break;
+        case Apotheose.SURCHARGE:
+          rollText.add(TextSpan(
+            text: ' en Surcharge',
+          ));
+          break;
+      }
 
     if (roll.characterToHelp != null && roll.characterToHelp != "") {
       rollText.add(TextSpan(
@@ -887,9 +1006,10 @@ class CharacterWidgets {
           rollText.add(TextSpan(
             text: ' et réussit.',
           ));
-        else rollText.add(TextSpan(
-          text: ' et échoue.',
-        ));
+        else
+          rollText.add(TextSpan(
+            text: ' et échoue.',
+          ));
         break;
       case RollType.SOIN:
         if (roll.result[0] >= 10)
@@ -897,13 +1017,24 @@ class CharacterWidgets {
             text: ' et peut distribuer ${roll.success} PV',
           ));
         break;
-      case RollType.ARCANE_FIXE:
       case RollType.EMPIRIQUE:
         rollText.add(TextSpan(
-          text: '.',
+          text: ' (${roll.empirique}).',
         ));
         break;
+      case RollType.ARCANE_FIXE:
       case RollType.RELANCE:
+        break;
+      case RollType.APOTHEOSE:
+        if (roll.result[0] == 1) {
+          rollText.add(TextSpan(
+            text: ' et perd le contrôle !',
+          ));
+        } else {
+          rollText.add(TextSpan(
+            text: ' et garde le contrôle',
+          ));
+        }
         break;
     }
     if (resistingRoll == null &&
@@ -919,8 +1050,13 @@ class CharacterWidgets {
             text: " R-Chair",
             style: TextStyle(color: Colors.blue),
             recognizer: TapGestureRecognizer()
-              ..onTap = () => sendResistingRoll(context, RollType.CHAIR, roll.id,
-                  characterSheetViewModel, mjViewModel, resistingCharacters)),
+              ..onTap = () => sendResistingRoll(
+                  context,
+                  RollType.CHAIR,
+                  roll.id,
+                  characterSheetViewModel,
+                  mjViewModel,
+                  resistingCharacters)),
       );
       rollText.add(TextSpan(text: ' / '));
       rollText.add(
@@ -928,8 +1064,13 @@ class CharacterWidgets {
             text: " R-Esprit",
             style: TextStyle(color: Colors.blue),
             recognizer: TapGestureRecognizer()
-              ..onTap = () => sendResistingRoll(context, RollType.ESPRIT, roll.id,
-                  characterSheetViewModel, mjViewModel, resistingCharacters)),
+              ..onTap = () => sendResistingRoll(
+                  context,
+                  RollType.ESPRIT,
+                  roll.id,
+                  characterSheetViewModel,
+                  mjViewModel,
+                  resistingCharacters)),
       );
       rollText.add(TextSpan(text: ' / '));
       rollText.add(
@@ -937,19 +1078,24 @@ class CharacterWidgets {
             text: " R-Essence",
             style: TextStyle(color: Colors.blue),
             recognizer: TapGestureRecognizer()
-              ..onTap = () => sendResistingRoll(context, RollType.ESSENCE, roll.id,
-                  characterSheetViewModel, mjViewModel, resistingCharacters)),
+              ..onTap = () => sendResistingRoll(
+                  context,
+                  RollType.ESSENCE,
+                  roll.id,
+                  characterSheetViewModel,
+                  mjViewModel,
+                  resistingCharacters)),
       );
       rollText.add(TextSpan(text: ')'));
     }
-    if (resistingRoll != null){
+    if (resistingRoll != null) {
       rollText.add(TextSpan(text: ' ('));
-      rollText.add(
-        TextSpan(
-            text: " Subir : ${roll.getDegats(resistingRoll)}",
-            style: TextStyle(color: Colors.blue),
-            recognizer: TapGestureRecognizer()
-              ..onTap = () => subir(roll.rollerName, characterSheetViewModel, mjViewModel, roll.getDegats(resistingRoll)),
+      rollText.add(TextSpan(
+        text: " Subir : ${roll.getDegats(resistingRoll)}",
+        style: TextStyle(color: Colors.blue),
+        recognizer: TapGestureRecognizer()
+          ..onTap = () => subir(roll.rollerName, characterSheetViewModel,
+              mjViewModel, roll.getDegats(resistingRoll)),
       ));
       rollText.add(TextSpan(text: ')'));
     }
@@ -966,15 +1112,24 @@ class CharacterWidgets {
           if (value < 5) {
             rollDices.add(TextSpan(
                 text: value.toString() + '',
-                style: TextStyle(color: Colors.black87, fontSize: 26, fontFamily: 'DiceFont')));
+                style: TextStyle(
+                    color: Colors.black87,
+                    fontSize: 26,
+                    fontFamily: 'DiceFont')));
           } else if (value == 5) {
             rollDices.add(TextSpan(
                 text: value.toString() + '',
-                style: TextStyle(color: Colors.orange, fontSize: 26, fontFamily: 'DiceFont')));
+                style: TextStyle(
+                    color: Colors.orange,
+                    fontSize: 26,
+                    fontFamily: 'DiceFont')));
           } else if (value == 6) {
             rollDices.add(TextSpan(
                 text: value.toString() + '',
-                style: TextStyle(color: Colors.redAccent, fontSize: 26, fontFamily: 'DiceFont')));
+                style: TextStyle(
+                    color: Colors.redAccent,
+                    fontSize: 26,
+                    fontFamily: 'DiceFont')));
           }
         }
         break;
@@ -982,6 +1137,21 @@ class CharacterWidgets {
         // TODO si c'est d6, mettre le style visuel ?
         for (var value in roll.result) {
           rollDices.add(TextSpan(text: '[$value]'));
+        }
+        break;
+      case RollType.APOTHEOSE:
+        if (roll.result[0] == 1) {
+          rollDices.add(TextSpan(
+              text: roll.result[0].toString() ,
+              style: TextStyle(color: Colors.red,
+                  fontSize: 26,
+                  fontFamily: 'DiceFont')));
+        } else {
+          rollDices.add(TextSpan(
+              text: roll.result[0].toString(),
+              style: TextStyle(color: Colors.green,
+                  fontSize: 26,
+                  fontFamily: 'DiceFont')));
         }
         break;
       case RollType.ARCANE_FIXE:
@@ -1006,42 +1176,53 @@ class CharacterWidgets {
     return Container(
         decoration: BoxDecoration(
             border: Border(
-          top: BorderSide(width: 1.0, color: Colors.grey),
+          top: BorderSide(
+              width: 1.0,
+              color: resistingRoll == null ? Colors.grey : Colors.white),
         )),
-        child: Row(children: <Widget>[
-          if (resistingRoll != null)
-            Padding(
-                padding: EdgeInsets.fromLTRB(24, 5, 34, 0),
-                child: Container(
-                  color: Colors.black45,
-                  height: 80,
-                  width: 2,
+        child: Padding(
+            padding: resistingRoll != null
+                ? EdgeInsets.fromLTRB(60, 5, 0, 5)
+                : EdgeInsets.fromLTRB(0, 5, 0, 5),
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border(
+                  left: BorderSide(
+                      width: 1.0,
+                      color:
+                          resistingRoll != null ? Colors.white : Colors.white),
                 )),
-          Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 30, 0),
-              child: CircleAvatar(
-                radius: 24,
-                backgroundColor: Colors.white,
-                foregroundImage: NetworkImage(roll.picture ?? ''),
-                //"assets/images/portraits/${character.name}.png"),
-              )),
-          Flexible(
-              child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 30, 0),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                    Wrap(children: [
-                      Text.rich(TextSpan(
-                          text: roll.dateText() + ' - ', // 10:19:22 -
-                          children: rollText),)
-                    ]),
-                    Text.rich(TextSpan(
-                        // 10:19:22 -
-                        children: rollDices),
-                    textAlign: TextAlign.center,),
-                  ])))
-        ]));
+                child: Row(children: <Widget>[
+//          if (resistingRoll != null)
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: CircleAvatar(
+                        radius: 24,
+                        backgroundColor: Colors.white,
+                        foregroundImage: NetworkImage(roll.picture ?? ''),
+                      )),
+                  Flexible(
+                      child: Padding(
+                          padding: EdgeInsets.fromLTRB(0, 0, 30, 0),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Wrap(children: [
+                                  Text.rich(
+                                    TextSpan(
+                                        text: roll.dateText() + ' - ',
+                                        // 10:19:22 -
+                                        children: rollText),
+                                  )
+                                ]),
+                                Text.rich(
+                                  TextSpan(
+                                      // 10:19:22 -
+                                      children: rollDices),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ])))
+                ]))));
   }
 
   static Future<void Function()> showEditStatAlertDialog(
@@ -1227,6 +1408,280 @@ class CharacterWidgets {
         });
   }
 
+  static Future<void Function()> showRestAlertDialog(
+      BuildContext context,
+      CharacterSheetViewModel characterSheetViewModel,
+      Character character) async {
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    int restPoints = 3;
+    int pv = character.pv;
+    int pf = character.pf;
+    int pp = character.pp;
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              title: restPoints > 1
+                  ? Text("Repos : ${restPoints} pierres restantes")
+                  : Text("Repos : ${restPoints} pierre restante"),
+              content: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                        child: TextButton(
+                          onPressed: () {
+                            setState(() {
+                              if (pv < character.pvMax && restPoints > 0) {
+                                pv = pv + 1;
+                                restPoints = restPoints - 1;
+                              }
+                            });
+                          },
+                          child: Text("PV : ${pv} / ${character.pvMax}"),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                        child: TextButton(
+                          onPressed: () {
+                            setState(() {
+                              if (pf < character.pfMax && restPoints > 0) {
+                                pf = pf + 1;
+                                restPoints = restPoints - 1;
+                              }
+                            });
+                          },
+                          child: Text("PF : ${pf} / ${character.pfMax}"),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                        child: TextButton(
+                          onPressed: () {
+                            setState(() {
+                              if (pp < character.ppMax && restPoints > 0) {
+                                pp = pp + 1;
+                                restPoints = restPoints - 1;
+                              }
+                            });
+                          },
+                          child: Text("PP : ${pp} / ${character.ppMax}"),
+                        ),
+                      ),
+                    ],
+                  )),
+              actions: <Widget>[
+                InkWell(
+                  child: Text('OK   '),
+                  onTap: () {
+                    character.pv = pv;
+                    character.pf = pf;
+                    character.pp = pp;
+                    character.arcanes = character.arcanesMax;
+                    characterSheetViewModel.createOrUpdateCharacter(character);
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          });
+        });
+  }
+
+  static Future<void Function()> showApotheoseAlertDialog(
+      BuildContext context,
+      CharacterSheetViewModel characterSheetViewModel,
+      Character character) async {
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    Roll? roll = null;
+    if (character.apotheose != Apotheose.NONE) {
+      roll = await characterSheetViewModel.sendRoll(RollType.APOTHEOSE);
+    }
+    int penalityPoints = 3;
+    List<String> apotheoseImprovementList =
+        character.niveau >= 20 ? ["Apothéose Finale"] : [];
+    String? apotheoseImprovement = null;
+    apotheoseImprovementList.addAll(character.apotheoseImprovementList);
+    if (!apotheoseImprovementList.contains("Aucune")) {
+      apotheoseImprovementList.add("Aucune");
+    }
+    apotheoseImprovementList.add("(Ajouter)");
+    Apotheose apotheose = character.apotheose;
+    final TextEditingController _textEditingController =
+    TextEditingController(text: '');
+    int pv = character.pv;
+    int pf = character.pf;
+    int pp = character.pp;
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              title: Text("Apotheose"),
+              content: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (character.apotheose == Apotheose.NONE)
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                          child: DropdownButton<String>(
+                            hint: Text('Choix de l\'Apothéose'),
+                            value: apotheoseImprovement,
+                            icon: const Icon(Icons.arrow_downward),
+                            elevation: 16,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                if (newValue == "Aucune") {
+                                  apotheose = Apotheose.NORMALE;
+                                } else if (newValue == "Apothéose Finale") {
+                                  apotheose = Apotheose.FINALE;
+                                } else {
+                                  apotheose = Apotheose.IMPROVED;
+                                }
+                                apotheoseImprovement = newValue;
+                              });
+                            },
+                            style: const TextStyle(color: Colors.deepPurple),
+                            underline: Container(
+                              height: 2,
+                              color: Colors.deepPurpleAccent,
+                            ),
+                            items: apotheoseImprovementList
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      if (character.apotheose == Apotheose.NONE && apotheoseImprovement == "(Ajouter)")
+                        TextFormField(
+                          controller: _textEditingController,
+                          decoration: InputDecoration(hintText: "Amélioration de l\'Apothéose"),
+                        ),
+                        if(roll != null)
+                        Padding(
+                            padding:
+                            const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                            child: roll.result[0] != 1 ? Text("Pas de perte de contrôle.") : Text("Perte de contrôle !")
+                        ),
+                      if(roll?.data != null)
+                        Padding(
+                            padding:
+                            const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                            child: Text(roll!.data!)
+                        ),
+                      if(roll != null)
+                        Padding(
+                            padding:
+                            const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                            child: Text("------------")
+                        )
+                      ,
+                      if (character.apotheose != Apotheose.NONE)
+                        Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                            child:
+                                Text("Pierres à perdre : ${penalityPoints}")),
+                      if (character.apotheose != Apotheose.NONE)
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                          child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                if (pv > 0 && penalityPoints > 0) {
+                                  pv = pv - 1;
+                                  penalityPoints = penalityPoints - 1;
+                                }
+                              });
+                            },
+                            child: Text("PV : ${pv} / ${character.pvMax}"),
+                          ),
+                        ),
+                      if (character.apotheose != Apotheose.NONE)
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                          child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                if (pf > 0 && penalityPoints > 0) {
+                                  pf = pf - 1;
+                                  penalityPoints = penalityPoints - 1;
+                                }
+                              });
+                            },
+                            child: Text("PF : ${pf} / ${character.pfMax}"),
+                          ),
+                        ),
+                      if (character.apotheose != Apotheose.NONE)
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                          child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                if (pp > 0 && penalityPoints > 0) {
+                                  pp = pp - 1;
+                                  penalityPoints = penalityPoints - 1;
+                                }
+                              });
+                            },
+                            child: Text("PP : ${pp} / ${character.ppMax}"),
+                          ),
+                        ),
+                    ],
+                  )),
+              actions: <Widget>[
+                if (character.apotheose == Apotheose.NONE)
+                  InkWell(
+                    child: Text('Passer en Apothéose   '),
+                    onTap: () {
+                      character.apotheose = apotheose;
+                      character.apotheoseImprovement = apotheoseImprovement == "(Ajouter)" ? _textEditingController.text : apotheoseImprovement;
+                      characterSheetViewModel
+                          .createOrUpdateCharacter(character);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                if (character.apotheose != Apotheose.NONE)
+                  InkWell(
+                    child: Text('Continuer   '),
+                    onTap: () {
+                      character.pv = pv;
+                      character.pf = pf;
+                      character.pp = pp;
+                      characterSheetViewModel
+                          .createOrUpdateCharacter(character);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                if (character.apotheose != Apotheose.NONE)
+                  InkWell(
+                    child: Text('S\'arrêter   '),
+                    onTap: () {
+                      character.apotheose = Apotheose.NONE;
+                      characterSheetViewModel
+                          .createOrUpdateCharacter(character);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+              ],
+            );
+          });
+        });
+  }
+
   static Future<void Function()> showEmpiriqueRollAlertDialog(
       BuildContext context,
       CharacterSheetViewModel characterSheetViewModel,
@@ -1320,10 +1775,10 @@ class CharacterWidgets {
     if (characterSheetViewModel != null) {
       sendRoll(characterSheetViewModel, rollType, '', id);
     } else if (mjViewModel != null && resistingCharacters != null) {
-      showSelectResistDialog(context, mjViewModel, resistingCharacters, id, rollType);
+      showSelectResistDialog(
+          context, mjViewModel, resistingCharacters, id, rollType);
     }
   }
-
 
   static Future<void Function()> showSelectResistDialog(
       BuildContext context,
@@ -1333,8 +1788,7 @@ class CharacterWidgets {
       RollType rollType) async {
     Map<String, bool> characterList = {};
 
-    List<bool> characterNamesChecked = [];
-    for( var i = 0 ; i < characterNames.length; i++ ) {
+    for (var i = 0; i < characterNames.length; i++) {
       characterList[characterNames[i]] = false;
     }
     return await showDialog(
@@ -1348,13 +1802,16 @@ class CharacterWidgets {
                   InkWell(
                       child: Text('OK   '),
                       onTap: () {
-                        for( var i = 0 ; i < characterNames.length; i++ ) {
-                          if(characterNamesChecked[i])
-                            sendRoll(mjViewModel.getCharacterViewModel(characterNames[i]), rollType, '', id);
+                        print("SENDOU ${characterList}");
+                        for (String key in characterList.keys) {
+                          if (characterList[key]!) {
+                            print("SENDOU ${characterList[key]}");
+                            sendRoll(mjViewModel.getCharacterViewModel(key),
+                                rollType, '', id);
+                          }
                         }
                         Navigator.of(context).pop();
-                      }
-                  )
+                      })
                 ],
                 content: Container(
                   width: double.minPositive,
@@ -1439,9 +1896,9 @@ class CharacterWidgets {
         });*/
   }
 
-
-  static subir( String name, CharacterSheetViewModel? characterSheetViewModel, MjViewModel? mjViewModel, int degats) {
-    if(characterSheetViewModel != null) {
+  static subir(String name, CharacterSheetViewModel? characterSheetViewModel,
+      MjViewModel? mjViewModel, int degats) {
+    if (characterSheetViewModel != null) {
       characterSheetViewModel.subir(degats);
     } else if (mjViewModel != null) {
       mjViewModel.subir(name, degats);

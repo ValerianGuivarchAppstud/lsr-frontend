@@ -1,0 +1,9 @@
+enum Apotheose {
+  NONE,
+  NORMALE,
+  IMPROVED,
+  ARCANIQUE,
+  FORME_VENGERESSE,
+  SURCHARGE,
+  FINALE
+}

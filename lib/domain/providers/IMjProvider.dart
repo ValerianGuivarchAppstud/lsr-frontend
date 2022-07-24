@@ -6,4 +6,5 @@ abstract class IMjProvider {
   Future<MjSheet> addCharacterList(String characterName);
   Future<MjSheet> removeCharacterList(String characterName);
   Future<List<Character>> addCharacterWithTemplate(String templateName, String customName, int level, int number);
+  deleteRolls();
 }
