@@ -44,6 +44,7 @@ class CharacterWidgets {
   static buildCharacter(
           BuildContext context,
           bool playerDisplay,
+          bool? played,
           Character character,
           double width,
           double sizeRatio,
@@ -68,7 +69,6 @@ class CharacterWidgets {
                       padding: EdgeInsets.only(bottom: 10),
                       child: Image.network(
                         character.background,
-                        //"assets/images/background/${describeEnum(character.bloodline != Bloodline.AUCUN ? character.bloodline : character.classe).toLowerCase()}.jpg",
                         fit: BoxFit.fill,
                         height: 120,
                         width: (sizeRatio * width),
@@ -189,15 +189,31 @@ class CharacterWidgets {
                 ),
                 textAlign: TextAlign.start,
               ),
-              IconButton(
-                  color: Colors.transparent,
-                  onPressed: () {
-                    mjViewModel?.removeCharacterList(character.name);
-                  },
-                  icon: const Icon(
-                    Icons.close,
-                    color: Colors.red,
-                  )),
+              if(played != null && !played)
+                IconButton(
+                    color: Colors.transparent,
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.check_circle_outline,
+                      color: Colors.red,
+                    )),
+              if(played != null && played)
+                IconButton(
+                    color: Colors.transparent,
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.check_circle,
+                      color: Colors.green,
+                    )),
+                IconButton(
+                    color: Colors.transparent,
+                    onPressed: () {
+                      mjViewModel?.removeCharacterList(character.name);
+                    },
+                    icon: const Icon(
+                      Icons.close,
+                      color: Colors.red,
+                    )),
             ]),
           if (noteFieldController != null)
             Padding(
@@ -711,7 +727,7 @@ class CharacterWidgets {
               }, () => {}),
               buildCharacterSheetButton(
                   '',
-                  "Relance : " + character.relance.toString(),
+                  (playerDisplay ? "Relance" : "Rel") + " : " + character.relance.toString(),
                   (sizeRatio * width) / 6.5,
                   sizeRatioFont * 12,
                   34,

@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'Character.dart';
 import 'Roll.dart';
+import 'Round.dart';
 
 part 'MjSheet.g.dart';
 
@@ -19,6 +20,10 @@ class MjSheet {
   List<String> templateNames;
   List<Roll> rollList;
   List<String> playersName;
+  List<String> charactersBattleAllies;
+  List<String> charactersBattleEnnemies;
+  int relanceMj;
+  Round round;
   MjSheet({
       required this.characters,
     required this.rollList,
@@ -26,7 +31,11 @@ class MjSheet {
     required this.pnjNames,
     required this.tempoNames,
     required this.templateNames,
-    required this.playersName
+    required this.playersName,
+    required this.charactersBattleAllies,
+    required this.charactersBattleEnnemies,
+    required this.relanceMj,
+    required this.round
   });
 
 

@@ -1,5 +1,6 @@
 import 'package:lsr/domain/models/MjSheet.dart';
 
+import '../../../domain/models/Round.dart';
 import '../character/CharacterSheetState.dart';
 
 class MjState {

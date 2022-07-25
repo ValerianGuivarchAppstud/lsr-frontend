@@ -107,6 +107,7 @@ class _CharacterPageState extends State<CharacterPage> {
                       return CharacterWidgets.buildCharacter(
                           context,
                           true,
+                          null,
                           state.data!.character!,
                           width,
                           1,

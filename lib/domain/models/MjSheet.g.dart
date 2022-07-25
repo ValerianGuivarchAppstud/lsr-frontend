@@ -26,6 +26,15 @@ MjSheet _$MjSheetFromJson(Map<String, dynamic> json) => MjSheet(
       playersName: (json['playersName'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
+      charactersBattleAllies: (json['charactersBattleAllies'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+      charactersBattleEnnemies:
+          (json['charactersBattleEnnemies'] as List<dynamic>)
+              .map((e) => e as String)
+              .toList(),
+      relanceMj: json['relanceMj'] as int,
+      round: $enumDecode(_$RoundEnumMap, json['round']),
     );
 
 Map<String, dynamic> _$MjSheetToJson(MjSheet instance) => <String, dynamic>{
@@ -36,4 +45,14 @@ Map<String, dynamic> _$MjSheetToJson(MjSheet instance) => <String, dynamic>{
       'templateNames': instance.templateNames,
       'rollList': instance.rollList,
       'playersName': instance.playersName,
+      'charactersBattleAllies': instance.charactersBattleAllies,
+      'charactersBattleEnnemies': instance.charactersBattleEnnemies,
+      'relanceMj': instance.relanceMj,
+      'round': _$RoundEnumMap[instance.round]!,
     };
+
+const _$RoundEnumMap = {
+  Round.NONE: 'NONE',
+  Round.PJ: 'PJ',
+  Round.PNJ: 'PNJ',
+};

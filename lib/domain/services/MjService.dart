@@ -33,4 +33,12 @@ class MjService {
   void deleteRolls() {
     return this.mjProvider.deleteRolls();
   }
+
+  void nextRound() {
+    return this.mjProvider.nextRound();
+  }
+
+  void stopBattle() {
+    return this.mjProvider.stopBattle();
+  }
 }

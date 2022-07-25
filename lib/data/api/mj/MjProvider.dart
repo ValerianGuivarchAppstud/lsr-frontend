@@ -49,4 +49,14 @@ class MjProvider implements IMjProvider {
     _networkingConfig.dio.delete('rolls');
   }
 
+  @override
+  void nextRound() {
+    _networkingConfig.dio.put('mj/nextRound', data: '{}');
+  }
+
+  @override
+  void stopBattle() {
+    _networkingConfig.dio.put('mj/stopBattle', data: '{}');
+  }
+
 }

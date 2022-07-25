@@ -85,7 +85,7 @@ class MjViewModel extends SubViewModel with ChangeNotifier {
 
   void createNewCharacter(Character character) {
     _mjService.createOrUpdateCharacter(character).then((value) => {
-          if (value.category == Category.TEMPO)
+          if (value.category == Category.TEMPO || value.category == Category.PNJ_ALLY || value.category == Category.PNJ_ENNEMY)
             {this.addCharacterList(value.name)}
         });
   }
@@ -116,5 +116,13 @@ class MjViewModel extends SubViewModel with ChangeNotifier {
 
   deleteRolls() {
     _mjService.deleteRolls();
+  }
+
+  nextRound() {
+    _mjService.nextRound();
+  }
+
+  stopBattle() {
+    _mjService.stopBattle();
   }
 }

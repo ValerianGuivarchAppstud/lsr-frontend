@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lsr/domain/models/Category.dart';
 import 'package:lsr/domain/models/MjSheet.dart';
+import 'package:lsr/domain/models/Round.dart';
 import 'package:lsr/view/modules/character/CharacterWidgets.dart';
 import 'package:lsr/view/modules/mj/MjWidgets.dart';
 
@@ -127,7 +128,23 @@ class _MjPageState extends State<MjPage> {
                 ),
                 TextButton(onPressed: () => {
                   mjViewModel.deleteRolls()
-                }, child: Text("Supprimer les lancers"))
+                }, child: Text("Supprimer les lancers")),
+                if(mjSheet.round == Round.NONE)
+                  TextButton(onPressed: () => {
+                    mjViewModel.nextRound()
+                  }, child: Text("Start combat")),
+                if(mjSheet.round == Round.PJ)
+                  TextButton(onPressed: () => {
+                    mjViewModel.nextRound()
+                  }, child: Text("Tour des PJ")),
+                if(mjSheet.round == Round.PNJ)
+                  TextButton(onPressed: () => {
+                    mjViewModel.nextRound()
+                  }, child: Text("Tour des PNJ")),
+                if(mjSheet.round != Round.NONE)
+                  TextButton(onPressed: () => {
+                    mjViewModel.stopBattle()
+                  }, child: Text("Stop combat"))
               ]),
               Align(
                   alignment: Alignment.topLeft,
@@ -143,6 +160,8 @@ class _MjPageState extends State<MjPage> {
                         child: CharacterWidgets.buildCharacter(
                             context,
                             false,
+                            mjSheet.round != Round.PJ ? null
+                            : mjSheet.charactersBattleAllies.contains(character.name),
                             character,
                             width,
                             RATIO_BUTTON,
@@ -264,6 +283,8 @@ class _MjPageState extends State<MjPage> {
                         child: CharacterWidgets.buildCharacter(
                             context,
                             false,
+                            mjSheet.round != Round.PNJ ? null
+                                : mjSheet.charactersBattleEnnemies.contains(character.name),
                             character,
                             width,
                             RATIO_BUTTON,
