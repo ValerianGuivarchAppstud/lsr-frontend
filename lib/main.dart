@@ -146,6 +146,10 @@ class _MainState extends State<MyApp> {
                         .of(context)
                         .size
                         .width;
+                    var heightScreen = MediaQuery
+                        .of(context)
+                        .size
+                        .height;
                     if (state.data == null) {
                       return LoadingWidget(
                           key: Key(
@@ -153,7 +157,7 @@ class _MainState extends State<MyApp> {
                           ));
                     } else {
                       return buildBodyApp(
-                          state.data!, widthScreen, getBody, mainViewModel, callPage);
+                          state.data!, widthScreen, heightScreen, getBody, mainViewModel, callPage);
                     }
                   });
             },
@@ -163,9 +167,11 @@ class _MainState extends State<MyApp> {
   }
 
 
-  static buildBodyApp(MainState data, double widthScreen,
+  static buildBodyApp(MainState data, double widthScreen, double heightScreen,
       Function(int selectedIndex, bool pj) getBody, MainViewModel mainViewModel,
       CallPage callPage) {
+
+    // callPage.callViewModel.getState().showLoading
 
     return Scaffold(
         body: Stack(

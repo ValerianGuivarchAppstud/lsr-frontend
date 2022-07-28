@@ -496,7 +496,8 @@ class MjWidgets {
                           playerName:
                               player ?? initialCharacter?.playerName ?? null,
                           buttonColor: buttonColor?.value.toString() ?? initialCharacter?.buttonColor ?? null,
-                          textColor: textColor?.value.toString() ?? initialCharacter?.textColor ?? null));
+                          textColor: textColor?.value.toString() ?? initialCharacter?.textColor ?? null,
+                      uid: null));
                       Navigator.of(context).pop();
                     }
                   },

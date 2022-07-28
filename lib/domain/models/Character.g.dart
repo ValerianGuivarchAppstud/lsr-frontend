@@ -42,6 +42,7 @@ Character _$CharacterFromJson(Map<String, dynamic> json) => Character(
           (json['apotheoseImprovementList'] as List<dynamic>)
               .map((e) => e as String)
               .toList(),
+      uid: json['uid'] as int?,
     );
 
 Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
@@ -77,6 +78,7 @@ Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'textColor': instance.textColor,
       'apotheoseImprovement': instance.apotheoseImprovement,
       'apotheoseImprovementList': instance.apotheoseImprovementList,
+      'uid': instance.uid,
     };
 
 const _$ClasseEnumMap = {

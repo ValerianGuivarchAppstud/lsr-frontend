@@ -25,6 +25,8 @@ class Roll {
   int malediction;
   List<int> result;
   int? success;
+  int? juge12;
+  int? juge34;
   String? characterToHelp;
   String? picture;
   String? empirique;

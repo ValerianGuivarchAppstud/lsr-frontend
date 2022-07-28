@@ -26,7 +26,10 @@ Roll _$RollFromJson(Map<String, dynamic> json) => Roll(
       (json['resistRollList'] as List<dynamic>)
           .map((e) => Roll.fromJson(e as Map<String, dynamic>))
           .toList(),
-    )..characterToHelp = json['characterToHelp'] as String?;
+    )
+      ..juge12 = json['juge12'] as int?
+      ..juge34 = json['juge34'] as int?
+      ..characterToHelp = json['characterToHelp'] as String?;
 
 Map<String, dynamic> _$RollToJson(Roll instance) => <String, dynamic>{
       'id': instance.id,
@@ -41,6 +44,8 @@ Map<String, dynamic> _$RollToJson(Roll instance) => <String, dynamic>{
       'malediction': instance.malediction,
       'result': instance.result,
       'success': instance.success,
+      'juge12': instance.juge12,
+      'juge34': instance.juge34,
       'characterToHelp': instance.characterToHelp,
       'picture': instance.picture,
       'empirique': instance.empirique,

@@ -7,9 +7,8 @@ import 'SettingsViewModel.dart';
 
 class SettingsWidgets {
 
-  static Flexible buildCharacterSelection(Settings settings, SettingsViewModel? settingsViewModel, CharacterSheetViewModel? characterViewModel, void Function(VoidCallback fn) setState) {
-    return  Flexible(
-        child: Padding(
+  static Padding buildCharacterSelection(Settings settings, SettingsViewModel? settingsViewModel, CharacterSheetViewModel? characterViewModel, void Function(VoidCallback fn) setState) {
+    return  Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 30, 0),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,8 +63,7 @@ class SettingsWidgets {
                       );
                     }).toList(),
                   ),
-                ]))
-    );
+                ]));
   }
 
 }

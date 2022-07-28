@@ -67,7 +67,6 @@ class _CharacterPageState extends State<CharacterPage> {
 
           if (state.data?.showLoading ?? true) {
             const oneSec = Duration(seconds: 1);
-            developer.log("Timer : " + (characterName ?? "personne"));
             Timer.periodic(oneSec,
                 (Timer t) => characterSheetViewModel.getCharacterSheet());
           }

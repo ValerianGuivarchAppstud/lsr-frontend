@@ -81,7 +81,7 @@ class _HealSheetPageState extends State<HealSheetPage> {
                           ));
                         } else if (state.data?.character == null) {
                           return Center(
-                            child: Text(state.error?.toString() ?? 'nop'),
+                            child: Text(state.error?.toString() ?? 'Sélectionne d\'abord ton personnage !'),
                           );
                         } else {
                           return HealWidgets.buildHeal(context, state.data!.character!, width,

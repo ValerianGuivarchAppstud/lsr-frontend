@@ -45,6 +45,7 @@ class Character {
   late String? textColor;
   late String? apotheoseImprovement;
   late List<String> apotheoseImprovementList;
+  int? uid;
   Character({
       required this.name,
       required this.classe,
@@ -77,7 +78,8 @@ class Character {
     required this.buttonColor,
     required this.textColor,
     required this.apotheoseImprovement,
-    required this.apotheoseImprovementList
+    required this.apotheoseImprovementList,
+    required this.uid
   });
 
 

@@ -2,6 +2,8 @@ import 'package:lsr/domain/models/Settings.dart';
 import 'package:lsr/domain/providers/ISettingsProvider.dart';
 import 'package:lsr/domain/providers/IStorageProvider.dart';
 
+import '../models/Visio.dart';
+
 
 class SettingsService {
   IStorageProvider storageProvider;
@@ -36,8 +38,16 @@ class SettingsService {
     return settings;
   }
 
-  Future<String> getVisioToken() async {
-    return this.settingsProvider.getVisioToken();
-}
+  Future<Visio> getVisio() async {
+    return this.settingsProvider.getVisio();
+  }
+
+  Future<String> getToken() async {
+    return this.settingsProvider.getToken();
+  }
+
+  void join(String name, int uid) {
+    this.settingsProvider.join(name, uid);
+  }
 
 }

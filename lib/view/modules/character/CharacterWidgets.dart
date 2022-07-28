@@ -176,7 +176,6 @@ class CharacterWidgets {
                             character.pictureApotheose != ""
                                 ? character.pictureApotheose
                                 : character.picture),
-                        //"assets/images/portraits/${character.name}.png"),
                       ))),
               Text(
                 character.name,
@@ -1009,7 +1008,14 @@ class CharacterWidgets {
       case RollType.ARCANE_ESPRIT:
       case RollType.ARCANE_ESSENCE:
         rollText.add(TextSpan(
-          text: ' et obtient ${roll.success} succès',
+          text: ' et obtient ',
+        ));
+        rollText.add(
+            TextSpan(
+              text: '${roll.success}',
+            ));
+        rollText.add(TextSpan(
+          text: 'succès',
         ));
         break;
       case RollType.SOIN:
@@ -1025,12 +1031,6 @@ class CharacterWidgets {
         else
           rollText.add(TextSpan(
             text: ' et échoue.',
-          ));
-        break;
-      case RollType.SOIN:
-        if (roll.result[0] >= 10)
-          rollText.add(TextSpan(
-            text: ' et peut distribuer ${roll.success} PV',
           ));
         break;
       case RollType.EMPIRIQUE:
@@ -1224,12 +1224,14 @@ class CharacterWidgets {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Wrap(children: [
-                                  Text.rich(
-                                    TextSpan(
-                                        text: roll.dateText() + ' - ',
-                                        // 10:19:22 -
-                                        children: rollText),
-                                  )
+                                  Tooltip(
+                                    message: (roll.juge12 != null && roll.juge34 !=null) ? "Juge12=${roll.juge12}, Juge34=${roll.juge34}" : "",
+                                    child: RichText(
+                                      text: TextSpan(
+                                          text: roll.dateText() + ' - ',
+                                          // 10:19:22 -
+                                          children: rollText)),
+                                    ),
                                 ]),
                                 Text.rich(
                                   TextSpan(
