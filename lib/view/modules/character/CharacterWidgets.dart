@@ -54,7 +54,7 @@ class CharacterWidgets {
           CharacterSheetViewModel characterSheetViewModel,
           CharacterSheetState characterSheetState,
           TextEditingController? noteFieldController,
-          List<String>? pjAlliesNames,
+          List<String>? alliesName,
           LayoutBuilder? rollList,
           MjViewModel? mjViewModel) =>
       Column(
@@ -753,7 +753,7 @@ class CharacterWidgets {
                   playerDisplay, () {
                 if (characterSheetState.uiState.characterToHelp == null) {
                   showHelpingRollAlertDialog(context, characterSheetViewModel,
-                      pjAlliesNames ?? [], characterSheetState.uiState);
+                      alliesName ?? [], characterSheetState.uiState);
                 } else {
                   characterSheetState.uiState.characterToHelp = null;
                   characterSheetViewModel.updateUi(characterSheetState.uiState);
@@ -1426,7 +1426,7 @@ class CharacterWidgets {
   static Future<void Function()> showHelpingRollAlertDialog(
       BuildContext context,
       CharacterSheetViewModel characterSheetViewModel,
-      List<String> pjAlliesNames,
+      List<String> alliesName,
       CharacterSheetUIState uiState) async {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     String? characterToHelp = null;
@@ -1458,7 +1458,7 @@ class CharacterWidgets {
                             height: 2,
                             color: Colors.deepPurpleAccent,
                           ),
-                          items: pjAlliesNames
+                          items: alliesName
                               .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -1583,7 +1583,7 @@ class CharacterWidgets {
     List<String> apotheoseImprovementList =
         character.niveau >= 20 ? ["Apothéose Finale"] : [];
     String? apotheoseImprovement = null;
-    apotheoseImprovementList.addAll(character.apotheoseImprovementList);
+    apotheoseImprovementList.addAll(character.apotheoseImprovementList ?? []);
     if (!apotheoseImprovementList.contains("Aucune")) {
       apotheoseImprovementList.add("Aucune");
     }

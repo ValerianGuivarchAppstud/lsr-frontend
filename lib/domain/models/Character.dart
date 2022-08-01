@@ -44,8 +44,8 @@ class Character {
   late String? buttonColor;
   late String? textColor;
   late String? apotheoseImprovement;
-  late List<String> apotheoseImprovementList;
-  late List<String> alliesName;
+  late List<String>? apotheoseImprovementList;
+  late List<String>? alliesName;
   int? uid;
   int? help;
   Character(

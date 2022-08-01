@@ -7,7 +7,7 @@ class CharacterSheetState {
   bool showLoading;
   Character? character;
   List<Roll>? rollList;
-  List<String>? pjAlliesNames;
+  List<String>? alliesName;
   List<String>? playersName;
   String? error;
   late CharacterSheetUIState uiState;
@@ -33,7 +33,7 @@ class CharacterSheetState {
         error = null;
         character = (partialState as CharacterSheetLoaded).character;
         rollList = (partialState).rollList;
-        pjAlliesNames = (partialState).pjAlliesNames;
+        alliesName = (partialState).alliesName;
         playersName = (partialState).playersName;
         break;
       case CharacterLoaded:
@@ -115,11 +115,11 @@ abstract class CharacterSheetPartialState {}
 class CharacterSheetLoaded extends CharacterSheetPartialState {
   Character character;
   List<Roll> rollList;
-  List<String> pjAlliesNames;
+  List<String> alliesName;
   List<String> playersName;
 
   CharacterSheetLoaded(
-      this.character, this.rollList, this.pjAlliesNames, this.playersName);
+      this.character, this.rollList, this.alliesName, this.playersName);
 }
 
 class CharacterLoaded extends CharacterSheetPartialState {

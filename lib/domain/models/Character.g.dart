@@ -39,12 +39,12 @@ Character _$CharacterFromJson(Map<String, dynamic> json) => Character(
       textColor: json['textColor'] as String?,
       apotheoseImprovement: json['apotheoseImprovement'] as String?,
       apotheoseImprovementList:
-          (json['apotheoseImprovementList'] as List<dynamic>)
-              .map((e) => e as String)
+          (json['apotheoseImprovementList'] as List<dynamic>?)
+              ?.map((e) => e as String)
               .toList(),
       uid: json['uid'] as int?,
-      alliesName: (json['alliesName'] as List<dynamic>)
-          .map((e) => e as String)
+      alliesName: (json['alliesName'] as List<dynamic>?)
+          ?.map((e) => e as String)
           .toList(),
       help: json['help'] as int?,
     );

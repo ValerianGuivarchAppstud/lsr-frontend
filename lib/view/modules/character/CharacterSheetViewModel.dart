@@ -64,7 +64,7 @@ class CharacterSheetViewModel extends SubViewModel with ChangeNotifier {
         streamController.add(_currentState.copy(CharacterSheetLoaded(
             value.character,
             value.rollList,
-            value.pjAlliesNames,
+            value.character.alliesName ?? [],
             value.playersName)));
       }).onError((error, stackTrace) {
         streamController

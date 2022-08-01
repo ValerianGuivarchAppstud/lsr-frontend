@@ -17,7 +17,21 @@ class CharacterProvider implements ICharacterProvider {
   Future<CharacterSheet> get(String name) async {
     Response response =
         await _networkingConfig.dio.get('character?name=' + name);
+    print("POUET1");
+
+    print(response);
+    try {
+      CharacterSheet characterSheet2 = CharacterSheet.fromJson(response.data);
+    } catch (e) {
+      print(e);
+    }
     CharacterSheet characterSheet = CharacterSheet.fromJson(response.data);
+
+    print("POUET2");
+    print(characterSheet);
+    print("POUET3");
+
+
     return characterSheet;
   }
 
