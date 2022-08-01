@@ -11,7 +11,6 @@ class _StatefulDialogState extends State<StatefulDialog> {
 
   final TextEditingController _textEditingController = TextEditingController();
 
-
   Future<void> showInformationDialog(BuildContext context) async {
     return await showDialog(
         context: context,
@@ -27,10 +26,12 @@ class _StatefulDialogState extends State<StatefulDialog> {
                       TextFormField(
                         controller: _textEditingController,
                         validator: (value) {
-                          return value != null ?(value.isNotEmpty? null : "Enter any text") : null;
+                          return value != null
+                              ? (value.isNotEmpty ? null : "Enter any text")
+                              : null;
                         },
                         decoration:
-                        InputDecoration(hintText: "Please Enter Text"),
+                            InputDecoration(hintText: "Please Enter Text"),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -1,4 +1,3 @@
-
 import 'package:lsr/domain/models/Character.dart';
 
 import '../../../utils/view/Const.dart';
@@ -12,12 +11,8 @@ class CallState {
   List<int> connectedUsersUid = [];
   late CallUIState uiState;
 
-
-  CallState({
-    this.showLoading = true,
-    this.token,
-    this.charactersUid,
-    this.error}){
+  CallState(
+      {this.showLoading = true, this.token, this.charactersUid, this.error}) {
     this.uiState = CallUIState();
   }
 
@@ -47,17 +42,17 @@ class CallState {
     }
     return this;
   }
-
-
 }
-
 
 class CallUIState {
   bool pjDisplay;
   bool joined;
   int? uid;
 
-  CallUIState({this.pjDisplay = INITIAL_STATE_PJ, this.joined = false, this.uid = null});
+  CallUIState(
+      {this.pjDisplay = INITIAL_STATE_PJ,
+      this.joined = false,
+      this.uid = null});
 }
 
 abstract class CallPartialState {}
@@ -81,7 +76,6 @@ class CallFailed extends CallPartialState {
 }
 
 class CallLoading extends CallPartialState {}
-
 
 class CallUIUpdated extends CallPartialState {
   CallUIState state;

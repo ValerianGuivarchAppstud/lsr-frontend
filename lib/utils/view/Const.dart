@@ -1,4 +1,3 @@
-
 const bool INITIAL_STATE_PJ = true;
 
 const bool INITIAL_STATE_CAMERA = false;

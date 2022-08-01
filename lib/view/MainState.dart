@@ -1,17 +1,12 @@
-
 import '../utils/view/Const.dart';
 
 class MainState {
-
   late MainUIState uiState;
 
   bool showLoading;
   String? error;
 
-
-  MainState({
-    this.showLoading = true,
-    this.error}) {
+  MainState({this.showLoading = true, this.error}) {
     this.uiState = MainUIState(INITIAL_STATE_PJ, INITIAL_STATE_CAMERA, 0);
   }
 
@@ -45,15 +40,12 @@ class MainState {
           error == other.error;
 
   @override
-  int get hashCode =>
-      showLoading.hashCode ^
-      error.hashCode;
+  int get hashCode => showLoading.hashCode ^ error.hashCode;
 }
 
 abstract class MainPartialState {}
 
 class MainLoaded extends MainPartialState {
-
   MainLoaded();
 }
 
@@ -71,14 +63,10 @@ class MainFailed extends MainPartialState {
 
 class MainLoading extends MainPartialState {}
 
-
 class MainUIState {
   bool pj;
   bool camera;
   int selectedIndex;
 
-  MainUIState(this.pj,
-    this.camera,
-    this.selectedIndex );
+  MainUIState(this.pj, this.camera, this.selectedIndex);
 }
-

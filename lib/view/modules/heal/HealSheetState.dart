@@ -10,12 +10,12 @@ class HealSheetState {
   String? error;
   late HealSheetUIState uiState;
 
-  HealSheetState({
-    this.showLoading = true,
-    this.character,
-    this.pjAllies,
-    this.error,
-    this.rollList}) {
+  HealSheetState(
+      {this.showLoading = true,
+      this.character,
+      this.pjAllies,
+      this.error,
+      this.rollList}) {
     this.uiState = HealSheetUIState();
   }
 
@@ -26,7 +26,7 @@ class HealSheetState {
         error = null;
         character = (partialState as HealSheetLoaded).character;
         pjAllies = (partialState).pjAllies;
-          rollList = (partialState).rollList;
+        rollList = (partialState).rollList;
         break;
       case HealSheetFailed:
         showLoading = false;
@@ -63,11 +63,7 @@ class HealSheetState {
   @override
   int get hashCode =>
       showLoading.hashCode ^ character.hashCode ^ error.hashCode;
-
-
-
 }
-
 
 class HealSheetUIState {
   bool power;
@@ -78,13 +74,13 @@ class HealSheetUIState {
   int healMax;
   String? errorMessage;
 
-  HealSheetUIState({
-    this.power = false,
-    this.focus = false,
-    this.heal = 0,
-    this.healMax = 0,
-    this.benediction = 0,
-    this.malediction = 0});
+  HealSheetUIState(
+      {this.power = false,
+      this.focus = false,
+      this.heal = 0,
+      this.healMax = 0,
+      this.benediction = 0,
+      this.malediction = 0});
 }
 
 abstract class HealSheetPartialState {}

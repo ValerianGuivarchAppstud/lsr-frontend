@@ -6,8 +6,7 @@ class SettingsState {
   String? error;
   late SettingsUIState uiState;
 
-  SettingsState(
-      {this.showLoading = true, this.settings, this.error}) {
+  SettingsState({this.showLoading = true, this.settings, this.error}) {
     this.uiState = SettingsUIState(false);
   }
 
@@ -36,7 +35,6 @@ class SettingsState {
     }
     return this;
   }
-
 
   @override
   bool operator ==(other) {
@@ -72,8 +70,6 @@ class SettingsFailed extends SettingsPartialState {
 }
 
 class SettingsLoading extends SettingsPartialState {}
-
-
 
 class SettingsUIUpdated extends SettingsPartialState {
   SettingsUIState state;

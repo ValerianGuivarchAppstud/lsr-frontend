@@ -36,16 +36,20 @@ class HealSheetViewModel extends SubViewModel with ChangeNotifier {
   }
 
   Future<void> getHealSheet([bool reload = false]) async {
-    if(reload) {
+    if (reload) {
       streamController.add(_currentState.copy(HealSheetLoading()));
     }
-    String characterName = _isPlayer ? (await this._configService!.getCharacterName() ?? '') : _characterName!;
+    String characterName = _isPlayer
+        ? (await this._configService!.getCharacterName() ?? '')
+        : _characterName!;
 
-      _sheetService.getHeal(characterName).then((value) {
-        streamController.add(_currentState.copy(HealSheetLoaded(value.character, value.pjAllies, value.rollList)));
-      }).onError((error, stackTrace) {
-        streamController.add(_currentState.copy(HealSheetFailed(error.toString())));
-      });
+    _sheetService.getHeal(characterName).then((value) {
+      streamController.add(_currentState.copy(
+          HealSheetLoaded(value.character, value.pjAllies, value.rollList)));
+    }).onError((error, stackTrace) {
+      streamController
+          .add(_currentState.copy(HealSheetFailed(error.toString())));
+    });
   }
 
   updateUi(HealSheetUIState state) {
@@ -53,13 +57,16 @@ class HealSheetViewModel extends SubViewModel with ChangeNotifier {
   }
 
   Future<void> healCharacter(Character allie) async {
-    try {if(this._currentState.uiState.heal > 0 && allie.pv < allie.pvMax) {
-      allie.pv = allie.pv + 1;
-      Character character = await _sheetService.createOrUpdateCharacter(allie);
-      this._currentState.uiState.heal = this._currentState.uiState.heal - 1;
+    try {
+      if (this._currentState.uiState.heal > 0 && allie.pv < allie.pvMax) {
+        allie.pv = allie.pv + 1;
+        Character character =
+            await _sheetService.createOrUpdateCharacter(allie);
+        this._currentState.uiState.heal = this._currentState.uiState.heal - 1;
         updateUi(_currentState.uiState);
-    }} catch (e) {
-      if(e is MessagedException) {
+      }
+    } catch (e) {
+      if (e is MessagedException) {
         print(e.message);
         _currentState.uiState.errorMessage = e.message;
       }
@@ -67,25 +74,27 @@ class HealSheetViewModel extends SubViewModel with ChangeNotifier {
   }
 
   Future<void> sendHealRoll() async {
-    if(_currentState.character != null) {
-      _sheetService.sendRoll(
-          rollType: RollType.SOIN,
-          rollerName: _currentState.character!.name,
-          secret: false,
-          focus: _currentState.uiState.focus,
-          power: _currentState.uiState.power,
-          proficiency: false,
-          benediction: _currentState.uiState.benediction,
-          malediction: _currentState.uiState.malediction,
-          characterToHelp: null,
-          resistRoll: null,
-          empirique: '').then((value) {
+    if (_currentState.character != null) {
+      _sheetService
+          .sendRoll(
+              rollType: RollType.SOIN,
+              rollerName: _currentState.character!.name,
+              secret: false,
+              focus: _currentState.uiState.focus,
+              power: _currentState.uiState.power,
+              proficiency: false,
+              benediction: _currentState.uiState.benediction,
+              malediction: _currentState.uiState.malediction,
+              characterToHelp: null,
+              resistRoll: null,
+              empirique: '')
+          .then((value) {
         this._currentState.uiState.heal = (value.success ?? 0);
         this._currentState.uiState.healMax = (value.success ?? 0);
         updateUi(_currentState.uiState);
       }).onError((error, stackTrace) {
-        streamController.add(
-            _currentState.copy(HealSheetFailed(error.toString())));
+        streamController
+            .add(_currentState.copy(HealSheetFailed(error.toString())));
       });
     }
   }

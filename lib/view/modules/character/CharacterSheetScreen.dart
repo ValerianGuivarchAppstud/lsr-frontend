@@ -107,6 +107,7 @@ class _CharacterPageState extends State<CharacterPage> {
                           context,
                           true,
                           null,
+                          true,
                           state.data!.character!,
                           width,
                           1,
@@ -114,7 +115,7 @@ class _CharacterPageState extends State<CharacterPage> {
                           characterSheetViewModel,
                           state.data!,
                           noteFieldController,
-                          state.data!.pjAlliesNames,
+                          state.data!.character?.alliesName,
                           CharacterWidgets.buildRollList(
                               state.data!.rollList,
                               characterName,

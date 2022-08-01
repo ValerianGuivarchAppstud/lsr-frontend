@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 
@@ -10,7 +9,8 @@ class ErrorHandlerTransformer
     extends Converter<Response<dynamic>, NetworkingResponse> {
   @override
   Sink<Response> startChunkedConversion(Sink<NetworkingResponse> sink) {
-    return ErrorHandlerConversionSink(sink as EventSink<NetworkingResponse> , this);
+    return ErrorHandlerConversionSink(
+        sink as EventSink<NetworkingResponse>, this);
   }
 
   @override
@@ -36,7 +36,7 @@ class ErrorHandlerConversionSink
   EventSink<NetworkingResponse> sink;
   Converter<Response<dynamic>, NetworkingResponse> converter;
 
-  ErrorHandlerConversionSink(this.sink,this.converter);
+  ErrorHandlerConversionSink(this.sink, this.converter);
 
   @override
   void add(Response<dynamic> chunk) {

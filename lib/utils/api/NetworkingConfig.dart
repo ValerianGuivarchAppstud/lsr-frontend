@@ -12,9 +12,10 @@ class NetworkingConfig {
 
   NetworkingConfig._init() {
     dio = Dio(BaseOptions(
-            baseUrl: ConfigReader.getBaseUrl(),
-          ///  headers: {HttpHeaders.userAgentHeader: 'dio', 'common-header': 'xx'},
-           ));
+      baseUrl: ConfigReader.getBaseUrl(),
+
+      ///  headers: {HttpHeaders.userAgentHeader: 'dio', 'common-header': 'xx'},
+    ));
     _addInterceptors(dio);
   }
 

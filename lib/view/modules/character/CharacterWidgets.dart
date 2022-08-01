@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +46,7 @@ class CharacterWidgets {
           BuildContext context,
           bool playerDisplay,
           bool? played,
+          bool turn,
           Character character,
           double width,
           double sizeRatio,
@@ -172,8 +174,7 @@ class CharacterWidgets {
                         backgroundColor: Colors.white,
                         foregroundImage: character.apotheose == Apotheose.NONE
                             ? NetworkImage(character.picture)
-                            : NetworkImage(
-                            character.pictureApotheose != ""
+                            : NetworkImage(character.pictureApotheose != ""
                                 ? character.pictureApotheose
                                 : character.picture),
                       ))),
@@ -188,31 +189,51 @@ class CharacterWidgets {
                 ),
                 textAlign: TextAlign.start,
               ),
-              if(played != null && !played)
-                IconButton(
-                    color: Colors.transparent,
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.check_circle_outline,
-                      color: Colors.red,
-                    )),
-              if(played != null && played)
-                IconButton(
-                    color: Colors.transparent,
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.check_circle,
-                      color: Colors.green,
-                    )),
-                IconButton(
-                    color: Colors.transparent,
-                    onPressed: () {
-                      mjViewModel?.removeCharacterList(character.name);
-                    },
-                    icon: const Icon(
-                      Icons.close,
-                      color: Colors.red,
-                    )),
+              if (played != null)
+                if (!played)
+                  if (turn)
+                    IconButton(
+                        color: Colors.transparent,
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.check_circle_outline,
+                          color: (Colors.green),
+                        ))
+                  else
+                    IconButton(
+                        color: Colors.transparent,
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.check_circle_outline,
+                          color: (Colors.blueGrey),
+                        )),
+              if (played != null)
+                if (played)
+                  if (turn)
+                    IconButton(
+                        color: Colors.transparent,
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.check_circle,
+                          color: (Colors.green),
+                        ))
+                  else
+                    IconButton(
+                        color: Colors.transparent,
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.check_circle,
+                          color: (Colors.blueGrey),
+                        )),
+              IconButton(
+                  color: Colors.transparent,
+                  onPressed: () {
+                    mjViewModel?.removeCharacterList(character.name);
+                  },
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.red,
+                  )),
             ]),
           if (noteFieldController != null)
             Padding(
@@ -245,21 +266,47 @@ class CharacterWidgets {
                                 : Colors.blue))),
               ),
             ),
-          if(character.apotheose == Apotheose.NORMALE) Padding(
-              padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
-              child: Text('Apothéose', style: TextStyle(color: Colors.red, fontSize: playerDisplay ? 18 : 12, fontWeight: FontWeight.bold))),
-          if(character.apotheose == Apotheose.ARCANIQUE) Padding(
-              padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
-              child: Text('Apothéose Arcanique', style: TextStyle(color: Colors.red, fontSize: playerDisplay ? 18 : 12, fontWeight: FontWeight.bold))),
-          if(character.apotheose == Apotheose.FINALE) Padding(
-              padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
-              child: Text('Apothéose Finale', style: TextStyle(color: Colors.red, fontSize: playerDisplay ? 18 : 12, fontWeight: FontWeight.bold))),
-          if(character.apotheose == Apotheose.FORME_VENGERESSE) Padding(
-              padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
-              child: Text('forme Vengeresse', style: TextStyle(color: Colors.red, fontSize: playerDisplay ? 18 : 12, fontWeight: FontWeight.bold))),
-          if(character.apotheose == Apotheose.IMPROVED) Padding(
-              padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
-              child: Text('Apothéose Amélioré : ${character.apotheoseImprovement}', style: TextStyle(color: Colors.red, fontSize: playerDisplay ? 18 : 12, fontWeight: FontWeight.bold))),
+          if (character.apotheose == Apotheose.NORMALE)
+            Padding(
+                padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
+                child: Text('Apothéose',
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontSize: playerDisplay ? 18 : 12,
+                        fontWeight: FontWeight.bold))),
+          if (character.apotheose == Apotheose.ARCANIQUE)
+            Padding(
+                padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
+                child: Text('Apothéose Arcanique',
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontSize: playerDisplay ? 18 : 12,
+                        fontWeight: FontWeight.bold))),
+          if (character.apotheose == Apotheose.FINALE)
+            Padding(
+                padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
+                child: Text('Apothéose Finale',
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontSize: playerDisplay ? 18 : 12,
+                        fontWeight: FontWeight.bold))),
+          if (character.apotheose == Apotheose.FORME_VENGERESSE)
+            Padding(
+                padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
+                child: Text('forme Vengeresse',
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontSize: playerDisplay ? 18 : 12,
+                        fontWeight: FontWeight.bold))),
+          if (character.apotheose == Apotheose.IMPROVED)
+            Padding(
+                padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
+                child: Text(
+                    'Apothéose Amélioré : ${character.apotheoseImprovement}',
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontSize: playerDisplay ? 18 : 12,
+                        fontWeight: FontWeight.bold))),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -343,15 +390,19 @@ class CharacterWidgets {
                   ),
                   buildCharacterSheetButton(
                       "Bonus",
-                      character.apotheose == Apotheose.NONE
-                          ? characterSheetState.uiState.benediction.toString()
-                          : character.apotheose == Apotheose.FINALE
+                      (character.apotheose == Apotheose.NONE
                               ? characterSheetState.uiState.benediction
-                                      .toString() +
-                                  '+5'
-                              : characterSheetState.uiState.benediction
-                                      .toString() +
-                                  '+3',
+                                  .toString()
+                              : character.apotheose == Apotheose.FINALE
+                                  ? characterSheetState.uiState.benediction
+                                          .toString() +
+                                      '+5'
+                                  : characterSheetState.uiState.benediction
+                                          .toString() +
+                                      '+3') +
+                          ((character.help ?? 0) > 0
+                              ? (' (' + character.help!.toString() + ')')
+                              : ('')),
                       (sizeRatio * width) / 5,
                       sizeRatioFont * 26,
                       50,
@@ -726,7 +777,9 @@ class CharacterWidgets {
               }, () => {}),
               buildCharacterSheetButton(
                   '',
-                  (playerDisplay ? "Relance" : "Rel") + " : " + character.relance.toString(),
+                  (playerDisplay ? "Relance" : "Rel") +
+                      " : " +
+                      character.relance.toString(),
                   (sizeRatio * width) / 6.5,
                   sizeRatioFont * 12,
                   34,
@@ -875,9 +928,9 @@ class CharacterWidgets {
   static void changeUiValue(CharacterSheetViewModel characterSheetViewModel,
       CharacterSheetUIState uiState, String carac, int diff) {
     if (carac == 'Bonus') {
-      uiState.benediction += diff;
+      uiState.benediction = max(uiState.benediction + diff, 0);
     } else if (carac == 'Malus') {
-      uiState.malediction += diff;
+      uiState.malediction = max(uiState.malediction + diff, 0);
     }
     characterSheetViewModel.updateUi(uiState);
   }
@@ -1010,12 +1063,11 @@ class CharacterWidgets {
         rollText.add(TextSpan(
           text: ' et obtient ',
         ));
-        rollText.add(
-            TextSpan(
-              text: '${roll.success}',
-            ));
         rollText.add(TextSpan(
-          text: 'succès',
+          text: '${roll.success}',
+        ));
+        rollText.add(TextSpan(
+          text: ' succès',
         ));
         break;
       case RollType.SOIN:
@@ -1158,16 +1210,14 @@ class CharacterWidgets {
       case RollType.APOTHEOSE:
         if (roll.result[0] == 1) {
           rollDices.add(TextSpan(
-              text: roll.result[0].toString() ,
-              style: TextStyle(color: Colors.red,
-                  fontSize: 26,
-                  fontFamily: 'DiceFont')));
+              text: roll.result[0].toString(),
+              style: TextStyle(
+                  color: Colors.red, fontSize: 26, fontFamily: 'DiceFont')));
         } else {
           rollDices.add(TextSpan(
               text: roll.result[0].toString(),
-              style: TextStyle(color: Colors.green,
-                  fontSize: 26,
-                  fontFamily: 'DiceFont')));
+              style: TextStyle(
+                  color: Colors.green, fontSize: 26, fontFamily: 'DiceFont')));
         }
         break;
       case RollType.ARCANE_FIXE:
@@ -1225,13 +1275,16 @@ class CharacterWidgets {
                               children: [
                                 Wrap(children: [
                                   Tooltip(
-                                    message: (roll.juge12 != null && roll.juge34 !=null) ? "Juge12=${roll.juge12}, Juge34=${roll.juge34}" : "",
+                                    message: (roll.juge12 != null &&
+                                            roll.juge34 != null)
+                                        ? "Juge12=${roll.juge12}, Juge34=${roll.juge34}"
+                                        : "",
                                     child: RichText(
-                                      text: TextSpan(
-                                          text: roll.dateText() + ' - ',
-                                          // 10:19:22 -
-                                          children: rollText)),
-                                    ),
+                                        text: TextSpan(
+                                            text: roll.dateText() + ' - ',
+                                            // 10:19:22 -
+                                            children: rollText)),
+                                  ),
                                 ]),
                                 Text.rich(
                                   TextSpan(
@@ -1239,7 +1292,14 @@ class CharacterWidgets {
                                       children: rollDices),
                                   textAlign: TextAlign.center,
                                 ),
-                              ])))
+                              ]))),
+                  if (mjViewModel != null)
+                    IconButton(
+                        onPressed: () => {mjViewModel.deleteRoll(roll.id)},
+                        icon: const Icon(
+                          Icons.close,
+                          color: Colors.red,
+                        ))
                 ]))));
   }
 
@@ -1530,7 +1590,7 @@ class CharacterWidgets {
     apotheoseImprovementList.add("(Ajouter)");
     Apotheose apotheose = character.apotheose;
     final TextEditingController _textEditingController =
-    TextEditingController(text: '');
+        TextEditingController(text: '');
     int pv = character.pv;
     int pf = character.pf;
     int pp = character.pp;
@@ -1580,30 +1640,30 @@ class CharacterWidgets {
                             }).toList(),
                           ),
                         ),
-                      if (character.apotheose == Apotheose.NONE && apotheoseImprovement == "(Ajouter)")
+                      if (character.apotheose == Apotheose.NONE &&
+                          apotheoseImprovement == "(Ajouter)")
                         TextFormField(
                           controller: _textEditingController,
-                          decoration: InputDecoration(hintText: "Amélioration de l\'Apothéose"),
+                          decoration: InputDecoration(
+                              hintText: "Amélioration de l\'Apothéose"),
                         ),
-                        if(roll != null)
+                      if (roll != null)
                         Padding(
                             padding:
-                            const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-                            child: roll.result[0] != 1 ? Text("Pas de perte de contrôle.") : Text("Perte de contrôle !")
-                        ),
-                      if(roll?.data != null)
+                                const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                            child: roll.result[0] != 1
+                                ? Text("Pas de perte de contrôle.")
+                                : Text("Perte de contrôle !")),
+                      if (roll?.data != null)
                         Padding(
                             padding:
-                            const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-                            child: Text(roll!.data!)
-                        ),
-                      if(roll != null)
+                                const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                            child: Text(roll!.data!)),
+                      if (roll != null)
                         Padding(
                             padding:
-                            const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-                            child: Text("------------")
-                        )
-                      ,
+                                const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                            child: Text("------------")),
                       if (character.apotheose != Apotheose.NONE)
                         Padding(
                             padding:
@@ -1666,7 +1726,10 @@ class CharacterWidgets {
                     child: Text('Passer en Apothéose   '),
                     onTap: () {
                       character.apotheose = apotheose;
-                      character.apotheoseImprovement = apotheoseImprovement == "(Ajouter)" ? _textEditingController.text : apotheoseImprovement;
+                      character.apotheoseImprovement =
+                          apotheoseImprovement == "(Ajouter)"
+                              ? _textEditingController.text
+                              : apotheoseImprovement;
                       characterSheetViewModel
                           .createOrUpdateCharacter(character);
                       Navigator.of(context).pop();

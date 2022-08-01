@@ -13,28 +13,32 @@ class SettingsProvider implements ISettingsProvider {
   SettingsProvider(this._networkingConfig);
 
   @override
-  Future<Settings> get(String? playerName) async{
-    Response response = await _networkingConfig.dio.get('settings?playerName=' + (playerName ?? ''));
+  Future<Settings> get(String? playerName) async {
+    Response response = await _networkingConfig.dio
+        .get('settings?playerName=' + (playerName ?? ''));
     Settings settings = Settings.fromJson(response.data);
 
     return settings;
   }
 
   @override
-  Future<Visio> getVisio() async{
+  Future<Visio> getVisio() async {
     Response response = await _networkingConfig.dio.get('visio');
     Visio visio = Visio.fromJson(response.data);
     return visio;
   }
 
   @override
-  Future<String> getToken() async{
+  Future<String> getToken() async {
     Response response = await _networkingConfig.dio.get('token');
     String visioToken = response.data;
     return visioToken;
   }
 
-  @override void join(String name, int uid) {
-    _networkingConfig.dio.put('uid?characterName='+name+'&uid='+uid.toString(), data: '{}');
+  @override
+  void join(String name, int uid) {
+    _networkingConfig.dio.put(
+        'uid?characterName=' + name + '&uid=' + uid.toString(),
+        data: '{}');
   }
 }

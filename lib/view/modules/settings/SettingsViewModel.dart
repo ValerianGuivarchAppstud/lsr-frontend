@@ -35,18 +35,17 @@ class SettingsViewModel extends SubViewModel with ChangeNotifier {
   }
 
   Future<void> getSettings([bool reload = false]) async {
-
-    if(reload) {
+    if (reload) {
       streamController.add(_currentState.copy(SettingsLoading()));
     }
 
     _settingsService.getSettings().then((value) {
-        streamController.add(_currentState.copy(SettingsLoaded(value)));
+      streamController.add(_currentState.copy(SettingsLoaded(value)));
     }).onError((error, stackTrace) {
-        streamController.add(_currentState.copy(SettingsFailed(error.toString())));
-      });
+      streamController
+          .add(_currentState.copy(SettingsFailed(error.toString())));
+    });
   }
-
 
   @override
   changeMainState(MainUIUpdated state) {

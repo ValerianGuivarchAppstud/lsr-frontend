@@ -8,10 +8,7 @@ part 'Visio.g.dart';
 class Visio {
   List<Character>? characters;
 
-  Visio({
-    this.characters
-  });
-
+  Visio({this.characters});
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.

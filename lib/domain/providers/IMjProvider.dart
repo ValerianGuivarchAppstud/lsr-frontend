@@ -5,8 +5,10 @@ abstract class IMjProvider {
   Future<MjSheet> get();
   Future<MjSheet> addCharacterList(String characterName);
   Future<MjSheet> removeCharacterList(String characterName);
-  Future<List<Character>> addCharacterWithTemplate(String templateName, String customName, int level, int number);
+  Future<List<Character>> addCharacterWithTemplate(
+      String templateName, String customName, int level, int number);
   deleteRolls();
   nextRound();
   stopBattle();
+  deleteRoll(String id);
 }

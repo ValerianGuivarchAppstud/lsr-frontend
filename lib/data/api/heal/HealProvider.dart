@@ -13,7 +13,7 @@ class HealProvider implements IHealProvider {
   HealProvider(this._networkingConfig);
 
   @override
-  Future<HealSheet> get(String name) async{
+  Future<HealSheet> get(String name) async {
     Response response = await _networkingConfig.dio.get('heal?name=' + name);
     HealSheet healSheet = HealSheet.fromJson(response.data);
     return healSheet;

@@ -1,5 +1,3 @@
-
-
 /*
 Future<void> mainCommon(String env) async {
   // Always call this if the main method is asynchronous

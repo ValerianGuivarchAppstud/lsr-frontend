@@ -15,20 +15,20 @@ class RollProvider implements IRollProvider {
   RollProvider(this._networkingConfig);
 
   @override
-  Future<Roll> send({
-    required String rollerName,
-    required RollType rollType,
-    required bool secret,
-    required bool focus,
-    required bool power,
-    required bool proficiency,
-    required int benediction,
-    required int malediction,
-    required String? characterToHelp,
-    required String? resistRoll,
-    String empirique = ''
-  }) async {
-    SendRollRequest sendRollRequest = new SendRollRequest(rollerName: rollerName,
+  Future<Roll> send(
+      {required String rollerName,
+      required RollType rollType,
+      required bool secret,
+      required bool focus,
+      required bool power,
+      required bool proficiency,
+      required int benediction,
+      required int malediction,
+      required String? characterToHelp,
+      required String? resistRoll,
+      String empirique = ''}) async {
+    SendRollRequest sendRollRequest = new SendRollRequest(
+        rollerName: rollerName,
         rollType: rollType,
         secret: secret,
         focus: focus,
@@ -41,11 +41,12 @@ class RollProvider implements IRollProvider {
         resistRoll: resistRoll);
 
     try {
-    Response response = await _networkingConfig.dio.post('roll', data: sendRollRequest.toJson());
-    return Roll.fromJson(response.data);
+      Response response = await _networkingConfig.dio
+          .post('roll', data: sendRollRequest.toJson());
+      return Roll.fromJson(response.data);
     } on DioError catch (e) {
       print(e.response?.data['message']);
       throw new MessagedException(e.response?.data['message']);
-  }
+    }
   }
 }

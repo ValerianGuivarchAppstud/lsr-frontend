@@ -58,19 +58,27 @@ class Roll {
   }
 
   bonusMalusText() {
-    if(malediction==0 && benediction==0) {
+    if (malediction == 0 && benediction == 0) {
       return '';
-    } else if (malediction>0 && benediction==0) {
-      return 'Avec $malediction malédiction' + (malediction>0 ? 's' : '')+ ', ';
-    } else if(malediction==0 && benediction>0) {
-    return 'Avec $benediction benediction' + (benediction>0 ? 's' : '')+ ', ';
+    } else if (malediction > 0 && benediction == 0) {
+      return 'Avec $malediction malédiction' +
+          (malediction > 0 ? 's' : '') +
+          ', ';
+    } else if (malediction == 0 && benediction > 0) {
+      return 'Avec $benediction benediction' +
+          (benediction > 0 ? 's' : '') +
+          ', ';
     } else {
-      return 'Avec $malediction malédiction' + (malediction>0 ? 's' : '') + ' et $benediction benediction' + (benediction>0 ? 's' : '')+ ', ';
+      return 'Avec $malediction malédiction' +
+          (malediction > 0 ? 's' : '') +
+          ' et $benediction benediction' +
+          (benediction > 0 ? 's' : '') +
+          ', ';
     }
   }
 
   rollTypeText() {
-    switch(rollType){
+    switch (rollType) {
       case RollType.CHAIR:
         return 'Jet de Chair';
       case RollType.ESPRIT:
@@ -94,7 +102,7 @@ class Roll {
       case RollType.SAUVEGARDE_VS_MORT:
         return 'Jet de Sauvegarde contre la Mort';
       case RollType.RELANCE:
-        return ;
+        return;
       case RollType.APOTHEOSE:
         return 'Jet de Contrôle de l\'Apotheose';
     }
@@ -112,15 +120,15 @@ class Roll {
 
   powerText() {
     if (power) {
-      return {TextSpan( // se concentre et
-        text: 'en y mettant toute sa ',
-      ),
-        TextSpan( // se concentre et
-            text: 'puissance',
-            style: TextStyle(
-                fontStyle: FontStyle.italic
-            )
+      return {
+        TextSpan(
+          // se concentre et
+          text: 'en y mettant toute sa ',
         ),
+        TextSpan(
+            // se concentre et
+            text: 'puissance',
+            style: TextStyle(fontStyle: FontStyle.italic)),
       };
     }
   }
@@ -132,6 +140,8 @@ class Roll {
   }
 
   int getDegats(Roll resistingRoll) {
-    return max(((((resistingRoll.success ?? 0) - (this.success ?? 0) )/ 2).round()), 0);
+    return max(
+        ((((resistingRoll.success ?? 0) - (this.success ?? 0)) / 2).round()),
+        0);
   }
 }

@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 abstract class MviDisposable {
@@ -13,12 +12,10 @@ abstract class MviView<VS> implements MviDisposable {
   });
 }
 
-
-
 abstract class MviPartialState {}
 
 abstract class MviStateViewModel<PS extends MviPartialState,
-VS extends MviStateViewModel<PS, VS>> {
+    VS extends MviStateViewModel<PS, VS>> {
   VS reducer(PS partialState);
 }
 

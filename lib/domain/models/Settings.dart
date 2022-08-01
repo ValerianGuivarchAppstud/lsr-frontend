@@ -9,18 +9,17 @@ class Settings {
   String? currentCharacter;
   List<String> charactersName;
 
-  Settings({
-    this.currentPlayer = "",
-    required this.playersName,
-    this.currentCharacter = "",
-    required this.charactersName
-  });
-
+  Settings(
+      {this.currentPlayer = "",
+      required this.playersName,
+      this.currentCharacter = "",
+      required this.charactersName});
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
   /// The constructor is named after the source class, in this case, User.
-  factory Settings.fromJson(Map<String, dynamic> json) => _$SettingsFromJson(json);
+  factory Settings.fromJson(Map<String, dynamic> json) =>
+      _$SettingsFromJson(json);
 
   /// `toJson` is the convention for a class to declare support for serialization
   /// to JSON. The implementation simply calls the private, generated

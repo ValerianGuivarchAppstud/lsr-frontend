@@ -1,5 +1,1 @@
-enum Round {
-  NONE,
-  PJ,
-  PNJ
-}
+enum Round { NONE, PJ, PNJ }

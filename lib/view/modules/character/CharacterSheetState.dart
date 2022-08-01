@@ -15,14 +15,14 @@ class CharacterSheetState {
   String notes;
   Settings? settings;
 
-  CharacterSheetState({
-    this.showLoading = true,
-    this.character,
-    this.error,
-    this.rollList,
-    this.lastTimeNoteSaved,
-  this.notes = '',
-  this.playersName}) {
+  CharacterSheetState(
+      {this.showLoading = true,
+      this.character,
+      this.error,
+      this.rollList,
+      this.lastTimeNoteSaved,
+      this.notes = '',
+      this.playersName}) {
     this.uiState = CharacterSheetUIState();
   }
 
@@ -31,9 +31,9 @@ class CharacterSheetState {
       case CharacterSheetLoaded:
         showLoading = false;
         error = null;
-          character = (partialState as CharacterSheetLoaded).character;
-          rollList = (partialState).rollList;
-          pjAlliesNames = (partialState).pjAlliesNames;
+        character = (partialState as CharacterSheetLoaded).character;
+        rollList = (partialState).rollList;
+        pjAlliesNames = (partialState).pjAlliesNames;
         playersName = (partialState).playersName;
         break;
       case CharacterLoaded:
@@ -49,7 +49,7 @@ class CharacterSheetState {
       case RollListLoaded:
         showLoading = false;
         error = null;
-          rollList = (partialState as RollListLoaded).rollList;
+        rollList = (partialState as RollListLoaded).rollList;
         break;
       case CharacterSheetFailed:
         showLoading = false;
@@ -67,7 +67,6 @@ class CharacterSheetState {
     }
     return this;
   }
-
 
   @override
   String toString() {
@@ -87,11 +86,7 @@ class CharacterSheetState {
   @override
   int get hashCode =>
       showLoading.hashCode ^ character.hashCode ^ error.hashCode;
-
-
-
 }
-
 
 class CharacterSheetUIState {
   bool secret;
@@ -104,14 +99,15 @@ class CharacterSheetUIState {
   String? characterToHelp;
   String? errorMessage;
 
-  CharacterSheetUIState({this.secret = false,
-    this.power = false,
-    this.proficiency = false,
-    this.focus = false,
-    this.help = false,
-    this.benediction = 0,
-    this.malediction = 0,
-    this.characterToHelp});
+  CharacterSheetUIState(
+      {this.secret = false,
+      this.power = false,
+      this.proficiency = false,
+      this.focus = false,
+      this.help = false,
+      this.benediction = 0,
+      this.malediction = 0,
+      this.characterToHelp});
 }
 
 abstract class CharacterSheetPartialState {}
@@ -122,7 +118,8 @@ class CharacterSheetLoaded extends CharacterSheetPartialState {
   List<String> pjAlliesNames;
   List<String> playersName;
 
-  CharacterSheetLoaded(this.character, this.rollList, this.pjAlliesNames, this.playersName);
+  CharacterSheetLoaded(
+      this.character, this.rollList, this.pjAlliesNames, this.playersName);
 }
 
 class CharacterLoaded extends CharacterSheetPartialState {

@@ -14,11 +14,12 @@ class HealSheetPage extends StatefulWidget {
   final String? characterName;
   final HealSheetViewModel healSheetViewModel;
 
-
-  HealSheetPage(Key key, this.healSheetViewModel, [this.characterName = null]) : super(key: key);
+  HealSheetPage(Key key, this.healSheetViewModel, [this.characterName = null])
+      : super(key: key);
 
   @override
-  _HealSheetPageState createState() => _HealSheetPageState(healSheetViewModel, characterName);
+  _HealSheetPageState createState() =>
+      _HealSheetPageState(healSheetViewModel, characterName);
 }
 
 class _HealSheetPageState extends State<HealSheetPage> {
@@ -62,35 +63,41 @@ class _HealSheetPageState extends State<HealSheetPage> {
             const oneSec = Duration(seconds: 1);
             developer.log("Timer : " + (characterName ?? "personne"));
             Timer.periodic(
-                oneSec,
-                (Timer t) =>
-                  healSheetViewModel.getHealSheet()
-                );
+                oneSec, (Timer t) => healSheetViewModel.getHealSheet());
           }
           return Container(
-                  height: height,
-                  width: width,
-                  color: Colors.white30,
-                  child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: LayoutBuilder(builder: (context, constraints) {
-                        if (state.data == null || (state.data!.showLoading)) {
-                          return LoadingWidget(
-                              key: Key(
-                            "LoadingWidget",
-                          ));
-                        } else if (state.data?.character == null) {
-                          return Center(
-                            child: Text(state.error?.toString() ?? 'Sélectionne d\'abord ton personnage !'),
-                          );
-                        } else {
-                          return HealWidgets.buildHeal(context, state.data!.character!, width,
-                              1,
-                              1,
-                              healSheetViewModel, state.data!,  state.data!.pjAllies?.where((element) => element.isAlly()).toList(),
-                            CharacterWidgets.buildRollList(state.data!.rollList, characterName, null, null, null));
-                        }
-                      })));
+              height: height,
+              width: width,
+              color: Colors.white30,
+              child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: LayoutBuilder(builder: (context, constraints) {
+                    if (state.data == null || (state.data!.showLoading)) {
+                      return LoadingWidget(
+                          key: Key(
+                        "LoadingWidget",
+                      ));
+                    } else if (state.data?.character == null) {
+                      return Center(
+                        child: Text(state.error?.toString() ??
+                            'Sélectionne d\'abord ton personnage !'),
+                      );
+                    } else {
+                      return HealWidgets.buildHeal(
+                          context,
+                          state.data!.character!,
+                          width,
+                          1,
+                          1,
+                          healSheetViewModel,
+                          state.data!,
+                          state.data!.pjAllies
+                              ?.where((element) => element.isAlly())
+                              .toList(),
+                          CharacterWidgets.buildRollList(state.data!.rollList,
+                              characterName, null, null, null));
+                    }
+                  })));
         });
   }
   /*Widget RollWidget2(Roll roll) {

@@ -15,38 +15,51 @@ class MjProvider implements IMjProvider {
   MjProvider(this._networkingConfig);
 
   @override
-  Future<MjSheet> get() async{
+  Future<MjSheet> get() async {
     Response response = await _networkingConfig.dio.get('mj');
     MjSheet mjSheet = MjSheet.fromJson(response.data);
     return mjSheet;
   }
 
-
   @override
-  Future<MjSheet> addCharacterList(String characterName) async{
-    Response response = await _networkingConfig.dio.put('mj/character?characterName=' + (characterName), data: '{}');
+  Future<MjSheet> addCharacterList(String characterName) async {
+    Response response = await _networkingConfig.dio
+        .put('mj/character?characterName=' + (characterName), data: '{}');
     MjSheet mjSheet = MjSheet.fromJson(response.data);
     return mjSheet;
   }
 
   @override
-  Future<MjSheet> removeCharacterList(String characterName) async{
-    Response response = await _networkingConfig.dio.delete('mj/character?characterName=' + (characterName));
+  Future<MjSheet> removeCharacterList(String characterName) async {
+    Response response = await _networkingConfig.dio
+        .delete('mj/character?characterName=' + (characterName));
     MjSheet mjSheet = MjSheet.fromJson(response.data);
     return mjSheet;
   }
 
   @override
-  Future<List<Character>> addCharacterWithTemplate(String templateName, String customName, int level, int number) async{
-    SendCreateWithTemplateRequest request = SendCreateWithTemplateRequest(templateName:templateName, customName:templateName, level:level, number:number);
-    Response response = await _networkingConfig.dio.put('mj/template', data: request.toJson());
-    SendCreateWithTemplateResponse templateNewCharacters = await SendCreateWithTemplateResponse.fromJson(response.data);
+  Future<List<Character>> addCharacterWithTemplate(
+      String templateName, String customName, int level, int number) async {
+    SendCreateWithTemplateRequest request = SendCreateWithTemplateRequest(
+        templateName: templateName,
+        customName: templateName,
+        level: level,
+        number: number);
+    Response response =
+        await _networkingConfig.dio.put('mj/template', data: request.toJson());
+    SendCreateWithTemplateResponse templateNewCharacters =
+        await SendCreateWithTemplateResponse.fromJson(response.data);
     return templateNewCharacters.templateNewCharacters;
   }
 
   @override
   deleteRolls() {
     _networkingConfig.dio.delete('rolls');
+  }
+
+  @override
+  deleteRoll(String id) {
+    _networkingConfig.dio.delete('roll?id=' + id);
   }
 
   @override
@@ -58,5 +71,4 @@ class MjProvider implements IMjProvider {
   void stopBattle() {
     _networkingConfig.dio.put('mj/stopBattle', data: '{}');
   }
-
 }

@@ -46,7 +46,7 @@ class MjViewModel extends SubViewModel with ChangeNotifier {
                   element.name == _characterViewModel.getCharacterName()),
               [],
               [],
-          value.playersName));
+              value.playersName));
         }
         streamController.add(_currentState.copy(MjLoaded(value)));
       }
@@ -85,7 +85,9 @@ class MjViewModel extends SubViewModel with ChangeNotifier {
 
   void createNewCharacter(Character character) {
     _mjService.createOrUpdateCharacter(character).then((value) => {
-          if (value.category == Category.TEMPO || value.category == Category.PNJ_ALLY || value.category == Category.PNJ_ENNEMY)
+          if (value.category == Category.TEMPO ||
+              value.category == Category.PNJ_ALLY ||
+              value.category == Category.PNJ_ENNEMY)
             {this.addCharacterList(value.name)}
         });
   }
@@ -124,5 +126,9 @@ class MjViewModel extends SubViewModel with ChangeNotifier {
 
   stopBattle() {
     _mjService.stopBattle();
+  }
+
+  deleteRoll(String id) {
+    _mjService.deleteRoll(id);
   }
 }

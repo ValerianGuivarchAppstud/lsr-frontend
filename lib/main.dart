@@ -27,7 +27,6 @@ import 'data/api/heal/HealProvider.dart';
 import 'data/api/roll/RollProvider.dart';
 import 'domain/services/MjService.dart';
 
-
 Future<void> mainCommon(String env) async {
   // Always call this if the main method is asynchronous
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,10 +48,14 @@ void main() {
       mjProvider: MjProvider(NetworkingConfig()));
 
   MainViewModel mainViewModel = MainViewModel();
-  CharacterSheetViewModel characterSheetViewModel= CharacterSheetViewModel.playerConstructor(_characterService, _settingsService);
+  CharacterSheetViewModel characterSheetViewModel =
+      CharacterSheetViewModel.playerConstructor(
+          _characterService, _settingsService);
   SettingsViewModel settingsViewModel = SettingsViewModel(_settingsService);
-  HealSheetViewModel healSheetViewModel = HealSheetViewModel(_characterService, _settingsService);
-  MjViewModel mjViewModel = MjViewModel(_mjService, _characterService, _settingsService);
+  HealSheetViewModel healSheetViewModel =
+      HealSheetViewModel(_characterService, _settingsService);
+  MjViewModel mjViewModel =
+      MjViewModel(_mjService, _characterService, _settingsService);
   CallViewModel callViewModel = CallViewModel(_settingsService);
 
   mainViewModel.addSubViewModel(characterSheetViewModel);
@@ -60,18 +63,20 @@ void main() {
   mainViewModel.addSubViewModel(healSheetViewModel);
   mainViewModel.addSubViewModel(mjViewModel);
 
-  Widget characterPage = CharacterPage(characterSheetViewModel, Key('CharacterPage'), null);
+  Widget characterPage =
+      CharacterPage(characterSheetViewModel, Key('CharacterPage'), null);
   Widget healPage = HealSheetPage(Key("HealPage"), healSheetViewModel, null);
-  Widget settingsPage = SettingsPage(settingsViewModel, mainViewModel, key: Key('SettingsPage'));
+  Widget settingsPage =
+      SettingsPage(settingsViewModel, mainViewModel, key: Key('SettingsPage'));
   MjPage mjPage = MjPage(mjViewModel, key: Key('MjPage'));
   CallPage callPage = CallPage(callViewModel, key: Key('CallPage'));
 
-  runApp(MyApp(mainViewModel, characterPage, healPage, settingsPage, mjPage, callPage, key: Key("MyApp")));
+  runApp(MyApp(
+      mainViewModel, characterPage, healPage, settingsPage, mjPage, callPage,
+      key: Key("MyApp")));
 }
 
-
 class MyApp extends StatefulWidget {
-
   final MainViewModel mainViewModel;
   final Widget characterPage;
   final Widget healPage;
@@ -79,18 +84,17 @@ class MyApp extends StatefulWidget {
   final MjPage mjPage;
   final CallPage callPage;
 
-
-  MyApp(this.mainViewModel, this.characterPage, this.healPage, this.settingsPage, this.mjPage, this.callPage, {required Key key})
+  MyApp(this.mainViewModel, this.characterPage, this.healPage,
+      this.settingsPage, this.mjPage, this.callPage,
+      {required Key key})
       : super(key: key);
 
-
   @override
-  _MainState createState() => _MainState(this.mainViewModel, this.characterPage, this.healPage, this.settingsPage, this.mjPage, this.callPage);
-
+  _MainState createState() => _MainState(this.mainViewModel, this.characterPage,
+      this.healPage, this.settingsPage, this.mjPage, this.callPage);
 }
 
 class _MainState extends State<MyApp> {
-
   final MainViewModel mainViewModel;
   final Widget characterPage;
   final Widget healPage;
@@ -98,7 +102,8 @@ class _MainState extends State<MyApp> {
   final MjPage mjPage;
   final CallPage callPage;
 
-  _MainState(this.mainViewModel, this.characterPage, this.healPage, this.settingsPage, this.mjPage, this.callPage);
+  _MainState(this.mainViewModel, this.characterPage, this.healPage,
+      this.settingsPage, this.mjPage, this.callPage);
 
   @override
   void initState() {
@@ -131,68 +136,60 @@ class _MainState extends State<MyApp> {
   Widget build(BuildContext context) {
     CharacterWidgets.getColorList();
     mainViewModel.getMain();
-    return
-      MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Les Sept Rois',
-        onGenerateRoute: (settings) {
-          return MaterialPageRoute(
-            builder: (context) {
-              return StreamBuilder<MainState>(
-                  stream: mainViewModel.streamController.stream,
-                  initialData: mainViewModel.getState(),
-                  builder: (context, state) {
-                    var widthScreen = MediaQuery
-                        .of(context)
-                        .size
-                        .width;
-                    var heightScreen = MediaQuery
-                        .of(context)
-                        .size
-                        .height;
-                    if (state.data == null) {
-                      return LoadingWidget(
-                          key: Key(
-                            "LoadingApp",
-                          ));
-                    } else {
-                      return buildBodyApp(
-                          state.data!, widthScreen, heightScreen, getBody, mainViewModel, callPage);
-                    }
-                  });
-            },
-          );
-        },
-      );
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Les Sept Rois',
+      onGenerateRoute: (settings) {
+        return MaterialPageRoute(
+          builder: (context) {
+            return StreamBuilder<MainState>(
+                stream: mainViewModel.streamController.stream,
+                initialData: mainViewModel.getState(),
+                builder: (context, state) {
+                  var widthScreen = MediaQuery.of(context).size.width;
+                  var heightScreen = MediaQuery.of(context).size.height;
+                  if (state.data == null) {
+                    return LoadingWidget(
+                        key: Key(
+                      "LoadingApp",
+                    ));
+                  } else {
+                    return buildBodyApp(state.data!, widthScreen, heightScreen,
+                        getBody, mainViewModel, callPage);
+                  }
+                });
+          },
+        );
+      },
+    );
   }
 
-
-  static buildBodyApp(MainState data, double widthScreen, double heightScreen,
-      Function(int selectedIndex, bool pj) getBody, MainViewModel mainViewModel,
+  static buildBodyApp(
+      MainState data,
+      double widthScreen,
+      double heightScreen,
+      Function(int selectedIndex, bool pj) getBody,
+      MainViewModel mainViewModel,
       CallPage callPage) {
-
     // callPage.callViewModel.getState().showLoading
 
     return Scaffold(
-        body: Stack(
-            alignment: Alignment.topRight,
-            children: [Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                      width: data.uiState.pj ? (data.uiState.camera
-                          ? widthScreen / 2
-                          : widthScreen) : (data.uiState.camera
-                          ? 2 * widthScreen / 3
-                          : widthScreen),
-                      child: Scaffold(
-                        body: Center(
-                          child: getBody(data.uiState.selectedIndex, data.uiState.pj),
-                        ),
-                        bottomNavigationBar: data.uiState.pj
-                            ? BottomNavigationBar(
+        body: Stack(alignment: Alignment.topRight, children: [
+      Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+                width: data.uiState.pj
+                    ? (data.uiState.camera ? widthScreen / 2 : widthScreen)
+                    : (data.uiState.camera ? 2 * widthScreen / 3 : widthScreen),
+                child: Scaffold(
+                  body: Center(
+                    child: getBody(data.uiState.selectedIndex, data.uiState.pj),
+                  ),
+                  bottomNavigationBar: data.uiState.pj
+                      ? BottomNavigationBar(
                           unselectedItemColor: Colors.tealAccent,
                           selectedItemColor: Colors.blue,
                           items: const <BottomNavigationBarItem>[
@@ -212,7 +209,9 @@ class _MainState extends State<MyApp> {
                           currentIndex: data.uiState.selectedIndex,
                           onTap: (index) {
                             mainViewModel.changeTab(index);
-                          },) : BottomNavigationBar(
+                          },
+                        )
+                      : BottomNavigationBar(
                           unselectedItemColor: Colors.tealAccent,
                           selectedItemColor: Colors.blue,
                           items: const <BottomNavigationBarItem>[
@@ -234,22 +233,21 @@ class _MainState extends State<MyApp> {
                             mainViewModel.changeTab(index);
                           },
                         ),
-                      )),
-                  if( data.uiState.camera) SizedBox(
-                      width: data.uiState.pj ? widthScreen / 2 : widthScreen / 3,
-                      //* 0.9 / 3,
-                      child: callPage
-                  )
-                ]),
-              IconButton(
+                )),
+            if (data.uiState.camera)
+              SizedBox(
+                  width: data.uiState.pj ? widthScreen / 2 : widthScreen / 3,
+                  //* 0.9 / 3,
+                  child: callPage)
+          ]),
+      /*IconButton(
                 icon: Icon(Icons.camera_alt),
                 color: data.uiState.camera ? Colors.white : Colors.black,
                 onPressed: () =>
                 {
                   mainViewModel.switchCamera()
                 },
-              )
-            ])
-    );
+              )*/
+    ]));
   }
 }

@@ -28,13 +28,15 @@ class CharacterSheetViewModel extends SubViewModel with ChangeNotifier {
     return _characterName;
   }
 
-  CharacterSheetViewModel.playerConstructor(this._sheetService, this._configService) {
+  CharacterSheetViewModel.playerConstructor(
+      this._sheetService, this._configService) {
     _currentState = CharacterSheetState();
     _characterName = null;
     _isPlayer = true;
   }
 
-  CharacterSheetViewModel.mjConstructor(this._sheetService, this._configService, this._characterName, this._currentState) {
+  CharacterSheetViewModel.mjConstructor(this._sheetService, this._configService,
+      this._characterName, this._currentState) {
     _isPlayer = false;
   }
 
@@ -43,26 +45,30 @@ class CharacterSheetViewModel extends SubViewModel with ChangeNotifier {
   }
 
   Future<void> getCharacterSheet([bool reload = false]) async {
-    if(reload) {
+    if (reload) {
       streamController.add(_currentState.copy(CharacterSheetLoading()));
     }
-    String characterName = _isPlayer ? (await this._configService.getCharacterName() ?? '') : _characterName!;
+    String characterName = _isPlayer
+        ? (await this._configService.getCharacterName() ?? '')
+        : _characterName!;
 
-    if(characterName == '') {
+    if (characterName == '') {
       _configService.getSettings().then((value) {
-        streamController.add(_currentState.copy(SettingsLoaded(
-            value)));
+        streamController.add(_currentState.copy(SettingsLoaded(value)));
       }).onError((error, stackTrace) {
-        streamController.add(
-            _currentState.copy(CharacterSheetFailed(error.toString())));
+        streamController
+            .add(_currentState.copy(CharacterSheetFailed(error.toString())));
       });
     } else {
       _sheetService.get(characterName).then((value) {
         streamController.add(_currentState.copy(CharacterSheetLoaded(
-            value.character, value.rollList, value.pjAlliesNames, value.playersName)));
+            value.character,
+            value.rollList,
+            value.pjAlliesNames,
+            value.playersName)));
       }).onError((error, stackTrace) {
-        streamController.add(
-            _currentState.copy(CharacterSheetFailed(error.toString())));
+        streamController
+            .add(_currentState.copy(CharacterSheetFailed(error.toString())));
       });
     }
   }
@@ -83,12 +89,14 @@ class CharacterSheetViewModel extends SubViewModel with ChangeNotifier {
     _sheetService.createOrUpdateCharacter(character).then((value) {
       streamController.add(_currentState.copy(CharacterLoaded(value)));
     }).onError((error, stackTrace) {
-      streamController.add(_currentState.copy(CharacterSheetFailed(error.toString())));
+      streamController
+          .add(_currentState.copy(CharacterSheetFailed(error.toString())));
     });
   }
 
-  Future<Roll?> sendRoll(RollType rollType, [String empirique = '', String? resistRoll = null]) async {
-    if(_currentState.character != null) {
+  Future<Roll?> sendRoll(RollType rollType,
+      [String empirique = '', String? resistRoll = null]) async {
+    if (_currentState.character != null) {
       try {
         Roll roll = await _sheetService.sendRoll(
             rollType: rollType,
@@ -98,7 +106,10 @@ class CharacterSheetViewModel extends SubViewModel with ChangeNotifier {
             power: _currentState.uiState.power,
             proficiency: _currentState.uiState.proficiency,
             benediction: _currentState.uiState.benediction,
-            malediction: _currentState.uiState.malediction,
+            malediction: _currentState.uiState.malediction +
+                (rollType == RollType.CHAIR
+                    ? _currentState.character!.getInjury()
+                    : 0),
             characterToHelp: _currentState.uiState.characterToHelp,
             resistRoll: resistRoll,
             empirique: empirique);
@@ -107,17 +118,19 @@ class CharacterSheetViewModel extends SubViewModel with ChangeNotifier {
         }
         return roll;
       } on MessagedException catch (e) {
-          print(e.message);
-          _currentState.uiState.errorMessage = e.message;
+        print(e.message);
+        _currentState.uiState.errorMessage = e.message;
       }
     }
     return null;
   }
 
   void saveNotesIfEnoughTime(DateTime timeUpdate) {
-    if(((_currentState.lastTimeNoteSaved?.difference(timeUpdate).inSeconds) ?? 0) <= 0) {
+    if (((_currentState.lastTimeNoteSaved?.difference(timeUpdate).inSeconds) ??
+            0) <=
+        0) {
       _currentState.lastTimeNoteSaved = null;
-      if(_currentState.character != null) {
+      if (_currentState.character != null) {
         _currentState.character!.notes = _currentState.notes;
         this.createOrUpdateCharacter(_currentState.character!);
       }
@@ -125,8 +138,9 @@ class CharacterSheetViewModel extends SubViewModel with ChangeNotifier {
   }
 
   void subir(int degats) {
-    if(_currentState.character != null) {
-      _currentState.character!.pv = max(_currentState.character!.pv - degats, 0);
+    if (_currentState.character != null) {
+      _currentState.character!.pv =
+          max(_currentState.character!.pv - degats, 0);
       this.createOrUpdateCharacter(_currentState.character!);
     }
   }

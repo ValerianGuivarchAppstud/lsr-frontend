@@ -63,12 +63,14 @@ class _CallPageState extends State<CallPage> {
         setState(() {
           final info = 'onJoinChannel: $channel, uid: $uid';
           callViewModel.join(uid);
+          print("chat = " + channel);
         });
       }, /*leaveChannel: (stats) {
         setState(() {
           _users.clear();
         });
-      },*/ userJoined: (uid, elapsed) {
+      },*/
+          userJoined: (uid, elapsed) {
         setState(() {
           callViewModel.newUser(uid);
         });
@@ -99,23 +101,25 @@ class _CallPageState extends State<CallPage> {
             if (!state.data!.uiState.joined && !state.data!.showLoading) {
               print("PROUT");
               CallUIState uiState = state.data!.uiState;
-             uiState.joined = true;
+              uiState.joined = true;
               callViewModel.updateUi(uiState);
               _engine?.joinChannel(state.data!.token, channel, null, 0);
             }
 
             if (state.data?.showLoading ?? true) {
               const oneSec = Duration(seconds: 1);
-              Timer.periodic(oneSec,
-                      (Timer t) => callViewModel.getCall());
+              Timer.periodic(oneSec, (Timer t) => callViewModel.getCall());
             }
             return Scaffold(
               backgroundColor: Colors.black,
               body: Center(
                 child: Stack(
                   children: <Widget>[
-                    _viewRows(state.data?.uiState.pjDisplay ?? true, state.data?.uiState.uid,
-                        state.data?.charactersUid, state.data?.connectedUsersUid ?? [])
+                    _viewRows(
+                        state.data?.uiState.pjDisplay ?? true,
+                        state.data?.uiState.uid,
+                        state.data?.charactersUid,
+                        state.data?.connectedUsersUid ?? [])
                   ],
                 ),
               ),
@@ -123,15 +127,15 @@ class _CallPageState extends State<CallPage> {
           } else {
             return LoadingWidget(
                 key: Key(
-                  "Loading visio",
-                ));
+              "Loading visio",
+            ));
           }
         });
   }
 
   /// Helper function to get list of native views
   Map<int, Widget> _getRenderViews(List<int> usersUid, int? currentUid) {
-    final Map<int, Widget> list =new Map();
+    final Map<int, Widget> list = new Map();
     list[currentUid ?? 0] = RtcLocalView.SurfaceView();
     usersUid.forEach((int uid) {
       list[uid] = RtcRemoteView.SurfaceView(uid: uid, channelId: channel);
@@ -148,47 +152,50 @@ class _CallPageState extends State<CallPage> {
   }
 
   /// Video view wrapper
-  Widget _videoView(Widget view, int rowNumber, bool pjDisplay, Character? character) {
+  Widget _videoView(
+      Widget view, int rowNumber, bool pjDisplay, Character? character) {
     double w =
         MediaQuery.of(context).size.width / (rowNumber * (pjDisplay ? 2 : 3));
     return Container(
-      decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.black,
-            width: 2
-          ),
-          borderRadius: BorderRadius.all(Radius.circular(20))
-      ),
-      width: w,
-      child: Stack(
-        alignment: Alignment.topLeft,
-        children: [
-        view,if( character != null) Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              CircleAvatar(
-                radius: 16,
-                backgroundColor: Colors.white,
-                foregroundImage: character.apotheose == Apotheose.NONE
-                    ? NetworkImage(character.picture)
-                    : NetworkImage(
-                    character.pictureApotheose != ""
-                        ? character.pictureApotheose
-                        : character.picture),
-              ),
-              Text('  '+character.name+ (character.playerName !=null ? '('+ character.playerName!+')' : '' ))
-            ],),])
-    );
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.black, width: 2),
+            borderRadius: BorderRadius.all(Radius.circular(20))),
+        width: w,
+        child: Stack(alignment: Alignment.topLeft, children: [
+          view,
+          if (character != null)
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                CircleAvatar(
+                  radius: 16,
+                  backgroundColor: Colors.white,
+                  foregroundImage: character.apotheose == Apotheose.NONE
+                      ? NetworkImage(character.picture)
+                      : NetworkImage(character.pictureApotheose != ""
+                          ? character.pictureApotheose
+                          : character.picture),
+                ),
+                Text('  ' +
+                    character.name +
+                    (character.playerName != null
+                        ? '(' + character.playerName! + ')'
+                        : ''))
+              ],
+            ),
+        ]));
   }
 
   /// Video view row wrapper
-  Widget _expandedVideoRow(List<int> userUids, int rowNumber, bool pjDisplay, List<Character>? charactersUid, Map<int, Widget> views) {
-
+  Widget _expandedVideoRow(List<int> userUids, int rowNumber, bool pjDisplay,
+      List<Character>? charactersUid, Map<int, Widget> views) {
     List<Widget> wrappedViews = [];
-    for(int uid in views.keys) {
-      List<Character>? character = charactersUid?.where((element) => element.uid == uid).toList();
-      if((character?.length ?? 0) > 0) {
-        wrappedViews.add(_videoView(views[uid]!, rowNumber, pjDisplay, character?[0]));
+    for (int uid in views.keys) {
+      List<Character>? character =
+          charactersUid?.where((element) => element.uid == uid).toList();
+      if ((character?.length ?? 0) > 0) {
+        wrappedViews
+            .add(_videoView(views[uid]!, rowNumber, pjDisplay, character?[0]));
       } else {
         wrappedViews.add(_videoView(views[uid]!, rowNumber, pjDisplay, null));
       }
@@ -202,7 +209,8 @@ class _CallPageState extends State<CallPage> {
   }
 
   /// Video layout wrapper
-  Widget _viewRows(bool pjDisplay, int? currentUid, List<Character>? charactersUid, List<int> users) {
+  Widget _viewRows(bool pjDisplay, int? currentUid,
+      List<Character>? charactersUid, List<int> users) {
     final views = _getRenderViews(users, currentUid);
     print("VISIO ${views.length}");
     switch (views.length) {
@@ -210,110 +218,146 @@ class _CallPageState extends State<CallPage> {
         return Container(
             child: Column(
           children: <Widget>[
-            _expandedVideoRow(views.keys.toList().sublist(0, 1), 1, pjDisplay, charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(0, 1), 1, pjDisplay,
+                charactersUid, views),
           ],
         ));
       case 2:
         return Container(
             child: Column(
           children: <Widget>[
-            _expandedVideoRow(views.keys.toList().sublist(0, 1), 1, pjDisplay, charactersUid, views),
-            _expandedVideoRow(views.keys.toList().sublist(1, 2), 1, pjDisplay, charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(0, 1), 1, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(1, 2), 1, pjDisplay,
+                charactersUid, views),
           ],
         ));
       case 3:
         return Container(
             child: Column(
           children: <Widget>[
-            _expandedVideoRow(views.keys.toList().sublist(0, 2), 2, pjDisplay, charactersUid, views),
-            _expandedVideoRow(views.keys.toList().sublist(2, 3), 2, pjDisplay, charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(0, 2), 2, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(2, 3), 2, pjDisplay,
+                charactersUid, views),
           ],
         ));
       case 4:
         return Container(
             child: Column(
           children: <Widget>[
-            _expandedVideoRow(views.keys.toList().sublist(0, 2), 2, pjDisplay, charactersUid, views),
-            _expandedVideoRow(views.keys.toList().sublist(2, 4), 2, pjDisplay, charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(0, 2), 2, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(2, 4), 2, pjDisplay,
+                charactersUid, views),
           ],
         ));
       case 5:
         return Container(
             child: Column(
           children: <Widget>[
-            _expandedVideoRow(views.keys.toList().sublist(0, 2), 2, pjDisplay, charactersUid, views),
-            _expandedVideoRow(views.keys.toList().sublist(2, 4), 2, pjDisplay, charactersUid, views),
-            _expandedVideoRow(views.keys.toList().sublist(4, 5), 2, pjDisplay, charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(0, 2), 2, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(2, 4), 2, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(4, 5), 2, pjDisplay,
+                charactersUid, views),
           ],
         ));
       case 6:
         return Container(
             child: Column(
           children: <Widget>[
-            _expandedVideoRow(views.keys.toList().sublist(0, 2), 2, pjDisplay, charactersUid, views),
-            _expandedVideoRow(views.keys.toList().sublist(2, 4), 2, pjDisplay, charactersUid, views),
-            _expandedVideoRow(views.keys.toList().sublist(4, 6), 2, pjDisplay, charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(0, 2), 2, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(2, 4), 2, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(4, 6), 2, pjDisplay,
+                charactersUid, views),
           ],
         ));
       case 7:
         return Container(
             child: Column(
           children: <Widget>[
-            _expandedVideoRow(views.keys.toList().sublist(0, 2), 2, pjDisplay, charactersUid, views),
-            _expandedVideoRow(views.keys.toList().sublist(2, 4), 2, pjDisplay, charactersUid, views),
-            _expandedVideoRow(views.keys.toList().sublist(4, 6), 2, pjDisplay, charactersUid, views),
-            _expandedVideoRow(views.keys.toList().sublist(6, 7), 2, pjDisplay, charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(0, 2), 2, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(2, 4), 2, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(4, 6), 2, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(6, 7), 2, pjDisplay,
+                charactersUid, views),
           ],
         ));
       case 8:
         return Container(
             child: Column(
           children: <Widget>[
-            _expandedVideoRow(views.keys.toList().sublist(0, 2), 2, pjDisplay, charactersUid, views),
-            _expandedVideoRow(views.keys.toList().sublist(2, 4), 2, pjDisplay, charactersUid, views),
-            _expandedVideoRow(views.keys.toList().sublist(4, 6), 2, pjDisplay, charactersUid, views),
-            _expandedVideoRow(views.keys.toList().sublist(6, 8), 2, pjDisplay, charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(0, 2), 2, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(2, 4), 2, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(4, 6), 2, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(6, 8), 2, pjDisplay,
+                charactersUid, views),
           ],
         ));
       case 9:
         return Container(
             child: Column(
           children: <Widget>[
-            _expandedVideoRow(views.keys.toList().sublist(0, 3), 3, pjDisplay, charactersUid, views),
-            _expandedVideoRow(views.keys.toList().sublist(3, 6), 3, pjDisplay, charactersUid, views),
-            _expandedVideoRow(views.keys.toList().sublist(6, 9), 3, pjDisplay, charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(0, 3), 3, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(3, 6), 3, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(6, 9), 3, pjDisplay,
+                charactersUid, views),
           ],
         ));
       case 10:
         return Container(
             child: Column(
-              children: <Widget>[
-                _expandedVideoRow(views.keys.toList().sublist(0, 2), 3, pjDisplay, charactersUid, views),
-                _expandedVideoRow(views.keys.toList().sublist(2, 5), 3, pjDisplay, charactersUid, views),
-                _expandedVideoRow(views.keys.toList().sublist(5, 8), 3, pjDisplay, charactersUid, views),
-                _expandedVideoRow(views.keys.toList().sublist(8, 10), 3, pjDisplay, charactersUid, views),
-              ],
-            ));
+          children: <Widget>[
+            _expandedVideoRow(views.keys.toList().sublist(0, 2), 3, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(2, 5), 3, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(5, 8), 3, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(8, 10), 3, pjDisplay,
+                charactersUid, views),
+          ],
+        ));
       case 11:
         return Container(
             child: Column(
-              children: <Widget>[
-                _expandedVideoRow(views.keys.toList().sublist(0, 3), 3, pjDisplay, charactersUid, views),
-                _expandedVideoRow(views.keys.toList().sublist(3, 6), 3, pjDisplay, charactersUid, views),
-                _expandedVideoRow(views.keys.toList().sublist(6, 9), 3, pjDisplay, charactersUid, views),
-                _expandedVideoRow(views.keys.toList().sublist(9, 11), 3, pjDisplay, charactersUid, views),
-              ],
-            ));
+          children: <Widget>[
+            _expandedVideoRow(views.keys.toList().sublist(0, 3), 3, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(3, 6), 3, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(6, 9), 3, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(9, 11), 3, pjDisplay,
+                charactersUid, views),
+          ],
+        ));
       case 12:
         return Container(
             child: Column(
-              children: <Widget>[
-                _expandedVideoRow(views.keys.toList().sublist(0, 3), 3, pjDisplay, charactersUid, views),
-                _expandedVideoRow(views.keys.toList().sublist(3, 6), 3, pjDisplay, charactersUid, views),
-                _expandedVideoRow(views.keys.toList().sublist(6, 9), 3, pjDisplay, charactersUid, views),
-                _expandedVideoRow(views.keys.toList().sublist(9, 12), 3, pjDisplay, charactersUid, views),
-              ],
-            ));
+          children: <Widget>[
+            _expandedVideoRow(views.keys.toList().sublist(0, 3), 3, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(3, 6), 3, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(6, 9), 3, pjDisplay,
+                charactersUid, views),
+            _expandedVideoRow(views.keys.toList().sublist(9, 12), 3, pjDisplay,
+                charactersUid, views),
+          ],
+        ));
       default:
     }
     return Container();

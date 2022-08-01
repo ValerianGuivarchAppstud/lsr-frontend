@@ -11,19 +11,17 @@ class CharacterSheet {
   List<Roll> rollList;
   late List<String> pjAlliesNames;
   late List<String> playersName;
-  CharacterSheet({
-      required this.character,
+  CharacterSheet(
+      {required this.character,
       required this.rollList,
-    required this.pjAlliesNames,
-    required this.playersName
-  });
-
+      required this.pjAlliesNames,
+      required this.playersName});
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
   /// The constructor is named after the source class, in this case, User.
-  factory CharacterSheet.fromJson(Map<String, dynamic> json) => _$CharacterSheetFromJson(json);
-
+  factory CharacterSheet.fromJson(Map<String, dynamic> json) =>
+      _$CharacterSheetFromJson(json);
 
   /// `toJson` is the convention for a class to declare support for serialization
   /// to JSON. The implementation simply calls the private, generated

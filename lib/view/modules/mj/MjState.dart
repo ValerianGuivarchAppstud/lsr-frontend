@@ -10,11 +10,7 @@ class MjState {
   String? error;
   late MjUIState uiState;
 
-
-  MjState({
-    this.showLoading = true,
-    this.mjSheet,
-    this.error}) {
+  MjState({this.showLoading = true, this.mjSheet, this.error}) {
     this.charactersState = {};
     this.uiState = MjUIState(false);
   }
@@ -60,11 +56,10 @@ class MjState {
   }
 
   @override
-  int get hashCode =>
-      showLoading.hashCode ^ mjSheet.hashCode ^ error.hashCode;
+  int get hashCode => showLoading.hashCode ^ mjSheet.hashCode ^ error.hashCode;
 
   CharacterSheetState getCharacterStateData(String name) {
-    if(charactersState[name] == null) {
+    if (charactersState[name] == null) {
       charactersState[name] = new CharacterSheetState();
     }
     return charactersState[name]!;
@@ -87,15 +82,11 @@ class MjFailed extends MjPartialState {
 
 class MjLoading extends MjPartialState {}
 
-
-
-
 class MjMainLoaded extends MjPartialState {
   bool camera;
 
   MjMainLoaded(this.camera);
 }
-
 
 class MjUIUpdated extends MjPartialState {
   MjUIState state;

@@ -14,7 +14,10 @@ class SheetService {
   IHealProvider healProvider;
   IRollProvider rollProvider;
 
-  SheetService({required this.characterProvider, required this.rollProvider, required this.healProvider});
+  SheetService(
+      {required this.characterProvider,
+      required this.rollProvider,
+      required this.healProvider});
 
   Future<CharacterSheet> get(String name) => characterProvider.get(name);
 
@@ -25,17 +28,17 @@ class SheetService {
   }
 
   Future<Roll> sendRoll(
-          {required String rollerName,
-          required RollType rollType,
-          required bool secret,
-          required bool focus,
-          required bool power,
-          required bool proficiency,
-          required int benediction,
-          required int malediction,
-          required String? characterToHelp,
-          required String? resistRoll,
-            String empirique = ''}) async {
+      {required String rollerName,
+      required RollType rollType,
+      required bool secret,
+      required bool focus,
+      required bool power,
+      required bool proficiency,
+      required int benediction,
+      required int malediction,
+      required String? characterToHelp,
+      required String? resistRoll,
+      String empirique = ''}) async {
     try {
       Roll roll = await rollProvider.send(
           rollerName: rollerName,
@@ -50,10 +53,9 @@ class SheetService {
           resistRoll: resistRoll,
           empirique: empirique);
       return roll;
-    }  on MessagedException catch (e) {
+    } on MessagedException catch (e) {
       print(e.message);
       throw new MessagedException(e.message);
     }
   }
-
 }

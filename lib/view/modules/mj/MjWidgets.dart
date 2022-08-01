@@ -40,9 +40,9 @@ class MjWidgets {
     final TextEditingController _secunda =
         TextEditingController(text: initialCharacter?.secunda ?? '');
     final TextEditingController _picture =
-    TextEditingController(text: initialCharacter?.picture ?? '');
+        TextEditingController(text: initialCharacter?.picture ?? '');
     final TextEditingController _pictureApotheose =
-    TextEditingController(text: initialCharacter?.pictureApotheose ?? '');
+        TextEditingController(text: initialCharacter?.pictureApotheose ?? '');
     final TextEditingController _background =
         TextEditingController(text: initialCharacter?.background ?? '');
     Classe? classe = initialCharacter?.classe ?? null;
@@ -258,7 +258,7 @@ class MjWidgets {
                           children: [
                             Padding(
                               padding:
-                              const EdgeInsets.fromLTRB(0.0, 0.0, 5.0, 0.0),
+                                  const EdgeInsets.fromLTRB(0.0, 0.0, 5.0, 0.0),
                               child: DropdownButton<Genre>(
                                 hint: Text('Genre'),
                                 value: genre,
@@ -269,7 +269,7 @@ class MjWidgets {
                                   });
                                 },
                                 style:
-                                const TextStyle(color: Colors.deepPurple),
+                                    const TextStyle(color: Colors.deepPurple),
                                 underline: Container(
                                   height: 2,
                                   color: Colors.deepPurpleAccent,
@@ -277,16 +277,16 @@ class MjWidgets {
                                 items: Genre.values
                                     .map<DropdownMenuItem<Genre>>(
                                         (Genre value) {
-                                      return DropdownMenuItem<Genre>(
-                                        value: value,
-                                        child: Text(value.name),
-                                      );
-                                    }).toList(),
+                                  return DropdownMenuItem<Genre>(
+                                    value: value,
+                                    child: Text(value.name),
+                                  );
+                                }).toList(),
                               ),
                             ),
                             Padding(
                               padding:
-                              const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                                  const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                               child: DropdownButton<Category>(
                                 hint: Text('Categorie'),
                                 value: category,
@@ -298,7 +298,7 @@ class MjWidgets {
                                   });
                                 },
                                 style:
-                                const TextStyle(color: Colors.deepPurple),
+                                    const TextStyle(color: Colors.deepPurple),
                                 underline: Container(
                                   height: 2,
                                   color: Colors.deepPurpleAccent,
@@ -306,16 +306,16 @@ class MjWidgets {
                                 items: Category.values
                                     .map<DropdownMenuItem<Category>>(
                                         (Category value) {
-                                      return DropdownMenuItem<Category>(
-                                        value: value,
-                                        child: Text(value.name),
-                                      );
-                                    }).toList(),
+                                  return DropdownMenuItem<Category>(
+                                    value: value,
+                                    child: Text(value.name),
+                                  );
+                                }).toList(),
                               ),
                             ),
                             Padding(
                               padding:
-                              const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                                  const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                               child: DropdownButton<String>(
                                 hint: Text('Joueuse'),
                                 value: player,
@@ -327,7 +327,7 @@ class MjWidgets {
                                   });
                                 },
                                 style:
-                                const TextStyle(color: Colors.deepPurple),
+                                    const TextStyle(color: Colors.deepPurple),
                                 underline: Container(
                                   height: 2,
                                   color: Colors.deepPurpleAccent,
@@ -335,11 +335,11 @@ class MjWidgets {
                                 items: playersName
                                     .map<DropdownMenuItem<String>>(
                                         (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
                               ),
                             ),
                           ]),
@@ -348,7 +348,7 @@ class MjWidgets {
                           children: [
                             Padding(
                               padding:
-                              const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                                  const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                               child: DropdownButton<Color>(
                                 hint: Text('Couleur Bouton'),
                                 value: buttonColor,
@@ -360,7 +360,7 @@ class MjWidgets {
                                   });
                                 },
                                 style:
-                                const TextStyle(color: Colors.deepPurple),
+                                    const TextStyle(color: Colors.deepPurple),
                                 underline: Container(
                                   height: 2,
                                   color: Colors.deepPurpleAccent,
@@ -368,20 +368,20 @@ class MjWidgets {
                                 items: CharacterWidgets.getColorList()
                                     .map<DropdownMenuItem<Color>>(
                                         (Color value) {
-                                      return DropdownMenuItem<Color>(
-                                        value: value,
-                                        child: Text(value.toString(),
-                                          style: TextStyle(
-                                              backgroundColor: value,
-                                              color: value
-                                          ),),
-                                      );
-                                    }).toList(),
+                                  return DropdownMenuItem<Color>(
+                                    value: value,
+                                    child: Text(
+                                      value.toString(),
+                                      style: TextStyle(
+                                          backgroundColor: value, color: value),
+                                    ),
+                                  );
+                                }).toList(),
                               ),
                             ),
                             Padding(
                               padding:
-                              const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                                  const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                               child: DropdownButton<Color>(
                                 hint: Text('Couleur Text'),
                                 value: textColor,
@@ -393,7 +393,7 @@ class MjWidgets {
                                   });
                                 },
                                 style:
-                                const TextStyle(color: Colors.deepPurple),
+                                    const TextStyle(color: Colors.deepPurple),
                                 underline: Container(
                                   height: 2,
                                   color: Colors.deepPurpleAccent,
@@ -401,32 +401,36 @@ class MjWidgets {
                                 items: CharacterWidgets.getColorList()
                                     .map<DropdownMenuItem<Color>>(
                                         (Color value) {
-                                      return DropdownMenuItem<Color>(
-                                        value: value,
-                                        child: Text(value.toString(),
-                                          style: TextStyle(
-                                              backgroundColor: value,
-                                              color: value
-                                          ),),
-                                      );
-                                    }).toList(),
+                                  return DropdownMenuItem<Color>(
+                                    value: value,
+                                    child: Text(
+                                      value.toString(),
+                                      style: TextStyle(
+                                          backgroundColor: value, color: value),
+                                    ),
+                                  );
+                                }).toList(),
                               ),
                             ),
                           ]),
-                          Row(
+                      Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [SizedBox(
-                          width: 150.0,
-                          child: TextFormField(
-                            controller: _picture,
-                            decoration: InputDecoration(hintText: "Picture"),
-                          )),
-                      SizedBox(
-                          width: 150.0,
-                          child: TextFormField(
-                            controller: _pictureApotheose,
-                            decoration: InputDecoration(hintText: "Picture Apothéose"),
-                          ))]),
+                          children: [
+                            SizedBox(
+                                width: 150.0,
+                                child: TextFormField(
+                                  controller: _picture,
+                                  decoration:
+                                      InputDecoration(hintText: "Picture"),
+                                )),
+                            SizedBox(
+                                width: 150.0,
+                                child: TextFormField(
+                                  controller: _pictureApotheose,
+                                  decoration: InputDecoration(
+                                      hintText: "Picture Apothéose"),
+                                ))
+                          ]),
                       SizedBox(
                           width: 300.0,
                           child: TextFormField(
@@ -448,10 +452,12 @@ class MjWidgets {
                           bloodline: bloodline ??
                               initialCharacter?.bloodline ??
                               Bloodline.AUCUN,
-                          apotheose: initialCharacter?.apotheose ??
-                              Apotheose.NONE,
-                          apotheoseImprovement: initialCharacter?.apotheoseImprovement,
-                          apotheoseImprovementList: initialCharacter?.apotheoseImprovementList ?? [],
+                          apotheose:
+                              initialCharacter?.apotheose ?? Apotheose.NONE,
+                          apotheoseImprovement:
+                              initialCharacter?.apotheoseImprovement,
+                          apotheoseImprovementList:
+                              initialCharacter?.apotheoseImprovementList ?? [],
                           chair: int.parse(_chair.value.text),
                           esprit: int.parse(_esprit.value.text),
                           essence: int.parse(_essence.value.text),
@@ -495,9 +501,15 @@ class MjWidgets {
                           relance: initialCharacter?.relance ?? 0,
                           playerName:
                               player ?? initialCharacter?.playerName ?? null,
-                          buttonColor: buttonColor?.value.toString() ?? initialCharacter?.buttonColor ?? null,
-                          textColor: textColor?.value.toString() ?? initialCharacter?.textColor ?? null,
-                      uid: null));
+                          buttonColor: buttonColor?.value.toString() ??
+                              initialCharacter?.buttonColor ??
+                              null,
+                          textColor: textColor?.value.toString() ??
+                              initialCharacter?.textColor ??
+                              null,
+                          uid: null,
+                          help: null,
+                      alliesName: []));
                       Navigator.of(context).pop();
                     }
                   },
@@ -511,7 +523,9 @@ class MjWidgets {
   static Future<void Function()> buildCreateCharacterWithTemplateAlertDialog(
       BuildContext context,
       String templateName,
-      void Function(String templateName, String customName, int level, int number) addCharacterWithTemplate) async {
+      void Function(
+              String templateName, String customName, int level, int number)
+          addCharacterWithTemplate) async {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     final TextEditingController _name =
         TextEditingController(text: templateName);
@@ -568,7 +582,11 @@ class MjWidgets {
                   child: Text('OK   '),
                   onTap: () {
                     if (_formKey.currentState?.validate() ?? false) {
-                      addCharacterWithTemplate(templateName, _name.value.text, int.parse(_level.value.text),  int.parse(_number.value.text));
+                      addCharacterWithTemplate(
+                          templateName,
+                          _name.value.text,
+                          int.parse(_level.value.text),
+                          int.parse(_number.value.text));
                       Navigator.of(context).pop();
                     }
                   },

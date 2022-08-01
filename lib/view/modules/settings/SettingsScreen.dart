@@ -11,14 +11,13 @@ class SettingsPage extends StatefulWidget {
   final SettingsViewModel settingsViewModel;
   final MainViewModel mainViewModel;
 
-  SettingsPage(
-      this.settingsViewModel,
-      this.mainViewModel,
+  SettingsPage(this.settingsViewModel, this.mainViewModel,
       {required Key key, String SettingsName = ''})
       : super(key: key);
 
   @override
-  _SettingsPageState createState() => _SettingsPageState(this.settingsViewModel, this.mainViewModel);
+  _SettingsPageState createState() =>
+      _SettingsPageState(this.settingsViewModel, this.mainViewModel);
 }
 
 class _SettingsPageState extends State<SettingsPage> {
@@ -30,7 +29,9 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width; /* < WIDTH_SCREEN
+    var width = MediaQuery.of(context)
+        .size
+        .width; /* < WIDTH_SCREEN
         ? MediaQuery.of(context).size.width
         : WIDTH_SCREEN;*/
     settingsViewModel.getSettings();
@@ -58,8 +59,8 @@ class _SettingsPageState extends State<SettingsPage> {
                             child: Text("Paramètres indisponibles..."),
                           );
                         } else {
-                          return _buildSettings(state.data!.settings!,
-                              width, settingsViewModel, state.data!.uiState.pj);
+                          return _buildSettings(state.data!.settings!, width,
+                              settingsViewModel, state.data!.uiState.pj);
                         }
                       }))));
         });
@@ -68,16 +69,16 @@ class _SettingsPageState extends State<SettingsPage> {
   _buildSettings(Settings settings, double sizeWidth,
           SettingsViewModel settingsViewModel, bool pj) =>
       Column(mainAxisSize: MainAxisSize.min, children: [
-        SettingsWidgets.buildCharacterSelection(settings, settingsViewModel, null, setState),
+        SettingsWidgets.buildCharacterSelection(
+            settings, settingsViewModel, null, setState),
         Padding(
-          padding :EdgeInsets.fromLTRB(0, 100, 0, 0),
+            padding: EdgeInsets.fromLTRB(0, 100, 0, 0),
             child: ElevatedButton(
-          child: pj ? const Text('Devenir MJ') : Text('Devenir joueuse'),
-          onPressed: () {
-            mainViewModel.switchRole();
-          },
-        )
-        )
+              child: pj ? const Text('Devenir MJ') : Text('Devenir joueuse'),
+              onPressed: () {
+                mainViewModel.switchRole();
+              },
+            ))
       ]);
 }
 

@@ -1,5 +1,1 @@
-enum Genre {
-  HOMME,
-  FEMME,
-  AUTRE
-}
+enum Genre { HOMME, FEMME, AUTRE }

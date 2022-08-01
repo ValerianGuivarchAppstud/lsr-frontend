@@ -11,7 +11,7 @@ class HealWidgets {
   static buildHeal(
           BuildContext context,
           Character character,
-      double width,
+          double width,
           double sizeRatio,
           double sizeRatioFont,
           HealSheetViewModel healSheetViewModel,
@@ -23,9 +23,7 @@ class HealWidgets {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
             CharacterWidgets.buildCharacterSheetButton(
               "Soin",
               healSheetState.uiState.heal.toString() +
@@ -64,11 +62,12 @@ class HealWidgets {
               changeUiSelect(healSheetViewModel, healSheetState.uiState, 'PP');
             }, () => {}),
           ]),
-  Align(
-  alignment: Alignment.topCenter,
-  child: Wrap(
-    children: HealWidgets.buildHealCharacterList(pjAllies ?? [], healSheetViewModel),
-  )),
+          Align(
+              alignment: Alignment.topCenter,
+              child: Wrap(
+                children: HealWidgets.buildHealCharacterList(
+                    pjAllies ?? [], healSheetViewModel),
+              )),
           if (rollList != null) rollList
         ],
       );
@@ -137,39 +136,35 @@ class HealWidgets {
     healSheetViewModel.updateUi(uiState);
   }
 
-  static List<Widget> buildHealCharacterList(List<Character> pjAllies, HealSheetViewModel healSheetViewModel) {
+  static List<Widget> buildHealCharacterList(
+      List<Character> pjAllies, HealSheetViewModel healSheetViewModel) {
     List<Widget> list = [];
 
     for (Character character in pjAllies) {
       list.add(Container(
-        child:  Padding(
-          padding: EdgeInsets.all(4),
-          child : Row(
+          child: Padding(
+        padding: EdgeInsets.all(4),
+        child: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CharacterWidgets.buildCharacterSheetButton(
-                character.name,
-                character.pv.toString() +
-                    ' / ' +
-                    character.pvMax.toString(),
-                100,//(sizeRatio * width) / 5,
-                18,//sizeRatioFont * 26,
-                40,
-                character.pv <= 0
-                    ? Colors.blueGrey
-                    : character.buttonColorOrDefault(),
-                character.pv <= 0
-                    ? Colors.white
-                    : character.textColorOrDefault(),
-                true,
-                    () => { healSheetViewModel.healCharacter(character)},
-                    () =>{ },
+              character.name,
+              character.pv.toString() + ' / ' + character.pvMax.toString(),
+              100, //(sizeRatio * width) / 5,
+              18, //sizeRatioFont * 26,
+              40,
+              character.pv <= 0
+                  ? Colors.blueGrey
+                  : character.buttonColorOrDefault(),
+              character.pv <= 0 ? Colors.white : character.textColorOrDefault(),
+              true,
+              () => {healSheetViewModel.healCharacter(character)},
+              () => {},
             ),
           ],
         ),
-      )
-      ));
+      )));
     }
 
     return list;

@@ -45,9 +45,11 @@ class Character {
   late String? textColor;
   late String? apotheoseImprovement;
   late List<String> apotheoseImprovementList;
+  late List<String> alliesName;
   int? uid;
-  Character({
-      required this.name,
+  int? help;
+  Character(
+      {required this.name,
       required this.classe,
       required this.bloodline,
       required this.apotheose,
@@ -69,25 +71,25 @@ class Character {
       required this.secunda,
       required this.notes,
       required this.category,
-    required this.genre,
-    required this.relance,
-    required this.picture,
-    required this.pictureApotheose,
-    required this.background,
-    required this.playerName,
-    required this.buttonColor,
-    required this.textColor,
-    required this.apotheoseImprovement,
-    required this.apotheoseImprovementList,
-    required this.uid
-  });
-
-
+      required this.genre,
+      required this.relance,
+      required this.picture,
+      required this.pictureApotheose,
+      required this.background,
+      required this.playerName,
+      required this.buttonColor,
+      required this.textColor,
+      required this.apotheoseImprovement,
+      required this.apotheoseImprovementList,
+      required this.uid,
+        required this.alliesName,
+      required this.help});
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
   /// The constructor is named after the source class, in this case, User.
-  factory Character.fromJson(Map<String, dynamic> json) => _$CharacterFromJson(json);
+  factory Character.fromJson(Map<String, dynamic> json) =>
+      _$CharacterFromJson(json);
 
   /// `toJson` is the convention for a class to declare support for serialization
   /// to JSON. The implementation simply calls the private, generated
@@ -95,27 +97,58 @@ class Character {
   Map<String, dynamic> toJson() => _$CharacterToJson(this);
 
   String description() {
-    return getClasseDescription() + ' ' + getBloodlineDescription()+', niveau ${niveau}';
+    return getClasseDescription() +
+        ' ' +
+        getBloodlineDescription() +
+        ', niveau ${niveau}';
   }
 
   String getClasseDescription() {
-    switch(classe){
+    switch (classe) {
       case Classe.CHAMPION:
-        return genre == Genre.HOMME ? "Champion" : genre == Genre.FEMME ? "Championne" : "Champion.ne";
+        return genre == Genre.HOMME
+            ? "Champion"
+            : genre == Genre.FEMME
+                ? "Championne"
+                : "Champion.ne";
       case Classe.CORROMPU:
-        return genre == Genre.HOMME ? "Corrompu" : genre == Genre.FEMME ?  "Corrompue" : "Corrompu.e";
+        return genre == Genre.HOMME
+            ? "Corrompu"
+            : genre == Genre.FEMME
+                ? "Corrompue"
+                : "Corrompu.e";
       case Classe.REJETE:
-        return genre == Genre.HOMME ? "Rejeté" : genre == Genre.FEMME ?  "Rejetée" : "Rejeté.e";
+        return genre == Genre.HOMME
+            ? "Rejeté"
+            : genre == Genre.FEMME
+                ? "Rejetée"
+                : "Rejeté.e";
       case Classe.PACIFICATEUR:
-        return genre == Genre.HOMME ? "Pacificateur" : genre == Genre.FEMME ?  "Pacificatrice" : "Pacificateurice";
+        return genre == Genre.HOMME
+            ? "Pacificateur"
+            : genre == Genre.FEMME
+                ? "Pacificatrice"
+                : "Pacificateurice";
       case Classe.SPIRITE:
-        return genre == Genre.HOMME ? "Spirit" : genre == Genre.FEMME ?  "Spirite" : "Spirit.e";
+        return genre == Genre.HOMME
+            ? "Spirit"
+            : genre == Genre.FEMME
+                ? "Spirite"
+                : "Spirit.e";
       case Classe.ARCANISTE:
         return "Arcaniste";
       case Classe.CHAMPION_ARCANIQUE:
-        return genre == Genre.HOMME ? "Champion Arcanique" : genre == Genre.FEMME ?  "Championne Arcanique" :  "Champion.ne Arcanique";
+        return genre == Genre.HOMME
+            ? "Champion Arcanique"
+            : genre == Genre.FEMME
+                ? "Championne Arcanique"
+                : "Champion.ne Arcanique";
       case Classe.SOLDAT:
-        return genre == Genre.HOMME ? "Soldat" : genre == Genre.FEMME ?  "Soldate" : "Soldat.e";
+        return genre == Genre.HOMME
+            ? "Soldat"
+            : genre == Genre.FEMME
+                ? "Soldate"
+                : "Soldat.e";
       case Classe.INCONNU:
         return "Classe inconnue";
     }
@@ -159,7 +192,7 @@ class Character {
   }
 
   int getInjury() {
-    double diff = (pvMax - pv + 1) / 6;
+    double diff = (pvMax - pv - 1) / 6;
     return diff.floor();
   }
 

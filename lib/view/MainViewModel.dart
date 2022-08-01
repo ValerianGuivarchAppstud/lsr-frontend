@@ -12,8 +12,7 @@ class MainViewModel with ChangeNotifier {
   List<SubViewModel> subViewModels = [];
   late MainState _currentState;
 
-  final streamController =
-      StreamController<MainState>.broadcast(sync: true);
+  final streamController = StreamController<MainState>.broadcast(sync: true);
 
   MainViewModel() {
     _currentState = MainState();
@@ -28,8 +27,7 @@ class MainViewModel with ChangeNotifier {
   }
 
   Future<void> getMain([bool reload = false]) async {
-    if(reload) {
-
+    if (reload) {
       streamController.add(_currentState.copy(MainLoading()));
     }
   }
@@ -38,7 +36,7 @@ class MainViewModel with ChangeNotifier {
     streamController.add(_currentState.copy(MainUIUpdated(state)));
 
     print(subViewModels.length);
-    for(SubViewModel subViewModel in subViewModels) {
+    for (SubViewModel subViewModel in subViewModels) {
       subViewModel.changeMainState(MainUIUpdated(state));
     }
   }
@@ -46,16 +44,16 @@ class MainViewModel with ChangeNotifier {
   switchRole() {
     _currentState.uiState.selectedIndex = 0;
     _currentState.uiState.pj = !_currentState.uiState.pj;
-    updateUi( _currentState.uiState);
+    updateUi(_currentState.uiState);
   }
 
   switchCamera() {
     _currentState.uiState.camera = !_currentState.uiState.camera;
-    updateUi( _currentState.uiState);
+    updateUi(_currentState.uiState);
   }
 
   changeTab(int index) {
     _currentState.uiState.selectedIndex = index;
-    updateUi( _currentState.uiState);
+    updateUi(_currentState.uiState);
   }
 }
