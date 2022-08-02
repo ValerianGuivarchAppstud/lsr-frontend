@@ -106,10 +106,10 @@ class CharacterSheetViewModel extends SubViewModel with ChangeNotifier {
             power: _currentState.uiState.power,
             proficiency: _currentState.uiState.proficiency,
             benediction: _currentState.uiState.benediction,
-            malediction: _currentState.uiState.malediction +
+            malediction: _currentState.uiState.malediction + max(
                 (rollType == RollType.CHAIR
                     ? _currentState.character!.getInjury()
-                    : 0),
+                    : 0), 0),
             characterToHelp: _currentState.uiState.characterToHelp,
             resistRoll: resistRoll,
             empirique: empirique);

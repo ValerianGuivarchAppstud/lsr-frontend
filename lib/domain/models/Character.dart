@@ -151,6 +151,14 @@ class Character {
                 : "Soldat.e";
       case Classe.INCONNU:
         return "Classe inconnue";
+      case Classe.AVATAR:
+        return genre == Genre.HOMME
+            ? "Avatar"
+            : genre == Genre.FEMME
+            ? "Avatar"
+            : "Avatar";
+      case Classe.SKINWALKER:
+        return "Skinwalker";
     }
   }
 
@@ -188,6 +196,18 @@ class Character {
         return "de l'Arbre";
       case Bloodline.AUCUN:
         return "";
+      case Bloodline.TERREUR:
+        return "de la Terreur";
+      case Bloodline.GORGONNE:
+        return "Gorgonne";
+      case Bloodline.NECROMANCIE:
+        return "de la Nécromancie";
+      case Bloodline.VOYAGEUR:
+        return "du Voyageur";
+      case Bloodline.JUGE:
+        return "du Juge";
+      case Bloodline.VOLEUR:
+        return "du Voleur";
     }
   }
 

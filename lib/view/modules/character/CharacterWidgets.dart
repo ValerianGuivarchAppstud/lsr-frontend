@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:lsr/domain/models/Apotheose.dart';
+import 'package:lsr/domain/models/Classe.dart';
 import 'package:lsr/domain/models/RollType.dart';
 import 'package:lsr/view/modules/mj/MjViewModel.dart';
 
@@ -393,11 +394,15 @@ class CharacterWidgets {
                       (character.apotheose == Apotheose.NONE
                               ? characterSheetState.uiState.benediction
                                   .toString()
-                              : character.apotheose == Apotheose.FINALE
-                                  ? characterSheetState.uiState.benediction
-                                          .toString() +
-                                      '+5'
-                                  : characterSheetState.uiState.benediction
+                          : character.apotheose == Apotheose.FINALE
+                          ? characterSheetState.uiState.benediction
+                          .toString() +
+                          '+5'
+                          : character.apotheose == Apotheose.ARCANIQUE
+                          ? characterSheetState.uiState.benediction
+                          .toString() +
+                          '+2'
+                          : characterSheetState.uiState.benediction
                                           .toString() +
                                       '+3') +
                           ((character.help ?? 0) > 0
@@ -701,14 +706,35 @@ class CharacterWidgets {
                   character.textColorOrDefault(),
                   playerDisplay,
                   () => {
-                        if (character.niveau < 10 &&
-                            character.apotheose == Apotheose.NONE)
-                          {
-                            character.apotheose = Apotheose.NORMALE,
-                            characterSheetViewModel
-                                .createOrUpdateCharacter(character)
-                          }
-                        else
+                    if (character.classe == Classe.AVATAR &&
+                        character.apotheose == Apotheose.NONE)
+                      {
+                        character.apotheose = Apotheose.ARCANIQUE,
+                        characterSheetViewModel
+                            .createOrUpdateCharacter(character)
+                      }
+                    else if (character.classe == Classe.SPIRITE &&
+                        character.apotheose == Apotheose.NONE)
+                      {
+                        character.apotheose = Apotheose.FORME_VENGERESSE,
+                        characterSheetViewModel
+                            .createOrUpdateCharacter(character)
+                      }
+                    else if (character.classe == Classe.PACIFICATEUR &&
+                        character.apotheose == Apotheose.NONE)
+                      {
+                        character.apotheose = Apotheose.SURCHARGE,
+                        characterSheetViewModel
+                            .createOrUpdateCharacter(character)
+                      }
+                    else if (character.niveau < 10 &&
+                  character.apotheose == Apotheose.NONE)
+                  {
+                  character.apotheose = Apotheose.NORMALE,
+                  characterSheetViewModel
+                      .createOrUpdateCharacter(character)
+                  }
+                  else
                           {
                             showApotheoseAlertDialog(
                                 context, characterSheetViewModel, character)
@@ -1579,7 +1605,7 @@ class CharacterWidgets {
     if (character.apotheose != Apotheose.NONE) {
       roll = await characterSheetViewModel.sendRoll(RollType.APOTHEOSE);
     }
-    int penalityPoints = 3;
+    int penalityPoints = character.apotheose == Apotheose.ARCANIQUE ? 2 : 3;
     List<String> apotheoseImprovementList =
         character.niveau >= 20 ? ["Apothéose Finale"] : [];
     String? apotheoseImprovement = null;

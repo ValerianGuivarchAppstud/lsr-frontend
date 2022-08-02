@@ -96,6 +96,8 @@ const _$ClasseEnumMap = {
   Classe.ARCANISTE: 'ARCANISTE',
   Classe.CHAMPION_ARCANIQUE: 'CHAMPION_ARCANIQUE',
   Classe.SOLDAT: 'SOLDAT',
+  Classe.SKINWALKER: 'SKINWALKER',
+  Classe.AVATAR: 'AVATAR',
   Classe.INCONNU: 'INCONNU',
 };
 
@@ -114,7 +116,13 @@ const _$BloodlineEnumMap = {
   Bloodline.GOULE: 'GOULE',
   Bloodline.SUCCUBE: 'SUCCUBE',
   Bloodline.ILLITHIDE: 'ILLITHIDE',
+  Bloodline.GORGONNE: 'GORGONNE',
   Bloodline.ARBRE: 'ARBRE',
+  Bloodline.TERREUR: 'TERREUR',
+  Bloodline.NECROMANCIE: 'NECROMANCIE',
+  Bloodline.VOYAGEUR: 'VOYAGEUR',
+  Bloodline.JUGE: 'JUGE',
+  Bloodline.VOLEUR: 'VOLEUR',
   Bloodline.AUCUN: 'AUCUN',
 };
 

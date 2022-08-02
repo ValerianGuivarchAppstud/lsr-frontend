@@ -13,6 +13,12 @@ enum Bloodline {
   GOULE,
   SUCCUBE,
   ILLITHIDE,
+  GORGONNE,
   ARBRE,
+  TERREUR,
+  NECROMANCIE,
+  VOYAGEUR,
+  JUGE,
+  VOLEUR,
   AUCUN
 }
