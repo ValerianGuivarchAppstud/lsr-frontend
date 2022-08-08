@@ -98,6 +98,7 @@ const _$ClasseEnumMap = {
   Classe.SOLDAT: 'SOLDAT',
   Classe.SKINWALKER: 'SKINWALKER',
   Classe.AVATAR: 'AVATAR',
+  Classe.GAME_MASTER: 'GAME_MASTER',
   Classe.INCONNU: 'INCONNU',
 };
 

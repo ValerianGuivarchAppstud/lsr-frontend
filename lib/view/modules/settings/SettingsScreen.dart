@@ -75,9 +75,9 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: EdgeInsets.fromLTRB(0, 100, 0, 0),
             child: ElevatedButton(
               child: pj ? const Text('Devenir MJ') : Text('Devenir joueuse'),
-              onPressed: () {
+              onLongPress: () {
                 mainViewModel.switchRole();
-              },
+              }, onPressed: () {  },
             ))
       ]);
 }

@@ -15,6 +15,7 @@ part 'Roll.g.dart';
 class Roll {
   String id;
   String rollerName;
+  bool displayDices;
   RollType rollType;
   DateTime date;
   bool secret;
@@ -37,6 +38,7 @@ class Roll {
   Roll(
       this.id,
       this.rollerName,
+      this.displayDices,
       this.rollType,
       this.date,
       this.secret,

@@ -159,6 +159,8 @@ class Character {
             : "Avatar";
       case Classe.SKINWALKER:
         return "Skinwalker";
+      case Classe.GAME_MASTER:
+        return "MJ";
     }
   }
 

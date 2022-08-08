@@ -9,6 +9,7 @@ part of 'Roll.dart';
 Roll _$RollFromJson(Map<String, dynamic> json) => Roll(
       json['id'] as String,
       json['rollerName'] as String,
+      json['displayDices'] as bool,
       $enumDecode(_$RollTypeEnumMap, json['rollType']),
       DateTime.parse(json['date'] as String),
       json['secret'] as bool,
@@ -34,6 +35,7 @@ Roll _$RollFromJson(Map<String, dynamic> json) => Roll(
 Map<String, dynamic> _$RollToJson(Roll instance) => <String, dynamic>{
       'id': instance.id,
       'rollerName': instance.rollerName,
+      'displayDices': instance.displayDices,
       'rollType': _$RollTypeEnumMap[instance.rollType]!,
       'date': instance.date.toIso8601String(),
       'secret': instance.secret,

@@ -9,5 +9,6 @@ enum Classe {
   SOLDAT,
   SKINWALKER,
   AVATAR,
+  GAME_MASTER,
   INCONNU
 }

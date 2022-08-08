@@ -1193,6 +1193,7 @@ class CharacterWidgets {
       ));
       rollText.add(TextSpan(text: ')'));
     }
+    if(roll.displayDices ||  mjViewModel != null)
     switch (roll.rollType) {
       case RollType.CHAIR:
       case RollType.ESPRIT:
