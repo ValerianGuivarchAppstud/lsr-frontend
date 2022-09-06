@@ -79,5 +79,6 @@ const _$ApotheoseEnumMap = {
   Apotheose.ARCANIQUE: 'ARCANIQUE',
   Apotheose.FORME_VENGERESSE: 'FORME_VENGERESSE',
   Apotheose.SURCHARGE: 'SURCHARGE',
+  Apotheose.SURCHARGE_IMPROVED: 'SURCHARGE_IMPROVED',
   Apotheose.FINALE: 'FINALE',
 };

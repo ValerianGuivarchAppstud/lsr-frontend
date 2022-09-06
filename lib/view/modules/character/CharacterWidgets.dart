@@ -308,6 +308,15 @@ class CharacterWidgets {
                         color: Colors.red,
                         fontSize: playerDisplay ? 18 : 12,
                         fontWeight: FontWeight.bold))),
+          if (character.apotheose == Apotheose.SURCHARGE_IMPROVED)
+            Padding(
+                padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
+                child: Text(
+                    'Surcharge Améliorée : ${character.apotheoseImprovement}',
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontSize: playerDisplay ? 18 : 12,
+                        fontWeight: FontWeight.bold))),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -394,17 +403,17 @@ class CharacterWidgets {
                       (character.apotheose == Apotheose.NONE
                               ? characterSheetState.uiState.benediction
                                   .toString()
-                          : character.apotheose == Apotheose.FINALE
-                          ? characterSheetState.uiState.benediction
-                          .toString() +
-                          '+5'
-                          : character.apotheose == Apotheose.ARCANIQUE
-                          ? characterSheetState.uiState.benediction
-                          .toString() +
-                          '+2'
-                          : characterSheetState.uiState.benediction
+                              : character.apotheose == Apotheose.FINALE
+                                  ? characterSheetState.uiState.benediction
                                           .toString() +
-                                      '+3') +
+                                      '+5'
+                                  : character.apotheose == Apotheose.ARCANIQUE
+                                      ? characterSheetState.uiState.benediction
+                                              .toString() +
+                                          '+2'
+                                      : characterSheetState.uiState.benediction
+                                              .toString() +
+                                          '+3') +
                           ((character.help ?? 0) > 0
                               ? (' (' + character.help!.toString() + ')')
                               : ('')),
@@ -706,35 +715,35 @@ class CharacterWidgets {
                   character.textColorOrDefault(),
                   playerDisplay,
                   () => {
-                    if (character.classe == Classe.AVATAR &&
-                        character.apotheose == Apotheose.NONE)
-                      {
-                        character.apotheose = Apotheose.ARCANIQUE,
-                        characterSheetViewModel
-                            .createOrUpdateCharacter(character)
-                      }
-                    else if (character.classe == Classe.SPIRITE &&
-                        character.apotheose == Apotheose.NONE)
-                      {
-                        character.apotheose = Apotheose.FORME_VENGERESSE,
-                        characterSheetViewModel
-                            .createOrUpdateCharacter(character)
-                      }
-                    else if (character.classe == Classe.PACIFICATEUR &&
-                        character.apotheose == Apotheose.NONE)
-                      {
-                        character.apotheose = Apotheose.SURCHARGE,
-                        characterSheetViewModel
-                            .createOrUpdateCharacter(character)
-                      }
-                    else if (character.niveau < 10 &&
-                  character.apotheose == Apotheose.NONE)
-                  {
-                  character.apotheose = Apotheose.NORMALE,
-                  characterSheetViewModel
-                      .createOrUpdateCharacter(character)
-                  }
-                  else
+                        if (character.classe == Classe.AVATAR &&
+                            character.apotheose == Apotheose.NONE)
+                          {
+                            character.apotheose = Apotheose.ARCANIQUE,
+                            characterSheetViewModel
+                                .createOrUpdateCharacter(character)
+                          }
+                        else if (character.classe == Classe.SPIRITE &&
+                            character.apotheose == Apotheose.NONE)
+                          {
+                            character.apotheose = Apotheose.FORME_VENGERESSE,
+                            characterSheetViewModel
+                                .createOrUpdateCharacter(character)
+                          }
+                        /*else if (character.classe == Classe.PACIFICATEUR &&
+                            character.apotheose == Apotheose.NONE)
+                          {
+                            character.apotheose = Apotheose.SURCHARGE,
+                            characterSheetViewModel
+                                .createOrUpdateCharacter(character)
+                          }*/
+                        else if (character.niveau < 10 &&
+                            character.apotheose == Apotheose.NONE)
+                          {
+                            character.apotheose = Apotheose.NORMALE,
+                            characterSheetViewModel
+                                .createOrUpdateCharacter(character)
+                          }
+                        else
                           {
                             showApotheoseAlertDialog(
                                 context, characterSheetViewModel, character)
@@ -1050,6 +1059,11 @@ class CharacterWidgets {
             text: ' en Apothéose Améliorée',
           ));
           break;
+        case Apotheose.SURCHARGE_IMPROVED:
+          rollText.add(TextSpan(
+            text: ' en Surcharge Améliorée',
+          ));
+          break;
         case Apotheose.FINALE:
           rollText.add(TextSpan(
             text: ' en Apothéose Finale',
@@ -1193,79 +1207,81 @@ class CharacterWidgets {
       ));
       rollText.add(TextSpan(text: ')'));
     }
-    if(roll.displayDices ||  mjViewModel != null)
-    switch (roll.rollType) {
-      case RollType.CHAIR:
-      case RollType.ESPRIT:
-      case RollType.ESSENCE:
-      case RollType.MAGIE_LEGERE:
-      case RollType.MAGIE_FORTE:
-      case RollType.SOIN:
-      case RollType.ARCANE_ESPRIT:
-      case RollType.ARCANE_ESSENCE:
-        for (var value in roll.result) {
-          if (value < 5) {
-            rollDices.add(TextSpan(
-                text: value.toString() + '',
-                style: TextStyle(
-                    color: Colors.black87,
-                    fontSize: 26,
-                    fontFamily: 'DiceFont')));
-          } else if (value == 5) {
-            rollDices.add(TextSpan(
-                text: value.toString() + '',
-                style: TextStyle(
-                    color: Colors.orange,
-                    fontSize: 26,
-                    fontFamily: 'DiceFont')));
-          } else if (value == 6) {
-            rollDices.add(TextSpan(
-                text: value.toString() + '',
-                style: TextStyle(
-                    color: Colors.redAccent,
-                    fontSize: 26,
-                    fontFamily: 'DiceFont')));
+    if (roll.displayDices || mjViewModel != null)
+      switch (roll.rollType) {
+        case RollType.CHAIR:
+        case RollType.ESPRIT:
+        case RollType.ESSENCE:
+        case RollType.MAGIE_LEGERE:
+        case RollType.MAGIE_FORTE:
+        case RollType.SOIN:
+        case RollType.ARCANE_ESPRIT:
+        case RollType.ARCANE_ESSENCE:
+          for (var value in roll.result) {
+            if (value < 5) {
+              rollDices.add(TextSpan(
+                  text: value.toString() + '',
+                  style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 26,
+                      fontFamily: 'DiceFont')));
+            } else if (value == 5) {
+              rollDices.add(TextSpan(
+                  text: value.toString() + '',
+                  style: TextStyle(
+                      color: Colors.orange,
+                      fontSize: 26,
+                      fontFamily: 'DiceFont')));
+            } else if (value == 6) {
+              rollDices.add(TextSpan(
+                  text: value.toString() + '',
+                  style: TextStyle(
+                      color: Colors.redAccent,
+                      fontSize: 26,
+                      fontFamily: 'DiceFont')));
+            }
           }
-        }
-        break;
-      case RollType.EMPIRIQUE:
-        // TODO si c'est d6, mettre le style visuel ?
-        for (var value in roll.result) {
-          rollDices.add(TextSpan(text: '[$value]'));
-        }
-        break;
-      case RollType.APOTHEOSE:
-        if (roll.result[0] == 1) {
-          rollDices.add(TextSpan(
-              text: roll.result[0].toString(),
-              style: TextStyle(
-                  color: Colors.red, fontSize: 26, fontFamily: 'DiceFont')));
-        } else {
-          rollDices.add(TextSpan(
-              text: roll.result[0].toString(),
-              style: TextStyle(
-                  color: Colors.green, fontSize: 26, fontFamily: 'DiceFont')));
-        }
-        break;
-      case RollType.ARCANE_FIXE:
-        for (var value in roll.result) {
-          rollDices.add(TextSpan(text: '[$value]'));
-        }
-        break;
-      case RollType.SAUVEGARDE_VS_MORT:
-        for (var value in roll.result) {
-          if (value < 10) {
+          break;
+        case RollType.EMPIRIQUE:
+          // TODO si c'est d6, mettre le style visuel ?
+          for (var value in roll.result) {
+            rollDices.add(TextSpan(text: '[$value]'));
+          }
+          break;
+        case RollType.APOTHEOSE:
+          if (roll.result[0] == 1) {
             rollDices.add(TextSpan(
-                text: '[$value]', style: TextStyle(color: Colors.red)));
+                text: roll.result[0].toString(),
+                style: TextStyle(
+                    color: Colors.red, fontSize: 26, fontFamily: 'DiceFont')));
           } else {
             rollDices.add(TextSpan(
-                text: '[$value]', style: TextStyle(color: Colors.green)));
+                text: roll.result[0].toString(),
+                style: TextStyle(
+                    color: Colors.green,
+                    fontSize: 26,
+                    fontFamily: 'DiceFont')));
           }
-        }
-        break;
-      case RollType.RELANCE:
-        break;
-    }
+          break;
+        case RollType.ARCANE_FIXE:
+          for (var value in roll.result) {
+            rollDices.add(TextSpan(text: '[$value]'));
+          }
+          break;
+        case RollType.SAUVEGARDE_VS_MORT:
+          for (var value in roll.result) {
+            if (value < 10) {
+              rollDices.add(TextSpan(
+                  text: '[$value]', style: TextStyle(color: Colors.red)));
+            } else {
+              rollDices.add(TextSpan(
+                  text: '[$value]', style: TextStyle(color: Colors.green)));
+            }
+          }
+          break;
+        case RollType.RELANCE:
+          break;
+      }
     return Container(
         decoration: BoxDecoration(
             border: Border(
@@ -1644,11 +1660,18 @@ class CharacterWidgets {
                             onChanged: (String? newValue) {
                               setState(() {
                                 if (newValue == "Aucune") {
-                                  apotheose = Apotheose.NORMALE;
+                                if (character.classe == Classe.PACIFICATEUR)
+                                apotheose = Apotheose.SURCHARGE;
+                                else
+                                apotheose = Apotheose.NORMALE;
+
                                 } else if (newValue == "Apothéose Finale") {
                                   apotheose = Apotheose.FINALE;
                                 } else {
-                                  apotheose = Apotheose.IMPROVED;
+                                  if (character.classe == Classe.PACIFICATEUR)
+                                    apotheose = Apotheose.SURCHARGE_IMPROVED;
+                                  else
+                                    apotheose = Apotheose.IMPROVED;
                                 }
                                 apotheoseImprovement = newValue;
                               });

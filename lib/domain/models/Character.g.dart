@@ -99,6 +99,8 @@ const _$ClasseEnumMap = {
   Classe.SKINWALKER: 'SKINWALKER',
   Classe.AVATAR: 'AVATAR',
   Classe.GAME_MASTER: 'GAME_MASTER',
+  Classe.ROI: 'ROI',
+  Classe.PAROLIER: 'PAROLIER',
   Classe.INCONNU: 'INCONNU',
 };
 
@@ -134,6 +136,7 @@ const _$ApotheoseEnumMap = {
   Apotheose.ARCANIQUE: 'ARCANIQUE',
   Apotheose.FORME_VENGERESSE: 'FORME_VENGERESSE',
   Apotheose.SURCHARGE: 'SURCHARGE',
+  Apotheose.SURCHARGE_IMPROVED: 'SURCHARGE_IMPROVED',
   Apotheose.FINALE: 'FINALE',
 };
 

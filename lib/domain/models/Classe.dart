@@ -10,5 +10,7 @@ enum Classe {
   SKINWALKER,
   AVATAR,
   GAME_MASTER,
+  ROI,
+  PAROLIER,
   INCONNU
 }

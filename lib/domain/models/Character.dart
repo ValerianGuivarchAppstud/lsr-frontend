@@ -161,6 +161,10 @@ class Character {
         return "Skinwalker";
       case Classe.GAME_MASTER:
         return "MJ";
+      case Classe.ROI:
+        return "Roi";
+      case Classe.PAROLIER:
+        return "Parolier";
     }
   }
 

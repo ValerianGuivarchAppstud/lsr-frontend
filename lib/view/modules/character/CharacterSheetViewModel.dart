@@ -101,7 +101,7 @@ class CharacterSheetViewModel extends SubViewModel with ChangeNotifier {
         Roll roll = await _sheetService.sendRoll(
             rollType: rollType,
             rollerName: _currentState.character!.name,
-            secret: _currentState.uiState.secret,
+            secret: _currentState.uiState.secret || rollType == RollType.SAUVEGARDE_VS_MORT,
             focus: _currentState.uiState.focus,
             power: _currentState.uiState.power,
             proficiency: _currentState.uiState.proficiency,
