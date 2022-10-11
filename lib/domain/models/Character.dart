@@ -151,6 +151,8 @@ class Character {
                 : "Soldat.e";
       case Classe.INCONNU:
         return "Classe inconnue";
+      case Classe.DRAGON:
+        return "Dragon";
       case Classe.AVATAR:
         return genre == Genre.HOMME
             ? "Avatar"
@@ -204,6 +206,8 @@ class Character {
         return "";
       case Bloodline.TERREUR:
         return "de la Terreur";
+      case Bloodline.COLLECTIONNEUR:
+        return "Collectionneuse";
       case Bloodline.GORGONNE:
         return "Gorgonne";
       case Bloodline.NECROMANCIE:

@@ -9,6 +9,7 @@ enum Classe {
   SOLDAT,
   SKINWALKER,
   AVATAR,
+  DRAGON,
   GAME_MASTER,
   ROI,
   PAROLIER,
