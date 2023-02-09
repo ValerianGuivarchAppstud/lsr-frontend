@@ -14,10 +14,12 @@ class CharacterSheetState {
   DateTime? lastTimeNoteSaved;
   String notes;
   Settings? settings;
+  int? chaos;
 
   CharacterSheetState(
       {this.showLoading = true,
       this.character,
+        this.chaos,
       this.error,
       this.rollList,
       this.lastTimeNoteSaved,
@@ -32,6 +34,7 @@ class CharacterSheetState {
         showLoading = false;
         error = null;
         character = (partialState as CharacterSheetLoaded).character;
+        chaos = (partialState).chaos;
         rollList = (partialState).rollList;
         alliesName = (partialState).alliesName;
         playersName = (partialState).playersName;
@@ -117,9 +120,10 @@ class CharacterSheetLoaded extends CharacterSheetPartialState {
   List<Roll> rollList;
   List<String> alliesName;
   List<String> playersName;
+  int chaos;
 
   CharacterSheetLoaded(
-      this.character, this.rollList, this.alliesName, this.playersName);
+      this.character, this.rollList, this.alliesName, this.playersName, this.chaos);
 }
 
 class CharacterLoaded extends CharacterSheetPartialState {

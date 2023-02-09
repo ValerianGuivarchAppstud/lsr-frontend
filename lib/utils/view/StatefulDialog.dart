@@ -70,8 +70,12 @@ class _StatefulDialogState extends State<StatefulDialog> {
     return Scaffold(
       body: Container(
         child: Center(
-          child: FlatButton(
-              color: Colors.deepOrange,
+          child: TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.deepOrange,
+                padding: const EdgeInsets.all(16.0),
+                textStyle: const TextStyle(fontSize: 20),
+              ),
               onPressed: () async {
                 await showInformationDialog(context);
               },

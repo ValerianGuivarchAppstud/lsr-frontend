@@ -10,10 +10,12 @@ class CharacterSheet {
   Character character;
   List<Roll> rollList;
   late List<String> playersName;
+  int chaos;
   CharacterSheet(
       {required this.character,
       required this.rollList,
-      required this.playersName});
+      required this.playersName,
+      required this.chaos});
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.

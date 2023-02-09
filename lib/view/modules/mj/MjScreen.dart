@@ -177,7 +177,8 @@ class _MjPageState extends State<MjPage> {
                                     null,
                                     null,
                                     null,
-                                    mjViewModel));
+                                    mjViewModel,
+                                0));
                           }).toList())),
                       Row(children: [
                         Text(
@@ -312,7 +313,8 @@ class _MjPageState extends State<MjPage> {
                                     null,
                                     null,
                                     null,
-                                    mjViewModel));
+                                    mjViewModel,
+                                    0));
                           }).toList())),
                     ]))),
             SizedBox(

@@ -46,7 +46,8 @@ class MjViewModel extends SubViewModel with ChangeNotifier {
                   element.name == _characterViewModel.getCharacterName()),
               [],
               [],
-              value.playersName));
+              value.playersName,
+              0));
         }
         streamController.add(_currentState.copy(MjLoaded(value)));
       }

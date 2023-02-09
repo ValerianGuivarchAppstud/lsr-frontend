@@ -122,7 +122,8 @@ class _CharacterPageState extends State<CharacterPage> {
                               characterSheetViewModel,
                               null,
                               null),
-                          null);
+                          null,
+                          state.data!.chaos!);
                     }
                   })));
         });

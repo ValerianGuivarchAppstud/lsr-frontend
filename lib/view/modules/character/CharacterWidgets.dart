@@ -57,7 +57,8 @@ class CharacterWidgets {
           TextEditingController? noteFieldController,
           List<String>? alliesName,
           LayoutBuilder? rollList,
-          MjViewModel? mjViewModel) =>
+          MjViewModel? mjViewModel,
+      int chaos) =>
       Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -835,7 +836,8 @@ class CharacterWidgets {
                 playerDisplay,
                 () => showRestAlertDialog(
                     context, characterSheetViewModel, character),
-                () => {},
+                    () => showLongRestAlertDialog(
+                    context, characterSheetViewModel, character, chaos),
               )
             ],
           ),
@@ -1587,6 +1589,110 @@ class CharacterWidgets {
                               if (pp < character.ppMax && restPoints > 0) {
                                 pp = pp + 1;
                                 restPoints = restPoints - 1;
+                              }
+                            });
+                          },
+                          child: Text("PP : ${pp} / ${character.ppMax}"),
+                        ),
+                      ),
+                    ],
+                  )),
+              actions: <Widget>[
+                InkWell(
+                  child: Text('OK   '),
+                  onTap: () {
+                    character.pv = pv;
+                    character.pf = pf;
+                    character.pp = pp;
+                    character.arcanes = character.arcanesMax;
+                    characterSheetViewModel.createOrUpdateCharacter(character);
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          });
+        });
+  }
+
+
+
+  static Future<void Function()> showLongRestAlertDialog(
+      BuildContext context,
+      CharacterSheetViewModel characterSheetViewModel,
+      Character character,
+      int chaos) async {
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    double chaosEffect = 0;
+    if(chaos == 0) {
+      chaosEffect = 0;
+    } else if(chaos == 1) {
+      chaosEffect = 0.15;
+    } else if(chaos == 2) {
+      chaosEffect = 0.3;
+    } else if(chaos == 3) {
+      chaosEffect = 0.45;
+    } else if(chaos == 4) {
+      chaosEffect = 0.6;
+    } else {
+      chaosEffect = 0.75;
+    }
+    character.pv = character.pvMax;
+    character.pf = character.pfMax;
+    character.pp = character.ppMax;
+      int pointsToDelete = ((character.chair + character.esprit + character.essence) * chaosEffect).floor();
+    int pv = character.pv;
+    int pf = character.pf;
+    int pp = character.pp;
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              title: pointsToDelete > 1
+                  ? Text("Repos : ${pointsToDelete} pierres restantes")
+                  : Text("Repos : ${pointsToDelete} pierre restante"),
+              content: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                        child: TextButton(
+                          onPressed: () {
+                            setState(() {
+                              if (pv > 0 && pointsToDelete > 0) {
+                                pv = pv - 1;
+                                pointsToDelete = pointsToDelete - 1;
+                              }
+                            });
+                          },
+                          child: Text("PV : ${pv} / ${character.pvMax}"),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                        child: TextButton(
+                          onPressed: () {
+                            setState(() {
+                              if (pf > 0 && pointsToDelete > 0) {
+                                pf = pf - 1;
+                                pointsToDelete = pointsToDelete - 1;
+                              }
+                            });
+                          },
+                          child: Text("PF : ${pf} / ${character.pfMax}"),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                        child: TextButton(
+                          onPressed: () {
+                            setState(() {
+                              if (pp > 0 && pointsToDelete > 0) {
+                                pp = pp - 1;
+                                pointsToDelete = pointsToDelete - 1;
                               }
                             });
                           },

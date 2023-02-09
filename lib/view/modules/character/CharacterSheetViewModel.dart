@@ -65,7 +65,9 @@ class CharacterSheetViewModel extends SubViewModel with ChangeNotifier {
             value.character,
             value.rollList,
             value.character.alliesName ?? [],
-            value.playersName)));
+            value.playersName,
+          value.chaos
+        )));
       }).onError((error, stackTrace) {
         streamController
             .add(_currentState.copy(CharacterSheetFailed(error.toString())));
